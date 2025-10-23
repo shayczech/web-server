@@ -8,3 +8,4 @@ crash.*.log
 *.tfplan
 .DS_Store
 Thumbs.db
+*.tfstate.backup

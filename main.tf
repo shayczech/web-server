@@ -15,12 +15,15 @@ resource "tls_private_key" "my_key" {
 
 # 3. Creates a new key pair in AWS, using the public key we just generated
 resource "aws_key_pair" "my_aws_key" {
+
   key_name   = "web-key" # This is the name AWS will see
+
   public_key = tls_private_key.my_key.public_key_openssh
 }
 
 # 4. Saves the private key (that matches the public key) to your local disk
 resource "local_file" "my_private_key" {
+
   content         = tls_private_key.my_key.private_key_pem
   filename        = "web-key.pem" # This is the file it will create
   file_permission = "0600"
