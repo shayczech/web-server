@@ -1,0 +1,10 @@
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+.tfstate.
+*.pem
+crash.log
+crash.*.log
+*.tfplan
+.DS_Store
+Thumbs.db
