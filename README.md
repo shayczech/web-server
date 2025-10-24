@@ -1,6 +1,8 @@
 # Terraform-Deployed Secure Web Server
 
-This project provisions a hardened Ubuntu EC2 instance in AWS using Terraform. It installs Docker and deploys an HTTPS-enabled NGINX web service, demonstrating cloud automation, Infrastructure-as-Code (IaC), and practical DevSecOps principles.
+This project demonstrates my ability to design and deploy secure, automated cloud infrastructure using Terraform and AWS.  
+It highlights practical skills in Infrastructure-as-Code (IaC), cloud security, and automation — bridging the gap between hands-on system administration and scalable DevSecOps practices.  
+The implementation showcases a production-ready foundation for hosting containerized web applications with security, availability, and maintainability in mind.
 
 ---
 
