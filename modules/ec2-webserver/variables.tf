@@ -27,5 +27,5 @@ variable "index_html_path" {
 variable "server_name" {
   description = "The base name for the server and related resources."
   type        = string
-  default     = "web-server" # Provide a default value
+  default     = "terraform-server" # Provide a default value
 }
