@@ -42,7 +42,7 @@
 
     - name: 6. Place custom index.html (Simple file transfer)
       ansible.builtin.copy:
-        content: "<h1>Shaylee Czech's DevSecOps Portfolio is LIVE! (Automated by Ansible)</h1>"
+        content: "<h1>CI/CD Deployed! Shaylee Czech's Portfolio is Now Fully Automated.</h1>"
         dest: /app/html/index.html
         owner: root
         group: root
