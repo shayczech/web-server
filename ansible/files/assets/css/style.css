@@ -1,40 +1,31 @@
-/* Custom Portfolio Styles (assets/css/style.css) 
-  Use this file for styles that override Tailwind or add custom animations.
+/*
+  Custom Portfolio Styles
+  Used for small overrides, custom components, and animations that aren't easily done with Tailwind.
 */
 
-/* 1. Custom Animation for Page Load */
-/* This ensures the Hero section fades in smoothly for a better user experience. */
-.bg-indigo-700.text-white.py-20 {
-    /* Apply a custom opacity/transform class to trigger the animation */
-    opacity: 0;
-    animation: hero-fade-in 1.2s ease-out 0.5s forwards; 
+/* 1. Global Fade-In Animation */
+/* Ensures a smooth, modern load experience */
+body {
+    animation: fadeIn 0.8s ease-in-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-@keyframes hero-fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* 2. Style for the Dynamic Stat Badges */
+.stat-badge {
+    padding: 0.5rem 1rem; /* Tailwind p-2 px-4 */
+    border-radius: 9999px; /* Tailwind rounded-full */
+    font-size: 0.9rem; /* Tailwind text-sm */
+    font-weight: 500; /* Tailwind font-medium */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-/* 2. Style Overrides (Optional but good for visual detail) */
-
-/* Add a slight hover effect to the expertise boxes */
-#skills .rounded-xl {
-    transition: all 0.2s ease-in-out;
-}
-#skills .rounded-xl:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-/* 3. Mobile adjustments (if needed, but Tailwind handles most of this) */
-
-/* Example: Max width on root container */
-.max-w-7xl {
-    max-width: 1280px; /* Standard Tailwind width */
+/* Highlight the number */
+.stat-badge span {
+    font-weight: 700; /* Tailwind font-bold */
 }

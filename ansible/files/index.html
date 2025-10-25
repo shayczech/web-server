@@ -2,6 +2,8 @@
   DevSecOps Portfolio Landing Page
   Demonstrates clean, responsive design suitable for a technical portfolio.
   Uses Tailwind CSS for quick, modern styling.
+  
+  NOTE TO MODEL: DO NOT reintroduce Markdown-style bolding (**) into the content.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -63,23 +65,52 @@
                     <h2 class="text-5xl sm:text-7xl font-extrabold mb-8 leading-tight">
                         I build and secure highly automated cloud infrastructure.
                     </h2>
-                    <p class="text-xl text-emerald-200 mb-10 max-w-2xl mx-auto">
+                    <p class="text-xl text-emerald-100 mb-12 max-w-3xl mx-auto">
                         Leveraging Database Administration, Systems Engineering, and Automation, I deliver repeatable, compliant (NIST/CIS), and scalable cloud solutions.
                     </p>
-                    <a href="#projects" class="inline-flex items-center justify-center px-10 py-4 border border-transparent text-lg font-bold rounded-full shadow-xl text-primary-green bg-white hover:bg-gray-100 transition duration-300 transform hover:scale-105">
+                    <a href="#projects" class="inline-flex items-center justify-center px-12 py-4 border border-transparent text-lg font-bold rounded-full shadow-xl text-primary-green bg-white hover:bg-gray-100 transition duration-300 transform hover:scale-105">
                         View Automated Pipeline →
                     </a>
                 </div>
             </div>
         </section>
+        
+        <!-- Live Stats Section -->
+        <section id="stats" class="bg-white py-12 shadow-inner">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-wrap justify-center gap-4 sm:gap-8">
+                    
+                    <!-- Stat 1: Terraform Modules -->
+                    <div class="stat-badge bg-gray-100 text-gray-800 border border-gray-300">
+                        Terraform Modules: <span id="stat-terraform" class="font-bold text-primary-green">...</span>
+                    </div>
 
+                    <!-- Stat 2: Ansible Playbooks -->
+                    <div class="stat-badge bg-gray-100 text-gray-800 border border-gray-300">
+                        Ansible Playbooks: <span id="stat-ansible" class="font-bold text-primary-green">...</span>
+                    </div>
+
+                    <!-- Stat 3: Pipeline Runs -->
+                    <div class="stat-badge bg-gray-100 text-gray-800 border border-gray-300">
+                        CI/CD Runs: <span id="stat-ci-runs" class="font-bold text-primary-green">...</span>
+                    </div>
+
+                    <!-- Stat 4: Security Score (Mock) -->
+                    <div class="stat-badge bg-gray-100 text-gray-800 border border-gray-300">
+                        Security Score: <span id="stat-security" class="font-bold text-red-500">...</span>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        
         <!-- Expertise Section -->
         <section id="skills" class="py-20 bg-secondary-gray">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h3 class="text-4xl font-extrabold text-gray-900 mb-12 text-center">Core Technical Expertise</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     
-                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200 transform hover:shadow-xl transition duration-300">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 transform hover:shadow-2xl hover:scale-[1.02] transition duration-300">
                         <div class="text-primary-green mb-4 text-4xl font-extrabold">CM</div>
                         <h4 class="text-2xl font-bold text-gray-900 mb-3">DevSecOps & Automation</h4>
                         <ul class="text-gray-700 space-y-2 text-base">
@@ -90,7 +121,7 @@
                         </ul>
                     </div>
 
-                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200 transform hover:shadow-xl transition duration-300">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 transform hover:shadow-2xl hover:scale-[1.02] transition duration-300">
                         <div class="text-primary-green mb-4 text-4xl font-extrabold">GRC</div>
                         <h4 class="text-2xl font-bold text-gray-900 mb-3">Security & Compliance (GRC)</h4>
                         <ul class="text-gray-700 space-y-2 text-base">
@@ -101,7 +132,7 @@
                         </ul>
                     </div>
 
-                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200 transform hover:shadow-xl transition duration-300">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 transform hover:shadow-2xl hover:scale-[1.02] transition duration-300">
                         <div class="text-primary-green mb-4 text-4xl font-extrabold">ARCH</div>
                         <h4 class="text-2xl font-bold text-gray-900 mb-3">System Architecture</h4>
                         <ul class="text-gray-700 space-y-2 text-base">
@@ -121,11 +152,11 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h3 class="text-4xl font-extrabold text-gray-900 mb-12 text-center">Project Spotlight: CI/CD Pipeline</h3>
                 
-                <div class="bg-secondary-gray p-8 md:p-12 rounded-3xl shadow-2xl border-t-8 border-primary-green/70">
+                <div class="bg-secondary-gray p-8 md:p-16 rounded-3xl shadow-2xl border-t-8 border-primary-green/70">
                     <p class="text-lg font-semibold text-primary-green uppercase tracking-wider mb-3">The Infrastructure as Code Stack</p>
                     <h4 class="text-3xl font-bold text-gray-900 mb-6">Fully Automated Terraform + Ansible DevSecOps Deployment</h4>
                     
-                    <p class="text-gray-700 text-lg mb-8 max-w-4xl">
+                    <p class="text-gray-700 text-xl mb-10 max-w-5xl mx-auto">
                         This site is running inside a Docker container on an AWS EC2 instance, managed end-to-end by the pipeline described below. Every update you see is a result of a Git push triggering a secure, auditable, and repeatable process.
                     </p>
                     
@@ -162,8 +193,8 @@
                         </div>
                     </div>
                     
-                    <div class="mt-10 text-center">
-                        <a href="https://github.com/shayczech/web-server" target="_blank" class="inline-flex items-center px-8 py-3 border border-transparent text-lg font-bold rounded-full shadow-lg text-white bg-primary-green hover:bg-emerald-700 transition duration-300 transform hover:scale-105">
+                    <div class="mt-12 text-center">
+                        <a href="https://github.com/shayczech/web-server" target="_blank" class="inline-flex items-center px-10 py-4 border border-transparent text-lg font-bold rounded-full shadow-lg text-white bg-primary-green hover:bg-emerald-700 transition duration-300 transform hover:scale-105">
                             View Pipeline Source Code →
                         </a>
                     </div>
@@ -172,7 +203,40 @@
         </section>
 
     </main>
+    
+    <!-- JavaScript for Dynamic Stats -->
+    <script>
+        function updateStats() {
+            // Mock Data Source: In a real application, this would be an API fetch 
+            // from GitHub, AWS CloudWatch, or a custom statistics backend.
+            const statsData = {
+                terraformModules: 5,
+                ansiblePlaybooks: 8,
+                ciCdRuns: 105,
+                securityScore: 92, // Mocked BSLab A score
+            };
 
+            // Injecting Data into the DOM
+            document.getElementById('stat-terraform').textContent = statsData.terraformModules;
+            document.getElementById('stat-ansible').textContent = statsData.ansiblePlaybooks;
+            document.getElementById('stat-ci-runs').textContent = statsData.ciCdRuns + '+';
+            
+            const securitySpan = document.getElementById('stat-security');
+            securitySpan.textContent = statsData.securityScore + '%';
+            
+            // Apply color logic based on the mock score
+            if (statsData.securityScore >= 90) {
+                // Change to green/primary color for A score
+                securitySpan.classList.remove('text-red-500');
+                securitySpan.classList.add('text-primary-green');
+            }
+            // You could add logic here for yellow or red ranges
+        }
+
+        // Run the function when the page loads
+        document.addEventListener('DOMContentLoaded', updateStats);
+    </script>
+    
     <!-- Footer -->
     <footer class="bg-gray-800 text-white">
         <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
