@@ -65,14 +65,20 @@
 # --- 3. RUN CERTBOT CHALLENGE (DNS METHOD) ---
 
     - name: 7. Run Certbot DNS Challenge to obtain SSL certificate
-      ansible.builtin.command: 
-        cmd: certbot certonly --dns-route53 -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
-      args:
-        timeout: 300
-        creates: /etc/letsencrypt/live/shayleeczech.com/fullchain.pem # Prevents re-run if cert exists
-      become: yes
+      ansible.builtin.shell: | # <<< FINAL RAW SHELL IMPLEMENTATION
+        # Check if cert exists; if so, skip the whole script.
+        if [ -f /etc/letsencrypt/live/shayleeczech.com/fullchain.pem ]; then
+          echo "Certificate already exists. Skipping acquisition."
+          exit 0
+        fi
+        
+        # Execute Certbot without the problematic Ansible arguments
+        certbot certonly --dns-route53 -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
+        
       register: certbot_result
-      failed_when: certbot_result.rc != 0 and 'Certificate not yet due for renewal' not in certbot_result.stderr
+      # REMOVED: args: timeout/creates
+      become: yes
+      # Removed complex failed_when: check. If Certbot fails (rc=1), the task will fail normally.
 
     # --- 4. DEPLOY SSL CONFIG AND START CONTAINERS ---
 
