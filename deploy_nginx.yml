@@ -112,7 +112,15 @@
       notify: Restart Nginx Container
       become: yes
 
-    - name: 11. Start Final Nginx Container with SSL
+    - name: 11. Final Aggressive Port Cleanup Before Container Start
+      ansible.builtin.shell: |
+        fuser -k -n tcp 80 || true # Forcefully kill any process using TCP Port 80
+        systemctl restart docker || true # Force restart to clear lingering network bindings
+        sleep 3 # Give system 3 seconds to clear sockets
+      become: yes
+      ignore_errors: yes
+
+    - name: 12. Start Final Nginx Container with SSL
       community.docker.docker_container:
         name: portfolio-web
         image: nginx:latest
