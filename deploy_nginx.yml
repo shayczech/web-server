@@ -11,6 +11,7 @@
           - certbot
           - python3-certbot-nginx 
           - ca-certificates
+          - python3-certbot-dns-route53 # DNS PLUGIN
           - curl
           - gnupg
           - python3-pip
@@ -64,16 +65,13 @@
 # --- 3. RUN CERTBOT CHALLENGE (DNS METHOD) ---
 
     - name: 7. Run Certbot DNS Challenge to obtain SSL certificate
-      ansible.builtin.command: | # <<< CHANGED TO ansible.builtin.command
-        certbot certonly --dns-route53 -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
-      # Note: We must also change 'chdir' to 'chdir' argument and set timeout
+      ansible.builtin.command: 
+        cmd: certbot certonly --dns-route53 -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
       args:
-        chdir: /etc/nginx 
-        timeout: 300 # <<< ADDED SUPPORTED TIMEOUT HERE
+        timeout: 300
+        creates: /etc/letsencrypt/live/shayleeczech.com/fullchain.pem # Prevents re-run if cert exists
       become: yes
       register: certbot_result
-      # Added 'creates' argument to prevent unnecessary re-runs
-      creates: /etc/letsencrypt/live/shayleeczech.com/fullchain.pem
       failed_when: certbot_result.rc != 0 and 'Certificate not yet due for renewal' not in certbot_result.stderr
 
     # --- 4. DEPLOY SSL CONFIG AND START CONTAINERS ---
@@ -99,7 +97,7 @@
           - "443:443"
         volumes:
           - /app/html:/usr/share/nginx/html:ro
-          - /etc/letsencrypt:/etc/letsencrypt:ro
+          - /etc/letsencrypt:/etc/letsencrypt:ro # Mount certs for Nginx to read
         networks:
           - name: proxy_net
         recreate: true
