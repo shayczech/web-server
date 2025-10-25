@@ -11,7 +11,6 @@
           - certbot
           - python3-certbot-nginx 
           - python3-certbot-dns-route53 
-          - nginx 
           - ca-certificates
           - curl
           - gnupg
@@ -21,34 +20,20 @@
         update_cache: yes
       become: yes
 
-    - name: 2. Disable and Stop Host Nginx Service (Prevents Port Conflict)
-      ansible.builtin.systemd:
-        name: nginx
-        state: stopped
-        enabled: no 
-      become: yes
-      ignore_errors: yes
-
-    - name: 3. Install Docker via official Convenience Script (quick and reliable install)
+    - name: 2. Install Docker via official Convenience Script (quick and reliable install)
       ansible.builtin.shell: 
         cmd: curl -fsSL https://get.docker.com | sh
       become: yes
 
-    - name: 4. Install Python Docker Module
+    - name: 3. Install Python Docker Module
       ansible.builtin.apt:
         name: python3-docker
         state: present
       become: yes
 
-    - name: 5. Ensure Docker bridge network 'proxy_net' exists
-      community.docker.docker_network:
-        name: proxy_net
-        state: present
-      become: yes
-
     # --- 2. DEPLOY CONTENT AND PREPARE HOST DIRECTORIES ---
 
-    - name: 6. Create required directories
+    - name: 4. Create required directories
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -57,11 +42,12 @@
         mode: '0755'
       loop:
         - /app/html
-        - /etc/letsencrypt/live/shayleeczech.com # Only directories needed for static site + certs
+        - /app/config
+        - /etc/letsencrypt/ # Only directories needed for static site + certs
         - /root/.aws # Create AWS directory for credentials file
       become: yes
 
-    - name: 7. Place custom index.html (File copy from repo)
+    - name: 5. Place custom index.html (File copy from repo)
       ansible.builtin.copy:
         src: index.html 
         dest: /app/html/index.html
@@ -72,7 +58,7 @@
       become: yes
 
     # --- 3. TEMPORARY CREDENTIALS FILE ---
-    - name: 8. Create temporary AWS credentials file for Certbot
+    - name: 6. Create temporary AWS credentials file for Certbot
       ansible.builtin.copy:
         content: |
           [default]
@@ -87,7 +73,7 @@
         AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
 
-    - name: 9. Run Certbot DNS Challenge to obtain SSL certificate
+    - name: 7. Run Certbot DNS Challenge to obtain SSL certificate
       ansible.builtin.shell: |
         # Check if cert exists; if so, skip the whole script.
         if [ -f /etc/letsencrypt/live/shayleeczech.com/fullchain.pem ]; then
@@ -96,44 +82,50 @@
         fi
         
         # Execute Certbot without the problematic Ansible arguments
-        certbot certonly --dns-route53 -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
+        certbot certonly --dns-route53 -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade
         
       register: certbot_result
       become: yes
 
     # --- 4. DEPLOY SSL CONFIG AND START CONTAINERS ---
 
-    - name: 10. Deploy Nginx SSL Configuration File
+    - name: 8. Deploy Nginx SSL Configuration File
       ansible.builtin.copy:
         src: nginx_ssl.conf
-        dest: /etc/nginx/sites-available/default
+        dest: /app/config/nginx.conf
         owner: root
         group: root
         mode: '0644'
       notify: Restart Nginx Container
       become: yes
 
-    - name: 11. Final Aggressive Port Cleanup Before Container Start
+    - name: 9. Final Aggressive Port Cleanup Before Container Start
       ansible.builtin.shell: |
         fuser -k -n tcp 80 || true # Forcefully kill any process using TCP Port 80
+        fuser -k -n tcp 443 || true # ADDED: Ensure 443 is clear
         systemctl restart docker || true # Force restart to clear lingering network bindings
-        sleep 10 # INCREASED TO 10 SECONDS
+        sleep 10
       become: yes
       ignore_errors: yes
 
-    - name: 12. Start Final Nginx Container with SSL
+    - name: 10. Start Final Nginx Container with SSL
       community.docker.docker_container:
         name: portfolio-web
         image: nginx:latest
         state: started
         restart_policy: always
-        # DELETED: published_ports: [- "80:80", - "443:443"]
         volumes:
           - /app/html:/usr/share/nginx/html:ro
           - /etc/letsencrypt:/etc/letsencrypt:ro
-        # DELETED: networks: [ - name: proxy_net ]
+          - /app/config/nginx.conf:/etc/nginx/nginx.conf:ro # CRITICAL FIX: Mount config file
         network_mode: "host" # <<< CRITICAL FIX: Use host network stack
         recreate: true
+      become: yes
+      
+    - name: 11. Remove temporary AWS credentials file (SECURITY CRITICAL)
+      ansible.builtin.file:
+        path: /root/.aws/credentials
+        state: absent
       become: yes
 
   # --- HANDLERS ---
@@ -144,11 +136,10 @@
         image: nginx:latest
         state: started
         restart_policy: always
-        # DELETED: published_ports: [- "80:80", - "443:443"]
         volumes:
           - /app/html:/usr/share/nginx/html:ro
           - /etc/letsencrypt:/etc/letsencrypt:ro
-        # DELETED: networks: [ - name: proxy_net ]
+          - /app/config/nginx.conf:/etc/nginx/nginx.conf:ro # CRITICAL FIX: Mount config file
         network_mode: "host" # <<< CRITICAL FIX: Use host network stack
         recreate: true
       become: yes
