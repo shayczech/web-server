@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-g">
+    <!-- 1. FIXED CHARSET TYPO -->
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shaylee Czech | Interactive Resume</title>
     
@@ -36,37 +37,49 @@
             }
         }
     </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Custom Styles (for animations and filter) --><link rel="stylesheet" href="assets/css/style.css">
+    <!-- 2. REMOVED OLD STYLESHEET LINK and old <style> tag -->
     
-    <style>
-        /* Additional style for the filter buttons */
+    <!-- 
+      STYLES MOVED INLINE
+      All custom styles are now here, inside a 'text/tailwindcss' tag
+      so the CDN script can process them.
+    -->
+    <style type="text/tailwindcss">
+        /* 1. Global Page Load Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+
+        /* 2. Filter Button Styling (Using @apply) */
         .filter-btn {
             transition: all 0.3s ease-in-out;
+            @apply bg-white shadow-sm border border-gray-300 text-gray-700 px-5 py-2 rounded-full font-medium text-sm;
         }
+        
         .filter-btn.active {
-            background-color: #059669; /* primary-green-600 */
-            color: white;
-            transform: scale(1.05);
-            box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.3);
+            @apply bg-primary-green-600 text-white scale-105 shadow-lg shadow-primary-green-500/30;
         }
-        /* NEW: Skill Tag Styling */
+
+        /* 4. Skill Tag Styling */
         .skill-tag {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.35rem 0.8rem;
-            border-radius: 9999px; /* Full rounded */
-            background-color: #D1FAE5; /* primary-green-100 */
-            color: #047857; /* primary-green-700 */
-            font-size: 0.8rem; /* text-sm */
-            font-weight: 600; /* font-semibold */
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
-            transition: all 0.2s ease-in-out;
+            @apply inline-flex items-center px-3 py-1.5 rounded-full bg-primary-green-100 text-primary-green-700 text-xs font-semibold mr-2 mb-2 transition-all duration-200 ease-in-out;
         }
         .skill-tag:hover {
-            background-color: #A7F3D0; /* primary-green-200 */
-            transform: translateY(-1px);
+            @apply bg-primary-green-200 -translate-y-px;
+        }
+
+        /* 5. Job Card Styling */
+        .job-card {
+            transition: all 0.3s ease-in-out;
         }
     </style>
 </head>
@@ -94,22 +107,22 @@
         </div>
 
         <!-- Filter Buttons --><div id="filter-container" class="flex flex-wrap justify-center gap-3 mb-12">
-            <button data-filter="all" class="filter-btn active bg-white shadow-sm border border-gray-300 text-gray-700 px-5 py-2 rounded-full font-medium text-sm">
+            <button data-filter="all" class="filter-btn active">
                 View All
             </button>
-            <button data-filter="security" class="filter-btn bg-white shadow-sm border border-gray-300 text-gray-700 px-5 py-2 rounded-full font-medium text-sm">
+            <button data-filter="security" class="filter-btn">
                 Security
             </button>
-            <button data-filter="cloud" class="filter-btn bg-white shadow-sm border border-gray-300 text-gray-700 px-5 py-2 rounded-full font-medium text-sm">
+            <button data-filter="cloud" class="filter-btn">
                 Cloud & IaC
             </button>
-            <button data-filter="automation" class="filter-btn bg-white shadow-sm border border-gray-300 text-gray-700 px-5 py-2 rounded-full font-medium text-sm">
+            <button data-filter="automation" class="filter-btn">
                 Automation & Scripting
             </button>
-            <button data-filter="grc" class="filter-btn bg-white shadow-sm border border-gray-300 text-gray-700 px-5 py-2 rounded-full font-medium text-sm">
+            <button data-filter="grc" class="filter-btn">
                 GRC & Compliance
             </button>
-            <button data-filter="systems" class="filter-btn bg-white shadow-sm border border-gray-300 text-gray-700 px-5 py-2 rounded-full font-medium text-sm">
+            <button data-filter="systems" class="filter-btn">
                 Systems & Infrastructure
             </button>
         </div>
@@ -207,7 +220,7 @@
                     <li>Managed, upgraded, and migrated highly available SQL Server, MySQL, and Oracle databases using AWS DMS and other administration tools.</li>
                 </ul>
                 
-                <div class="mt-4 flex flex-wrap gap-2">
+                <div class_disabled="mt-4 flex flex-wrap gap-2">
                     <span class="skill-tag">Microsoft SQL Server</span>
                     <span class="skill-tag">Linux System Admin</span>
                     <span class="skill-tag">SSIS</span>

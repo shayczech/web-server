@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shaylee Czech | DevSecOps & Cloud Engineering</title>
     
+    <!-- Favicon (Green Checkmark) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2310B981%22></rect><path fill=%22%23FFFFFF%22 d=%22M77.6 30.7L45 63.3l-12.6-12.6c-1.6-1.6-4.2-1.6-5.8 0s-1.6 4.2 0 5.8l15.5 15.5c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2l35.5-35.5c-1.6-1.6 1.6-4.2 0-5.8s-4.2-1.6-5.8 0z%22></path></svg>">
 
+    <!-- 1. Load Tailwind CSS Library -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- 2. Configure Tailwind Theme -->
     <script>
         tailwind.config = {
             theme: {
@@ -30,28 +33,88 @@
         }
     </script>
     
+    <!-- 3. Load Custom Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- 
+      4. STYLES MOVED INLINE
+      All custom styles from style.css are now here, inside a 'text/tailwindcss' tag
+      so the CDN script can process them.
+    -->
+    <style type="text/tailwindcss">
+        /* 1. Global Page Load Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+
+        /* 2. Expertise Card Styling */
+        .expertise-card {
+            @apply bg-gray-50 p-8 rounded-xl shadow-md border border-gray-200 transition-all duration-300 hover:shadow-xl hover:border-primary-green-300 hover:-translate-y-1.5; 
+        }
+        .card-icon-wrapper {
+            @apply h-14 w-14 flex items-center justify-center rounded-full bg-gradient-to-br from-primary-green-100 to-primary-green-200 text-primary-green-700 font-bold text-xl mb-5 shadow-sm; 
+        }
+        .card-title {
+            @apply text-xl font-bold text-gray-900 mb-3;
+        }
+        .card-list {
+            @apply text-gray-600 space-y-2 list-disc list-inside;
+        }
+
+        /* 3. Dynamic Stat Styling */
+        .stat-item {
+            @apply flex flex-col items-center justify-center p-4;
+        }
+
+        .stat-value {
+            @apply text-5xl font-extrabold text-white;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Specific coloring for security score (applied by JS) */
+        .stat-value.text-primary-green-300 {
+            color: #6EE7B7; /* Brighter green for 'A' score */
+        }
+        .stat-value.text-yellow-300 {
+            color: #FDE047; /* Yellow for 'B/C' score */
+        }
+        .stat-value.text-red-400 {
+            color: #F87171; /* Red for 'D/F' score */
+        }
+
+        .stat-label {
+            @apply text-sm font-medium text-primary-green-200 uppercase tracking-wider mt-2;
+        }
+    </style>
 
 </head>
 <body class="bg-gray-100 antialiased font-sans">
 
+    <!-- Header & Navigation -->
     <header class="bg-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <a href="index.html" class="text-2xl font-extrabold text-primary-green-700 tracking-tight">Shaylee Czech</a>
             
+            <!-- Nav Links: Use absolute paths to work from both pages -->
             <nav class="hidden md:flex space-x-8">
                 <a href="/index.html#about" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">About</a>
                 <a href="/index.html#skills" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Expertise</a>
                 <a href="/index.html#projects" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Projects</a>
-                <a href="/resume.html" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Resume</a>
+                <a href="/resume.html" class="text-gray-600 hover:text-primary-green-600 transition duration-3D00 font-medium">Resume</a>
                 <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">LinkedIn</a>
             </nav>
         </div>
     </header>
 
+    <!-- Main Content -->
     <main class="flex-grow">
         
+        <!-- Hero Section -->
         <section id="about" class="bg-primary-green-600 text-white py-20 sm:py-32">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div class="max-w-3xl mx-auto">
@@ -69,20 +132,24 @@
             </div>
         </section>
         
+        <!-- Dynamic Stats Section -->
         <section id="stats" class="bg-primary-green-900 text-white py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                     
+                    <!-- Stat 1: Commits -->
                     <div class="stat-item">
                         <span id="commits-count" class="stat-value">...</span>
                         <p class="stat-label">Total Project Commits</p>
                     </div>
                     
+                    <!-- Stat 2: Security Score -->
                     <div class="stat-item">
                         <span id="security-score" class="stat-value">...</span>
                         <p class="stat-label">Security Score</p>
                     </div>
                     
+                    <!-- Stat 3: IaC Resources -->
                     <div class="stat-item">
                         <span id="resources-count" class="stat-value">...</span>
                         <p class="stat-label">Live IaC Resources</p>
@@ -91,6 +158,7 @@
             </div>
         </section>
 
+        <!-- Expertise Section -->
         <section id="skills" class="py-16 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h3 class="text-3xl font-extrabold text-gray-900 mb-12 text-center">Core Technical Expertise</h3>
@@ -133,6 +201,7 @@
             </div>
         </section>
 
+        <!-- Project Spotlight Section -->
         <section id="projects" class="py-16 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h3 class="text-3xl font-extrabold text-gray-900 mb-10 text-center">Project Spotlight: This CI/CD Pipeline</h3>
@@ -143,7 +212,7 @@
                     
                     <p class="text-gray-700 mb-6">
                         This site is running inside a Docker container on an AWS EC2 instance. The entire deployment process—from infrastructure creation to content update—is fully automated via a CI/CD pipeline. It features a two-container architecture: an Nginx proxy serving this page, and a Node.js API container providing the dynamic stats above.
-                    </When>
+                    </p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 text-gray-700">
                         <ul class="space-y-3">
@@ -168,8 +237,12 @@
                         </ul>
                     </div>
                     
-                    <div class="mt-8">
-                        <a href="https://github.com/shayczech/web-server" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-primary-green-600 hover:bg-primary-green-700 transition duration-300 transform hover:scale-105">
+                    <!-- 
+                      BUTTON UPDATED HERE: 
+                      - Added 'text-center' to the parent div
+                    -->
+                    <div class="mt-8 text-center">
+                        <a href="https://github.com/shayczech/web-server" target="_blank" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-primary-green-600 hover:bg-primary-green-700 transition duration-300 transform hover:scale-105">
                             View Source Code (The Pipeline) →
                         </a>
                     </div>
@@ -179,6 +252,7 @@
 
     </main>
 
+    <!-- Footer -->
     <footer class="bg-gray-800 text-white">
         <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
             <p class="text-sm">Relocating to Denver, CO | Seeking Cloud/DevSecOps Roles</p>
@@ -190,6 +264,11 @@
         </div>
     </footer>
 
+    <!-- 
+      DYNAMIC JAVASCRIPT BLOCK
+      - Correctly calls /api/stats
+      - Uses the correct JSON keys: 'githubCommits' and 'terraformModules'
+    -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
@@ -206,7 +285,6 @@
             // This function is kept from your original code to handle the UI
             async function updateStatsUI() {
                  try {
-                    // This is the main change: call fetchStats() instead of mockFetchStats()
                     const data = await fetchStats(); 
                     
                     // Populate stats - Safely check if elements exist
@@ -251,7 +329,6 @@
                     if (commitsEl) commitsEl.textContent = 'N/A';
                     if (resourcesEl) resourcesEl.textContent = 'N/A';
                     
-                    // Fixed typo here (removed stray 'S')
                     if (scoreEl) {
                         scoreEl.textContent = 'N/A';
                         // Keep default color, or use red
@@ -268,3 +345,5 @@
 
 </body>
 </html>
+
+
