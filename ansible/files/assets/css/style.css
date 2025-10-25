@@ -51,8 +51,6 @@ body {
 .stat-value.text-red-400 {
     color: #F87171; /* Red for 'D/F' score */
 }
-
-
 .stat-label {
     @apply text-sm font-medium text-primary-green-200 uppercase tracking-wider mt-2;
 }
