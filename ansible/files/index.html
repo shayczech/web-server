@@ -1,58 +1,66 @@
-<!--
-  DevSecOps Portfolio Landing Page
-  Demonstrates clean, responsive design suitable for a technical portfolio.
-  Uses Tailwind CSS for quick, modern styling.
-  
-  DEVELOPER NOTE: Do not use Markdown ** or ** for bolding. Use <strong> or Tailwind classes like font-bold.
--->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- DEVELOPMENT NOTE: (Model) Do not re-insert Markdown (**) bolding. Use Tailwind classes. -->
     <title>Shaylee Czech | DevSecOps & Cloud Engineering</title>
     
-    <!-- FAVICON (Browser Tab Icon) - Green checkmark to match theme -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23059669'/><path fill='none' stroke='%23FFFFFF' stroke-width='15' stroke-linecap='round' stroke-linejoin='round' d='M20 55 L45 78 L80 30'/></svg>">
+    <!-- Favicon (Green Checkmark) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2310B981%22></rect><path fill=%22%23FFFFFF%22 d=%22M77.6 30.7L45 63.3l-12.6-12.6c-1.6-1.6-4.2-1.6-5.8 0s-1.6 4.2 0 5.8l15.5 15.5c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2l35.5-35.5c1.6-1.6 1.6-4.2 0-5.8s-4.2-1.6-5.8 0z%22></path></svg>">
 
-    <!-- Load Tailwind CSS (MUST load first) -->
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Custom Tailwind Configuration (Green Theme) (MUST load second) -->
+    
+    <!-- Tailwind Configuration (Green Theme) -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        'primary-green': '#059669', /* emerald-600 */
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
                     },
+                    colors: {
+                        'primary-green': {
+                            DEFAULT: '#10B981', // Emerald 500
+                            '50': '#ECFDF5',
+                            '100': '#D1FAE5',
+                            '200': '#A7F3D0',
+                            '300': '#6EE7B7',
+                            '400': '#34D399',
+                            '500': '#10B981',
+                            '600': '#059669',
+                            '700': '#047857',
+                            '800': '#065F46',
+                            '900': '#064E3B',
+                            '950': '#022C22'
+                        }
+                    }
                 }
             }
         }
     </script>
     
-    <!-- Use Inter font family -->
-    <style>
-        /* This is the correct place for pure CSS rules */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
-    <!-- Custom CSS for fade-in and badge styling -->
+    <!-- Custom Styles (for animations) -->
     <link rel="stylesheet" href="assets/css/style.css">
+
 </head>
-<body class="min-h-screen flex flex-col antialiased">
+<body class="bg-gray-100 antialiased font-sans">
 
     <!-- Header & Navigation -->
-    <header class="bg-white shadow-lg sticky top-0 z-10">
+    <header class="bg-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-extrabold text-primary-green tracking-tight">Shaylee Czech</h1>
+            <!-- Site Title (links to homepage) -->
+            <a href="index.html" class="text-2xl font-extrabold text-primary-green-700 tracking-tight">Shaylee Czech</a>
+            
+            <!-- Navigation -->
             <nav class="hidden md:flex space-x-8">
-                <a href="#skills" class="text-gray-600 hover:text-primary-green transition duration-300 font-medium">Expertise</a>
-                <a href="#stats" class="text-gray-600 hover:text-primary-green transition duration-300 font-medium">Metrics</a>
-                <a href="#projects" class="text-gray-600 hover:text-primary-green transition duration-300 font-medium">Projects</a>
-                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-600 hover:text-primary-green transition duration-300 font-medium">LinkedIn</a>
+                <!-- NOTE: These are now absolute links to work from resume.html -->
+                <a href="index.html#about" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">About</a>
+                <a href="index.html#skills" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Expertise</a>
+                <a href="index.html#projects" class="text-gray-600 hover:text-primary-green-600 transition duration-3aws-actions/configure-aws-credentials@v4-300 font-medium">Projects</a>
+                <a href="resume.html" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Resume</a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">LinkedIn</a>
             </nav>
         </div>
     </header>
@@ -61,17 +69,17 @@
     <main class="flex-grow">
         
         <!-- Hero Section -->
-        <section id="hero" class="bg-primary-green text-white py-20 sm:py-32">
+        <section id="about" class="bg-primary-green-700 text-white py-20 sm:py-32">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <div class="max-w-4xl mx-auto">
-                    <p class="text-emerald-300 font-semibold uppercase tracking-wider mb-3">Cloud Engineering | DevSecOps | CISSP Candidate</p>
+                <div class="max-w-3xl mx-auto">
+                    <p class="text-primary-green-200 font-semibold uppercase tracking-wider mb-3">Cloud Engineering | DevSecOps | CISSP Candidate</p>
                     <h2 class="text-5xl sm:text-6xl font-extrabold mb-6 leading-tight">
                         Securing and automating cloud infrastructure for compliance and scale.
                     </h2>
-                    <p class="text-xl text-emerald-200 mb-8 font-light">
+                    <p class="text-xl text-primary-green-100 mb-10 leading-relaxed">
                         Leveraging a strong foundation in Database Administration, Systems Engineering, and Automation, I focus on repeatable, compliant (NIST/CIS), and scalable cloud solutions.
                     </p>
-                    <a href="#projects" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-primary-green bg-white hover:bg-gray-100 transition duration-300 transform hover:scale-105">
+                    <a href="#projects" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-primary-green-700 bg-white hover:bg-gray-100 transition duration-300 transform hover:scale-105">
                         View Automated Pipeline
                     </a>
                 </div>
@@ -79,45 +87,35 @@
         </section>
 
         <!-- Dynamic Stats Section -->
-        <section id="stats" class="py-12 bg-gray-50 border-b border-gray-200">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h3 class="text-2xl font-extrabold text-gray-800 mb-8 text-center">Live Operational Metrics</h3>
-                
-                <div id="stats-container" class="grid grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-8 justify-items-center">
+        <section id="stats" class="bg-primary-green-900 py-12">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- TYPO FIX: Changed 'classs' to 'class' -->
+                <div class="flex flex-col md:flex-row justify-around items-center text-center gap-8">
                     
-                    <!-- Stat 1: Terraform Modules -->
-                    <div class="stat-badge flex flex-col items-center">
-                        <span id="stat-terraform" class="text-4xl font-extrabold text-gray-900 leading-none">...</span>
-                        <span class="text-xs font-semibold uppercase text-gray-500 mt-1">Terraform Modules</span>
+                    <!-- Stat 1: Commits -->
+                    <div class="text-white w-full md:w-1/3">
+                        <p class="text-base font-semibold text-primary-green-300 uppercase tracking-wider mb-2">Live Project Stats</p>
+                        <span id="commits-count" class="stat-badge">...</span>
+                        <span class="text-lg text-primary-green-100 ml-2">Total Commits</span>
+                    </div>
+                    
+                    <!-- Stat 2: Security Score -->
+                    <div class="text-white w-full md:w-1/3">
+                        <p class="text-base font-semibold text-primary-green-300 uppercase tracking-wider mb-2">Deployment Status</p>
+                        <span id="security-score" class="stat-badge">...</span>
+                        <span class="text-lg text-primary-green-100 ml-2">Security Score</span>
                     </div>
 
-                    <!-- Stat 2: Ansible Playbooks -->
-                    <div class="stat-badge flex flex-col items-center">
-                        <span id="stat-ansible" class="text-4xl font-extrabold text-gray-900 leading-none">...</span>
-                        <span class="text-xs font-semibold uppercase text-gray-500 mt-1">Ansible Playbooks</span>
+                    <!-- Stat 3: Resources -->
+                    <div class="text-white w-full md:w-1/3">
+                        <p class="text-base font-semibold text-primary-green-300 uppercase tracking-wider mb-2">Live IaC Resources</p>
+                        <span id="resources-count" class="stat-badge">...</span>
+                        <span class="text-lg text-primary-green-100 ml-2">Managed by Terraform</span>
                     </div>
 
-                    <!-- Stat 3: Pipeline Runs -->
-                    <div class="stat-badge flex flex-col items-center">
-                        <span id="stat-cicd" class="text-4xl font-extrabold text-gray-900 leading-none">...</span>
-                        <span class="text-xs font-semibold uppercase text-gray-500 mt-1">Total CI/CD Runs</span>
-                    </div>
-
-                    <!-- Stat 4: GitHub Commits (Dynamic API) -->
-                    <div class="stat-badge flex flex-col items-center">
-                        <span id="stat-commits" class="text-4xl font-extrabold text-primary-green leading-none">...</span>
-                        <span class="text-xs font-semibold uppercase text-primary-green mt-1">GitHub Commits</span>
-                    </div>
-
-                    <!-- Stat 5: Security Score (Dynamic Color) -->
-                    <div class="stat-badge flex flex-col items-center">
-                        <span id="stat-security" class="text-4xl font-extrabold leading-none">...</span>
-                        <span class="text-xs font-semibold uppercase text-gray-500 mt-1">Compliance Score</span>
-                    </div>
                 </div>
             </div>
         </section>
-
 
         <!-- Expertise Section -->
         <section id="skills" class="py-16 bg-white">
@@ -125,20 +123,22 @@
                 <h3 class="text-3xl font-extrabold text-gray-900 mb-10 text-center">Core Technical Expertise</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     
-                    <div class="bg-gray-50 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border border-emerald-200/50">
-                        <div class="text-primary-green mb-3 text-3xl font-bold">CM</div>
+                    <!-- Card 1 -->
+                    <div class="bg-gray-50 p-6 rounded-xl shadow-lg border-t-4 border-primary-green-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+                        <div class="text-primary-green-700 mb-3 text-sm font-bold uppercase tracking-wider">Config Mgmt & Automation</div>
                         <h4 class="text-xl font-bold text-gray-900 mb-3">DevSecOps & Automation</h4>
                         <ul class="text-gray-600 space-y-2 list-disc list-inside">
-                            <li>IaC: Terraform, AWS (EC2, S3, EIP)</li>
-                            <li>Config Mgmt: Ansible Playbooks, Handlers</li>
-                            <li>CI/CD: GitHub Actions</li>
-                            <li>Scripting: Python, Bash, SQL, PowerShell</li>
+                            <li>Terraform (IaC), AWS (EC2, S3, EIP)</li>
+                            <li>Ansible Playbooks, Handlers</li>
+                            <li>GitHub Actions (CI/CD)</li>
+                            <li>Python, Bash, SQL, PowerShell</li>
                         </ul>
                     </div>
 
-                    <div class="bg-gray-50 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border border-emerald-200/50">
-                        <div class="text-primary-green mb-3 text-3xl font-bold">GRC</div>
-                        <h4 class="text-xl font-bold text-gray-900 mb-3">Security & Compliance (GRC)</h4>
+                    <!-- Card 2 -->
+                    <div class="bg-gray-50 p-6 rounded-xl shadow-lg border-t-4 border-primary-green-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+                        <div class="text-primary-green-700 mb-3 text-sm font-bold uppercase tracking-wider">GRC & Compliance</div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-3">Security & Compliance</h4>
                         <ul class="text-gray-600 space-y-2 list-disc list-inside">
                             <li>CISSP Preparation (Nov '25)</li>
                             <li>NIST/CIS Benchmarks, HIPAA, ITAR</li>
@@ -147,8 +147,9 @@
                         </ul>
                     </div>
 
-                    <div class="bg-gray-50 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border border-emerald-200/50">
-                        <div class="text-primary-green mb-3 text-3xl font-bold">ARCH</div>
+                    <!-- Card 3 -->
+                    <div class="bg-gray-50 p-6 rounded-xl shadow-lg border-t-4 border-primary-green-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+                        <div class="text-primary-green-700 mb-3 text-sm font-bold uppercase tracking-wider">Architecture</div>
                         <h4 class="text-xl font-bold text-gray-900 mb-3">System Architecture</h4>
                         <ul class="text-gray-600 space-y-2 list-disc list-inside">
                             <li>Database Security (Oracle, SQL Server)</li>
@@ -163,43 +164,43 @@
         </section>
 
         <!-- Project Spotlight Section -->
-        <section id="projects" class="py-16 bg-gray-50">
+        <section id="projects" class="py-16 bg-gray-100">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h3 class="text-3xl font-extrabold text-gray-900 mb-10 text-center">Project Spotlight: CI/CD Pipeline</h3>
+                <h3 class="text-3xl font-extrabold text-gray-900 mb-10 text-center">Project Spotlight: This CI/CD Pipeline</h3>
                 
-                <div class="bg-white p-6 md:p-10 rounded-xl shadow-2xl hover:shadow-3xl transition duration-500 border-t-4 border-primary-green">
-                    <p class="text-sm font-semibold text-primary-green uppercase tracking-wider mb-2">Deployed via GitHub Actions</p>
+                <div class="bg-white p-6 md:p-10 rounded-xl shadow-2xl border-t-4 border-primary-green-600">
+                    <p class="text-sm font-semibold text-primary-green-600 uppercase tracking-wider mb-2">Deployed via GitHub Actions</p>
                     <h4 class="text-2xl font-bold text-gray-900 mb-4">Terraform + Ansible DevSecOps Stack</h4>
                     
-                    <p class="text-gray-700 mb-6">
-                        This site is running inside a Docker container on an AWS EC2 instance. The entire deployment process—from infrastructure creation to content update—is fully automated via a CI/CD pipeline.
+                    <p class="text-gray-700 mb-8 leading-relaxed">
+                        This site is running inside a Docker container on an AWS EC2 instance. The entire deployment process—from infrastructure creation to content update—is fully automated via a CI/CD pipeline. It features a two-container architecture: an Nginx proxy serving this page, and a Node.js API container providing the dynamic stats above.
                     </p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 text-gray-700">
                         <ul class="space-y-3">
                             <li class="flex items-start">
-                                <span class="text-primary-green mr-2 text-xl">✓</span>
+                                <span class="text-primary-green-500 font-bold mr-2 text-xl">✓</span>
                                 <span class="font-medium">Terraform IaC: Manages EC2, EIP, and Security Group (S3 Remote State).</span>
                             </li>
                             <li class="flex items-start">
-                                <span class="text-primary-green mr-2 text-xl">✓</span>
-                                <span class="font-medium">Ansible: Installs Docker, copies content, and forces Nginx restart using Handlers.</span>
+                                <span class="text-primary-green-500 font-bold mr-2 text-xl">✓</span>
+                                <span class="font-medium">Ansible: Installs Docker, builds/deploys two containers, and configures Nginx.</span>
                             </li>
                         </ul>
                         <ul class="space-y-3">
                             <li class="flex items-start">
-                                <span class="text-primary-green mr-2 text-xl">✓</span>
-                                <span class="font-medium">GitHub Actions: Orchestrates the entire plan/apply/config cycle.</span>
+                                <span class="text-primary-green-500 font-bold mr-2 text-xl">✓</span>
+                                <span class="font-medium">Nginx Proxy: Serves static content and reverse-proxies /api/stats to the Node.js API.</span>
                             </li>
                             <li class="flex items-start">
-                                <span class="text-primary-green mr-2 text-xl">✓</span>
-                                <span class="font-medium">Security: Uses GitHub Secrets and IAM Least Privilege policies.</span>
+                                <span class="text-primary-green-500 font-bold mr-2 text-xl">✓</span>
+                                <span class="font-medium">GitHub Actions: Orchestrates the entire build/deploy cycle from a single `git push`.</span>
                             </li>
                         </ul>
                     </div>
                     
-                    <div class="mt-8">
-                        <a href="https://github.com/shayczech/web-server" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-primary-green hover:bg-emerald-700 transition duration-300">
+                    <div class="mt-10">
+                        <a href="https://github.com/shayczech/web-server" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-primary-green-600 hover:bg-primary-green-700 transition duration-300 transform hover:scale-105">
                             View Source Code (The Pipeline) →
                         </a>
                     </div>
@@ -221,73 +222,54 @@
         </div>
     </footer>
 
-    <!-- Client-Side JavaScript for Dynamic Stats -->
+    <!-- Dynamic Stats JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- DYNAMIC STATS FETCHER ---
             const fetchStats = async () => {
-                // FIXED: Use window.location.origin to ensure a fully qualified URL for fetch
+                // Use a fully qualified URL to prevent fetch parsing errors in preview environments
                 const apiEndpoint = window.location.origin + '/api/stats'; 
-                let data = null;
-
+                
                 try {
-                    // Fetch data from the local API microservice
                     const response = await fetch(apiEndpoint);
-                    
                     if (!response.ok) {
-                        // Throw error to trigger fallback logic
-                        throw new Error(`API returned status ${response.status}. Check Nginx proxy_pass configuration.`);
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
+                    const data = await response.json();
                     
-                    data = await response.json();
+                    // Populate stats
+                    document.getElementById('commits-count').textContent = data.commits;
+                    document.getElementById('resources-count').textContent = data.resources;
+                    
+                    // Populate security score and set color
+                    const scoreEl = document.getElementById('security-score');
+                    scoreEl.textContent = `${data.securityScore}%`;
+                    if (data.securityScore >= 90) {
+                        scoreEl.classList.add('text-green-400');
+                    } else if (data.securityScore >= 70) {
+                        scoreEl.classList.add('text-yellow-400');
+                    } else {
+                        scoreEl.classList.add('text-red-400');
+                    }
 
                 } catch (error) {
                     console.error('Error fetching dynamic stats:', error);
-                    // Fallback to static data if API fails or is unreachable
-                    data = {
-                        terraformModules: 4, 
-                        ansiblePlaybooks: 7,
-                        ciCdRuns: 110,
-                        securityScore: 85,
-                        githubCommits: 95
-                    };
+                    // Set fallback text on error
+                    document.getElementById('commits-count').textContent = 'N/A';
+                    document.getElementById('resources-count').textContent = 'N/A';
+S
+                    const scoreEl = document.getElementById('security-score');
+                    scoreEl.textContent = 'N/A';
+                    scoreEl.classList.add('text-gray-400');
                 }
-
-                // Function to update the DOM
-                const updateStat = (id, value, colorClass = 'text-gray-900') => {
-                    const el = document.getElementById(id);
-                    if (el) {
-                        el.textContent = value;
-                        el.classList.add(colorClass);
-                    }
-                };
-
-                // 1. Update general stats
-                updateStat('stat-terraform', data.terraformModules);
-                updateStat('stat-ansible', data.ansiblePlaybooks);
-                updateStat('stat-cicd', data.ciCdRuns);
-
-                // 2. Update GitHub Commits (Uses primary green color)
-                updateStat('stat-commits', data.githubCommits, 'text-primary-green');
-
-                // 3. Update Security Score with Dynamic Coloring
-                const securityScoreEl = document.getElementById('stat-security');
-                if (securityScoreEl) {
-                    let scoreColorClass = 'text-red-600'; // Default fail
-                    if (data.securityScore >= 90) {
-                        scoreColorClass = 'text-emerald-600'; // High score
-                    } else if (data.securityScore >= 80) {
-                        scoreColorClass = 'text-yellow-600'; // Warning
-                    }
-                    
-                    securityScoreEl.textContent = `${data.securityScore}%`;
-                    securityScoreEl.classList.add(scoreColorClass);
-                }
-
             };
 
+            // Run the fetcher
             fetchStats();
         });
     </script>
 
 </body>
 </html>
+

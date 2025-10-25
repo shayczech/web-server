@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-g">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaylee Czech | Interactive Resume</title>
+    
+    <!-- Favicon (Green Checkmark) --><link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2310B981%22></rect><path fill=%22%23FFFFFF%22 d=%22M77.6 30.7L45 63.3l-12.6-12.6c-1.6-1.6-4.2-1.6-5.8 0s-1.6 4.2 0 5.8l15.5 15.5c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2l35.5-35.5c1.6-1.6 1.6-4.2 0-5.8s-4.2-1.6-5.8 0z%22></path></svg>">
+
+    <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration (Green Theme) --><script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-green': {
+                            DEFAULT: '#10B981', // Emerald 500
+                            '50': '#ECFDF5',
+                            '100': '#D1FAE5',
+                            '200': '#A7F3D0',
+                            '300': '#6EE7B7',
+                            '400': '#34D399',
+                            '500': '#10B981',
+                            '600': '#059669',
+                            '700': '#047857',
+                            '800': '#065F46',
+                            '900': '#064E3B',
+                            '950': '#022C22'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom Styles (for animations and filter) --><link rel="stylesheet" href="assets/css/style.css">
+    
+    <style>
+        /* Additional style for the filter buttons */
+        .filter-btn {
+            transition: all 0.3s ease-in-out;
+        }
+        .filter-btn.active {
+            background-color: #059669; /* primary-green-600 */
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.3);
+        }
+        /* NEW: Skill Tag Styling */
+        .skill-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.8rem;
+            border-radius: 9999px; /* Full rounded */
+            background-color: #D1FAE5; /* primary-green-100 */
+            color: #047857; /* primary-green-700 */
+            font-size: 0.8rem; /* text-sm */
+            font-weight: 600; /* font-semibold */
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s ease-in-out;
+        }
+        .skill-tag:hover {
+            background-color: #A7F3D0; /* primary-green-200 */
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 antialiased font-sans">
+
+    <!-- Header & Navigation --><header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <!-- Site Title (links to homepage) --><a href="index.html" class="text-2xl font-extrabold text-primary-green-700 tracking-tight">Shaylee Czech</a>
+            
+            <!-- Navigation --><nav class="hidden md:flex space-x-8">
+                <a href="index.html#about" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">About</a>
+                <a href="index.html#skills" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Expertise</a>
+                <a href="index.html#projects" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Projects</a>
+                <a href="resume.html" class="text-primary-green-600 border-b-2 border-primary-green-600 transition duration-300 font-bold">Resume</a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">LinkedIn</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content --><main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- Page Title --><div class="text-center mb-10">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900">Interactive Resume</h1>
+            <p class="mt-3 text-lg text-gray-600">Click the tags below to filter my professional experience by key domain.</p>
+        </div>
+
+        <!-- Filter Buttons --><div id="filter-container" class="flex flex-wrap justify-center gap-3 mb-12">
+            <button data-filter="all" class="filter-btn active bg-white shadow-sm border border-gray-300 text-gray-700 px-5 py-2 rounded-full font-medium text-sm">
+                View All
+            </button>
+            <button data-filter="security" class="filter-btn bg-white shadow-sm border border-gray-300 text-gray-700 px-5 py-2 rounded-full font-medium text-sm">
+                Security
+            </button>
+            <button data-filter="cloud" class="filter-btn bg-white shadow-sm border border-gray-300 text-gray-700 px-5 py-2 rounded-full font-medium text-sm">
+                Cloud & IaC
+            </button>
+            <button data-filter="automation" class="filter-btn bg-white shadow-sm border border-gray-300 text-gray-700 px-5 py-2 rounded-full font-medium text-sm">
+                Automation & Scripting
+            </button>
+            <button data-filter="grc" class="filter-btn bg-white shadow-sm border border-gray-300 text-gray-700 px-5 py-2 rounded-full font-medium text-sm">
+                GRC & Compliance
+            </button>
+            <button data-filter="systems" class="filter-btn bg-white shadow-sm border border-gray-300 text-gray-700 px-5 py-2 rounded-full font-medium text-sm">
+                Systems & Infrastructure
+            </button>
+        </div>
+
+        <!-- Experience Timeline --><div id="experience-list" class="space-y-8">
+
+            <!-- Job 1: RBS IT --><div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-green-500" data-tags="security cloud automation">
+                <h3 class="text-2xl font-bold text-gray-900">System Engineer</h3>
+                <p class="text-gray-700 font-medium">RBS IT | Wichita, KS</p>
+                <p class="text-gray-500 text-sm mb-4">Feb 2025 - Present (9 mos)</p>
+                
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Drove proactive security strategy and operational excellence for 75+ MSP clients (over 3,000 devices), ensuring Tier 3 resolution while maintaining continuous system integrity, network reliability, and uptime for mission-critical operations.</li>
+                    <li>Spearheaded vulnerability management at scale by developing and deploying Python scripts to automatically identify and flag deprecated client hardware and software, mitigating potential security risks and enforcing system hygiene.</li>
+                    <li>Managed an advanced security stack, including 24/7 incident response and threat monitoring using RMM platforms, advanced email protection (Proofpoint), and Microsoft Purview for rapid containment and reconciliation.</li>
+                    <li>Administered comprehensive security and recovery solutions, including continuous endpoint monitoring (Huntress, SentinelOne, Microsoft Defender) and robust Disaster Recovery platforms (Acronis, Veeam).</li>
+                </ul>
+                
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <span class="skill-tag">Incident Management</span>
+                    <span class="skill-tag">Endpoint Security</span>
+                    <span class="skill-tag">Hybrid Cloud</span>
+                    <span class="skill-tag">Microsoft Intune</span>
+                    <span class="skill-tag">Active Directory</span>
+                </div>
+            </div>
+
+            <!-- Job 2: Leading Edge --><div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-green-500" data-tags="security cloud systems">
+                <h3 class="text-2xl font-bold text-gray-900">System Engineer</h3>
+                <p class="text-gray-700 font-medium">Leading Edge Technology Partners</p>
+                <p class="text-gray-500 text-sm mb-4">Oct 2024 - Feb 2025 (5 mos)</p>
+                
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Managed secure Identity and Access Management (IAM) for 45 clients (1500+ devices) via Microsoft Active Directory and Microsoft 365, reinforcing security best practices.</li>
+                    <li>Maintained high security and operational integrity by managing network segmentation and perimeter defense via SonicWall firewalls (VPNs, TCP/IP, DNS/DHCP).</li>
+                    <li>Oversaw Disaster Recovery (DR) readiness and data protection by administering Veeam Backup & Recovery and Synology storage solutions.</li>
+                    <li>Contributed to secure system deployment within Hyper-V and VMware virtualized environments, focusing on proper resource isolation and high-availability architecture.</li>
+                </ul>
+                
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <span class="skill-tag">Backup & Recovery</span>
+                    <span class="skill-tag">Server Architecture</span>
+                    <span class="skill-tag">Disaster Recovery</span>
+                </div>
+            </div>
+
+            <!-- Job 3: WTS --><div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-green-500" data-tags="security grc systems">
+                <h3 class="text-2xl font-bold text-gray-900">IT Support Manager</h3>
+                <p class="text-gray-700 font-medium">WTS</p>
+                <p class="text-gray-500 text-sm mb-4">May 2024 - Oct 2024 (6 mos)</p>
+                
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Facilitated Security and Compliance Audits (GRC) by driving rigorous adherence to NIST and CIS Benchmarks and implementing protocols such as HIPAA and ITAR.</li>
+                    <li>Architected and maintained secure, high-availability systems, including VMware environments, redundant SonicWall firewalls, and VeloCloud SD-WAN.</li>
+                    <li>Directed IT support for 25+ clients, leading the team in implementing proactive security measures and optimizing maintenance procedures to reduce incident volume.</li>
+                    <li>Designed and executed client IT strategies using Atera & ConnectWise RMM for automated monitoring and patch management, combined with Proofpoint for email threat detection.</li>
+                </ul>
+                
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <span class="skill-tag">Project Management</span>
+                    <span class="skill-tag">Network Design</span>
+                    <span class="skill-tag">GRC</span>
+                    <span class="skill-tag">Supervisory Skills</span>
+                </div>
+            </div>
+
+            <!-- Job 4: Village Travel --><div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-green-500" data-tags="security cloud grc">
+                <h3 class="text-2xl font-bold text-gray-900">Infrastructure Administrator</h3>
+                <p class="text-gray-700 font-medium">Village Travel | Wichita, KS</p>
+                <p class="text-gray-500 text-sm mb-4">Oct 2023 - May 2024 (8 mos)</p>
+                
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Spearheaded the secure migration of on-premises Active Directory to Microsoft Entra ID (Azure AD), establishing modern IAM and enabling Intune and Conditional Access.</li>
+                    <li>Conducted comprehensive NIST-based infrastructure audits to identify and remediate security weaknesses, optimizing resource utilization and reducing the attack surface.</li>
+                    <li>Configured and implemented Jira as a unified platform for enhanced ticketing, asset management, and security incident tracking.</li>
+                    <li>Developed and formally enforced robust backup and disaster recovery processes and policies to strengthen organizational resilience.</li>
+                </ul>
+                
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <span class="skill-tag">NIST</span>
+                    <span class="skill-tag">Microsoft Entra ID</span>
+                    <span class="skill-tag">Active Directory</span>
+                    <span class="skill-tag">Jira</span>
+                </div>
+            </div>
+
+            <!-- Job 5: Flint Hills --><div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-green-500" data-tags="security automation systems">
+                <h3 class="text-2xl font-bold text-gray-900">Database Administrator</h3>
+                <p class="text-gray-700 font-medium">Flint Hills Resources | Wichita, KS</p>
+                <p class="text-gray-500 text-sm mb-4">Jan 2023 - Jun 2023 (6 mos)</p>
+                
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Improved database security posture by consolidating redundant servers and migrating standalone Oracle databases to a managed multitenant architecture.</li>
+                    <li>Developed automation scripts (Bash, PowerShell, and SQL) for daily administration and monitoring tasks, enhancing operational efficiency and security checks.</li>
+                    <li>Managed, upgraded, and migrated highly available SQL Server, MySQL, and Oracle databases using AWS DMS and other administration tools.</li>
+                </ul>
+                
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <span class="skill-tag">Microsoft SQL Server</span>
+                    <span class="skill-tag">Linux System Admin</span>
+                    <span class="skill-tag">SSIS</span>
+                    <span class="skill-tag">Automation</span>
+                </div>
+            </div>
+
+            <!-- Job 6: TDS (Full-time) --><div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-green-500" data-tags="security automation systems">
+                <h3 class="text-2xl font-bold text-gray-900">Database Administrator</h3>
+                <p class="text-gray-700 font-medium">TDS Telecommunications LLC | Remote</p>
+                <p class="text-gray-500 text-sm mb-4">Apr 2019 - Dec 2022 (3 yrs 9 mos)</p>
+                
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Orchestrated the security-focused upgrade of over 400 Oracle databases from 12c to 19c, including rigorous vulnerability and performance testing.</li>
+                    <li>Developed and implemented automation scripts (Python, Bash, SQL) for weekly database refresh processes, streamlining operations and ensuring consistent security configurations.</li>
+                    <li>Maintained the security and integrity of over 400 SQL Server and Oracle databases via regular patching, refreshes, encryption, and secure upgrades (GoldenGate, Oracle RAC).</li>
+                </ul>
+                
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <span class="skill-tag">Oracle DBA</span>
+                    <span class="skill-tag">Oracle RAC</span>
+                    <span class="skill-tag">Linux</span>
+                    <span class="skill-tag">Patch Management</span>
+                </div>
+            </div>
+            
+            <!-- Job 7: TDS (Intern) --><div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-green-500" data-tags="systems">
+                <h3 class="text-2xl font-bold text-gray-900">Database Administration Intern</h3>
+                <p class="text-gray-700 font-medium">TDS Telecommunications LLC | Bend, OR</p>
+                <p class="text-gray-500 text-sm mb-4">Jul 2018 - Mar 2019 (9 mos)</p>
+                
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Provided Oracle database operational support and assisted the TDS DBA team with maintaining database related standards, procedures, and technical documentation.</li>
+                    <li>Performed operational database tasks including user and space management.</li>
+                </ul>
+                
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <span class="skill-tag">User Management</span>
+                    <span class="skill-tag">Oracle DBA</span>
+                </div>
+            </div>
+
+            <!-- Job 8: TDS (Network Intern) --><div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-green-500" data-tags="automation">
+                <h3 class="text-2xl font-bold text-gray-900">Network Engineer Intern</h3>
+                <p class="text-gray-700 font-medium">TDS Telecommunications LLC | Bend, OR</A></p>
+                <p class="text-gray-500 text-sm mb-4">Jan 2018 - Jun 2018 (6 mos)</p>
+                
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Developed a regression model using data mining and machine learning techniques in Python.</li>
+                    <li>Analyzed large data sets to improve efficiency of field technicians and reduce truck rolls.</li>
+                    <li>Used access point data and PNM protocols to get insights into end-user experience to make improvements to network infrastructure.</li>
+                </ul>
+                
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">R (Programming)</span>
+                    <span class="skill-tag">Network Analysis</span>
+                </div>
+            </div>
+
+            <!-- Job 9: Sunriver --><div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-green-500" data-tags="systems">
+                <h3 class="text-2xl font-bold text-gray-900">Technical Support Engineer</h3>
+                <p class="text-gray-700 font-medium">Sunriver Computer Services | Greater Bend Area</p>
+                <p class="text-gray-500 text-sm mb-4">Jun 2017 - Dec 2017 (7 mos)</p>
+                
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Oversaw the installation of operating systems, network systems, software, and hardware for 20+ local businesses.</li>
+                    <li>Monitored system operations to detect potential problems and implemented network systems to support communication.</li>
+                    <li>Provided technical direction and guidance to team members and performed quality assurance reviews.</li>
+                </ul>
+                
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <span class="skill-tag">Microsoft 365</span>
+                    <span class="skill-tag">Customer Service</span>
+                    <span class="skill-tag">CRM</span>
+                </div>
+            </div>
+
+            <!-- Job 10: WWU --><div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-green-500" data-tags="systems">
+                <h3 class="text-2xl font-bold text-gray-900">Computer Assistant</h3>
+                <p class="text-gray-700 font-medium">Western Washington University | Bellingham, WA</p>
+                <p class="text-gray-500 text-sm mb-4">Sep 2016 - Jun 2017 (10 mos)</p>
+                
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Worked on the development team doing software projects as needed and assisted in technical support and visual/print media support.</li>
+                    <li>Taught workshops in 3D Printing, Raspberry Pi, and Arduino.</li>
+                </ul>
+                
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <span class="skill-tag">Teaching</span>
+                    <span class="skill-tag">Technical Support</span>
+                </div>
+            </div>
+
+        </div> <!-- /#experience-list --></main>
+
+    <!-- Footer --><footer class="bg-gray-800 text-white mt-16">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm">Relocating to Denver, CO | Seeking Cloud/DevSecOps Roles</p>
+            <div class="mt-2 space-x-4">
+                <a href="mailto:shayleeczech@gmail.com" class="text-gray-400 hover:text-white">Email</a>
+                <span class="text-gray-600">|</span>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-400 hover:text-white">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Filtering --><script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterContainer = document.getElementById('filter-container');
+            const jobCards = document.querySelectorAll('.job-card');
+            
+            if (!filterContainer) return;
+
+            filterContainer.addEventListener('click', (e) => {
+                const targetButton = e.target.closest('button.filter-btn');
+                if (!targetButton) return;
+
+                const filter = targetButton.dataset.filter;
+
+                // Update active button state
+                filterContainer.querySelector('.filter-btn.active').classList.remove('active');
+                targetButton.classList.add('active');
+
+                // Filter job cards
+                jobCards.forEach(card => {
+                    const tags = card.dataset.tags;
+                    if (filter === 'all' || (tags && tags.includes(filter))) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
+
