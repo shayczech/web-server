@@ -37,14 +37,14 @@ jobs:
         id: apply
         run: terraform apply -auto-approve
         working-directory: infra/
-        
+
       - name: Get EC2 Public IP from Terraform Output
         id: get_ip
         run: |
           # The output name MUST match the output in your outputs.tf file
           EC2_IP=$(terraform output -raw instance_public_ip)
           echo "EC2_IP=$EC2_IP" >> $GITHUB_ENV
-
+        working-directory: infra/
 
       # --- PHASE 2: Ansible (Configuration Management) ---
       - name: Setup SSH Key for Ansible
