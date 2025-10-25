@@ -48,12 +48,13 @@ jobs:
 
 # --- PHASE 2: Ansible (Configuration Management) ---
 
-      - name: Start SSH Agent and Load Key
-        uses: webfactory/ssh-agent@v0.9.1
-        with:
-          # This secret contains the private key AND the passphrase
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+      - name: Setup SSH Key for Ansible (No Passphrase)
+        run: |
+          mkdir -p ~/.ssh
+          # Write the private key content from the GitHub Secret to a file
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa_runner
+          chmod 600 ~/.ssh/id_rsa_runner
+
       - name: Install Ansible
         run: |
           pip install ansible
@@ -74,5 +75,5 @@ jobs:
 
       - name: Run Ansible Playbook (Docker/Nginx Configuration)
         run: |
-          ansible-playbook -i inventory.ini deploy_nginx.yml
+          ansible-playbook -i inventory.ini deploy_nginx.yml --private-key ~/.ssh/id_rsa_runner
         working-directory: ansible/
