@@ -9,3 +9,13 @@ crash.*.log
 .DS_Store
 Thumbs.db
 *.tfstate.backup
+*.pem
+*.key
+new-secure-key
+new-secure-key.pub
+node_modules/
+pycache/
+*.pyc
+.env
+.DS_Store
+ansible.cfg
