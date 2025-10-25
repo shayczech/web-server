@@ -13,12 +13,14 @@ body {
     animation: fadeIn 0.8s ease-in-out forwards;
 }
 
-/* 2. Expertise Card Styling */
+/* 2. Expertise Card Styling - UPDATED */
 .expertise-card {
-    @apply bg-gray-50 p-6 rounded-xl shadow-md border border-gray-200 transition-all duration-300 hover:shadow-lg hover:border-primary-green-300 hover:-translate-y-1;
+    /* Increased padding slightly (p-8 instead of p-6) */
+    @apply bg-gray-50 p-8 rounded-xl shadow-md border border-gray-200 transition-all duration-300 hover:shadow-xl hover:border-primary-green-300 hover:-translate-y-1.5; 
 }
 .card-icon-wrapper {
-    @apply h-12 w-12 flex items-center justify-center rounded-full bg-primary-green-100 text-primary-green-700 font-bold text-lg mb-4;
+    /* Added subtle gradient */
+    @apply h-14 w-14 flex items-center justify-center rounded-full bg-gradient-to-br from-primary-green-100 to-primary-green-200 text-primary-green-700 font-bold text-xl mb-5 shadow-sm; 
 }
 .card-title {
     @apply text-xl font-bold text-gray-900 mb-3;
@@ -54,4 +56,3 @@ body {
 .stat-label {
     @apply text-sm font-medium text-primary-green-200 uppercase tracking-wider mt-2;
 }
-
