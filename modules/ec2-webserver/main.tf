@@ -1,4 +1,6 @@
-
+provider "aws" {
+  region = "us-east-2" # <<< MUST MATCH YOUR CONFIGURED REGION
+}
 # 1. Define the Security Group (The Firewall)
 # This now opens SSH (port 22) AND HTTP (port 80)
 resource "aws_security_group" "allow_web" {
