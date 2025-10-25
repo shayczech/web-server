@@ -71,7 +71,8 @@
 
     - name: 8. Run Certbot to obtain SSL certificate (The crucial step)
       ansible.builtin.shell: |
-        certbot certonly --webroot -w /app/html -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
+        # Use --nginx plugin which handles temporary serving and cleanup
+        certbot certonly --nginx -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
       args:
         chdir: /etc/nginx 
       become: yes
