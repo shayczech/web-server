@@ -33,7 +33,7 @@
 
     # --- 2. DEPLOY CONTENT AND PREPARE HOST DIRECTORIES ---
 
-    - name: 4. Create required directories (Including new /app/api for stats microservice)
+    - name: 4. Create required directories
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -43,59 +43,40 @@
       loop:
         - /app/html
         - /app/config
-        - /app/api # NEW: Directory for Node.js API files
-        - /etc/letsencrypt/ # Only directories needed for static site + certs
-        - /root/.aws # Create AWS directory for credentials file
+        - /app/api # ADDED: Directory for Node.js API files
+        - /etc/letsencrypt/
+        - /root/.aws
       become: yes
 
     - name: 5. Place custom index.html (File copy from repo)
       ansible.builtin.copy:
-        src: index.html 
+        src: files/index.html 
         dest: /app/html/index.html
         owner: root
         group: root
         mode: '0644'
       notify: Restart Nginx Container
       become: yes
-
+      
     - name: 5b. Copy all aesthetic assets (CSS, Images, JS)
       ansible.builtin.copy:
-        src: assets/
+        src: files/assets/
         dest: /app/html/
         owner: root
         group: root
         mode: '0755'
       notify: Restart Nginx Container
       become: yes
-      
-    # NEW BLOCK: Deploy and Start Stats API Service
-    - name: 5c. Copy Stats API files and Dockerfile to /app/api
+
+    - name: 5c. Copy Node.js API files (server.js, package.json, Dockerfile)
       ansible.builtin.copy:
-        src: api/
+        src: files/api/
         dest: /app/api/
         owner: root
         group: root
-        mode: '0644' # Files will be 0644, directories will be 0755
+        mode: '0755'
       become: yes
-      
-    - name: 5d. Build and start Stats API container
-      community.docker.docker_container:
-        name: stats-api
-        image: stats-api:latest
-        state: started
-        restart_policy: always
-        # We need the build_context and path to the Dockerfile
-        build:
-          path: /app/api
-          dockerfile: Dockerfile
-        volumes:
-          # Mount the source code directory to allow live changes (optional, but good for dev)
-          - /app/api:/usr/src/app
-        # CRITICAL: Use host network mode so Nginx (and client JS) can talk to it via localhost:3000
-        network_mode: "host" 
-        recreate: true
-      become: yes
-    # END NEW BLOCK
+
 
     # --- 3. TEMPORARY CREDENTIALS FILE ---
     - name: 6. Create temporary AWS credentials file for Certbot
@@ -127,17 +108,36 @@
       register: certbot_result
       become: yes
 
-    - name: 7b. Remove temporary AWS credentials file (SECURITY CRITICAL)
-      ansible.builtin.file:
-        path: /root/.aws/credentials
-        state: absent
+
+    # --- 4. DEPLOY API CONTAINER (New Step) ---
+    
+    - name: 5d. Build Stats API image
+      community.docker.docker_image:
+        name: stats-api
+        tag: latest
+        source: build
+        build:
+          path: /app/api/ # Use files copied to the host machine
+          pull: yes
+        state: present
+        force_tag: yes
       become: yes
 
-    # --- 4. DEPLOY SSL CONFIG AND START CONTAINERS ---
+    - name: 5e. Start Stats API container
+      community.docker.docker_container:
+        name: stats-api
+        image: stats-api:latest # Use the image built in the previous step
+        state: started
+        restart_policy: always
+        network_mode: "host" # Shares host network so Nginx can proxy via localhost:3000
+        recreate: true
+      become: yes
+
+    # --- 5. DEPLOY NGINX AND CLEANUP ---
 
     - name: 8. Deploy Nginx SSL Configuration File
       ansible.builtin.copy:
-        src: nginx_ssl.conf
+        src: files/nginx_ssl.conf
         dest: /app/config/nginx.conf
         owner: root
         group: root
@@ -149,7 +149,6 @@
       ansible.builtin.shell: |
         fuser -k -n tcp 80 || true # Forcefully kill any process using TCP Port 80
         fuser -k -n tcp 443 || true # ADDED: Ensure 443 is clear
-        fuser -k -n tcp 3000 || true # NEW: Clear port 3000 for stats API
         systemctl restart docker || true # Force restart to clear lingering network bindings
         sleep 10
       become: yes
@@ -168,6 +167,12 @@
         network_mode: "host" # <<< CRITICAL FIX: Use host network stack
         recreate: true
       become: yes
+      
+    - name: 11. Remove temporary AWS credentials file (SECURITY CRITICAL)
+      ansible.builtin.file:
+        path: /root/.aws/credentials
+        state: absent
+      become: yes
 
   # --- HANDLERS ---
   handlers:
@@ -181,6 +186,6 @@
           - /app/html:/usr/share/nginx/html:ro
           - /etc/letsencrypt:/etc/letsencrypt:ro
           - /app/config/nginx.conf:/etc/nginx/conf.d/default.conf:ro # CRITICAL FIX: Mount config file
-        network_mode: "host" # <<< CRITICAL FIX: Use host network stack
+        network_mode: "host"
         recreate: true
       become: yes

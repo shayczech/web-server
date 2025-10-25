@@ -12,7 +12,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shaylee Czech | DevSecOps & Cloud Engineering</title>
     
-    <!-- Custom Tailwind Configuration (Green Theme) MUST BE IN A SCRIPT TAG -->
+    <!-- Load Tailwind CSS (MUST load first) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Tailwind Configuration (Green Theme) (MUST load second) -->
     <script>
         tailwind.config = {
             theme: {
@@ -24,9 +27,6 @@
             }
         }
     </script>
-
-    <!-- Load Tailwind CSS (This must load AFTER the config script) -->
-    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Use Inter font family -->
     <style>
@@ -63,7 +63,7 @@
                 <div class="max-w-4xl mx-auto">
                     <p class="text-emerald-300 font-semibold uppercase tracking-wider mb-3">Cloud Engineering | DevSecOps | CISSP Candidate</p>
                     <h2 class="text-5xl sm:text-6xl font-extrabold mb-6 leading-tight">
-                        I build and secure highly automated cloud infrastructure.
+                        Securing and automating cloud infrastructure for compliance and scale.
                     </h2>
                     <p class="text-xl text-emerald-200 mb-8 font-light">
                         Leveraging a strong foundation in Database Administration, Systems Engineering, and Automation, I focus on repeatable, compliant (NIST/CIS), and scalable cloud solutions.
@@ -222,9 +222,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const fetchStats = async () => {
-                // CRITICAL FIX: Change from insecure 'http://localhost:3000' to secure, relative path
-                // Nginx will intercept '/api/stats' and proxy it internally to http://localhost:3000
-                const apiEndpoint = '/api/stats'; 
+                // FIXED: Use window.location.origin to ensure a fully qualified URL for fetch
+                const apiEndpoint = window.location.origin + '/api/stats'; 
                 let data = null;
 
                 try {
