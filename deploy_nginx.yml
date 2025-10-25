@@ -10,13 +10,13 @@
         name: 
           - certbot
           - python3-certbot-nginx 
-          - python3-certbot-dns-route53 # DNS PLUGIN
-          - nginx # Added Nginx to the host for certbot plugin
+          - python3-certbot-dns-route53 
+          - nginx 
           - ca-certificates
           - curl
           - gnupg
           - python3-pip
-          - lsof
+          - lsof # ADDED LSOF FOR DIAGNOSTICS
         state: present
         update_cache: yes
       become: yes
@@ -25,7 +25,7 @@
       ansible.builtin.systemd:
         name: nginx
         state: stopped
-        enabled: no # This is critical: prevents automatic restart
+        enabled: no 
       become: yes
       ignore_errors: yes
 
@@ -71,7 +71,7 @@
       notify: Restart Nginx Container
       become: yes
 
-    # --- 3. TEMPORARY CREDENTIALS FILE (THE FINAL FIX) ---
+    # --- 3. TEMPORARY CREDENTIALS FILE ---
     - name: 8. Create temporary AWS credentials file for Certbot
       ansible.builtin.copy:
         content: |
@@ -113,33 +113,13 @@
       notify: Restart Nginx Container
       become: yes
 
-    - name: 11. DIAGNOSTIC & AGGRESSIVE PORT CLEANUP (Final Attempt)
+    - name: 11. Final Aggressive Port Cleanup Before Container Start
       ansible.builtin.shell: |
-        echo "--- AGGRESSIVE PORT 80 CLEANUP & DIAGNOSTIC ---"
-        
-        # 1. Kill any process holding port 80 and print the output
-        fuser -k -n tcp 80 || true
-        
-        # 2. Check if anything is STILL holding the port after fuser
-        LSOF_OUTPUT=$(lsof -i :80 -t || true)
-        if [ -z "$LSOF_OUTPUT" ]; then
-          echo "SUCCESS: Port 80 is free."
-        else
-          echo "FAILURE: Processes still found holding port 80."
-          for pid in $LSOF_OUTPUT; do
-            ps -fp $pid
-          done
-        fi
-        
-        # 3. Restart Docker (Clears lingering bindings)
-        systemctl restart docker || true
-        
-        # 4. Final safety sleep
-        sleep 5
-        echo "--- END CLEANUP ---"
-      register: final_cleanup_result
-      changed_when: true
+        fuser -k -n tcp 80 || true # Forcefully kill any process using TCP Port 80
+        systemctl restart docker || true # Force restart to clear lingering network bindings
+        sleep 10 # INCREASED TO 10 SECONDS
       become: yes
+      ignore_errors: yes
 
     - name: 12. Start Final Nginx Container with SSL
       community.docker.docker_container:
@@ -147,14 +127,12 @@
         image: nginx:latest
         state: started
         restart_policy: always
-        published_ports:
-          - "80:80"
-          - "443:443"
+        # DELETED: published_ports: [- "80:80", - "443:443"]
         volumes:
           - /app/html:/usr/share/nginx/html:ro
           - /etc/letsencrypt:/etc/letsencrypt:ro
-        networks:
-          - name: proxy_net
+        # DELETED: networks: [ - name: proxy_net ]
+        network_mode: "host" # <<< CRITICAL FIX: Use host network stack
         recreate: true
       become: yes
 
@@ -166,13 +144,11 @@
         image: nginx:latest
         state: started
         restart_policy: always
-        published_ports:
-          - "80:80"
-          - "443:443"
+        # DELETED: published_ports: [- "80:80", - "443:443"]
         volumes:
           - /app/html:/usr/share/nginx/html:ro
           - /etc/letsencrypt:/etc/letsencrypt:ro
-        networks:
-          - name: proxy_net
+        # DELETED: networks: [ - name: proxy_net ]
+        network_mode: "host" # <<< CRITICAL FIX: Use host network stack
         recreate: true
       become: yes
