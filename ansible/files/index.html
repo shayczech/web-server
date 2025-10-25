@@ -58,7 +58,7 @@
                 <!-- NOTE: These are now absolute links to work from resume.html -->
                 <a href="index.html#about" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">About</a>
                 <a href="index.html#skills" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Expertise</a>
-                <a href="index.html#projects" class="text-gray-600 hover:text-primary-green-600 transition duration-3aws-actions/configure-aws-credentials@v4-300 font-medium">Projects</a>
+                <a href="index.html#projects" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Projects</a>
                 <a href="resume.html" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Resume</a>
                 <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">LinkedIn</a>
             </nav>
@@ -258,7 +258,7 @@
                     // Set fallback text on error
                     document.getElementById('commits-count').textContent = 'N/A';
                     document.getElementById('resources-count').textContent = 'N/A';
-S
+                    // ERROR WAS HERE: A stray 'S' was causing a SyntaxError
                     const scoreEl = document.getElementById('security-score');
                     scoreEl.textContent = 'N/A';
                     scoreEl.classList.add('text-gray-400');
@@ -272,4 +272,3 @@ S
 
 </body>
 </html>
-
