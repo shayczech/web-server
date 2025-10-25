@@ -1,7 +1,7 @@
 <!--
-  DevSecOps Portfolio Landing Page
-  Demonstrates clean, responsive design suitable for a technical portfolio.
-  Uses Tailwind CSS for quick, modern styling.
+  DevSecOps Portfolio Landing Page - Merged Template
+  Incorporates the clean styling/structure of the new template with the detailed
+  content and focused sections from the existing portfolio page.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -11,23 +11,28 @@
     <title>Shaylee Czech | DevSecOps & Cloud Engineering</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Use Inter font family -->
+    <!-- Link to your custom styles and font -->
+    <link rel="stylesheet" href="assets/css/style.css"> 
     <style>
+        /* Use Inter font family via local embed for fast loading */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
+        :root {
             font-family: 'Inter', sans-serif;
-            background-color: #f7fafc; /* Light gray background */
+        }
+        /* Ensure the main background color is set */
+        .bg-page-light {
+            background-color: #f7fafc; 
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased">
+<body class="bg-page-light min-h-screen flex flex-col antialiased">
 
-    <!-- Header & Navigation -->
+    <!-- Header & Navigation (Sticky for easy access) -->
     <header class="bg-white shadow-lg sticky top-0 z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <h1 class="text-2xl font-extrabold text-indigo-700 tracking-tight">Shaylee Czech</h1>
             <nav class="hidden md:flex space-x-8">
-                <a href="#about" class="text-gray-600 hover:text-indigo-600 transition duration-300 font-medium">About</a>
+                <a href="#hero" class="text-gray-600 hover:text-indigo-600 transition duration-300 font-medium">Home</a>
                 <a href="#skills" class="text-gray-600 hover:text-indigo-600 transition duration-300 font-medium">Expertise</a>
                 <a href="#projects" class="text-gray-600 hover:text-indigo-600 transition duration-300 font-medium">Projects</a>
                 <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-600 hover:text-indigo-600 transition duration-300 font-medium">LinkedIn</a>
@@ -38,7 +43,7 @@
     <!-- Main Content -->
     <main class="flex-grow">
         
-        <!-- Hero Section -->
+        <!-- Hero Section (Retained strong DevSecOps messaging) -->
         <section id="hero" class="bg-indigo-700 text-white py-20 sm:py-32">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div class="max-w-3xl mx-auto">
@@ -56,7 +61,7 @@
             </div>
         </section>
 
-        <!-- Expertise Section -->
+        <!-- Expertise Section (Copied from uploaded:index.html) -->
         <section id="skills" class="py-16 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h3 class="text-3xl font-extrabold text-gray-900 mb-10 text-center">Core Technical Expertise</h3>
@@ -99,7 +104,7 @@
             </div>
         </section>
 
-        <!-- Project Spotlight Section -->
+        <!-- Project Spotlight Section (Copied from uploaded:index.html) -->
         <section id="projects" class="py-16 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h3 class="text-3xl font-extrabold text-gray-900 mb-10 text-center">Project Spotlight: CI/CD Pipeline</h3>
@@ -141,12 +146,18 @@
                         </a>
                     </div>
                 </div>
+                
+                <!-- Placeholder for future projects -->
+                <div class="mt-10 text-center text-gray-600 p-6 rounded-xl border border-dashed border-gray-300">
+                    <p class="font-semibold">Future Projects Placeholder:</p>
+                    <p class="text-sm mt-1">Next up: Kubernetes (EKS) Cluster Deployment and Monitoring.</p>
+                </div>
             </div>
         </section>
 
     </main>
 
-    <!-- Footer -->
+    <!-- Footer (Used the simpler footer from the existing file) -->
     <footer class="bg-gray-800 text-white">
         <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
             <p class="text-sm">Relocating to Denver, CO | Seeking Cloud/DevSecOps Roles</p>
