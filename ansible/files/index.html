@@ -3,7 +3,7 @@
   Demonstrates clean, responsive design suitable for a technical portfolio.
   Uses Tailwind CSS for quick, modern styling.
   
-  NOTE TO MODEL: DO NOT reintroduce Markdown-style bolding (**) into the content.
+  DEVELOPER NOTE: Do not use Markdown ** or ** for bolding. Use <strong> or Tailwind classes like font-bold.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -13,41 +13,31 @@
     <title>Shaylee Czech | DevSecOps & Cloud Engineering</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
+    <!-- Use Inter font family -->
+    <style>
+        /* Custom Tailwind Configuration (Green Theme) */
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        // PRIMARY COLOR CHANGED FROM INDIGO TO EMERALD GREEN
-                        'primary-green': '#059669', /* Tailwind emerald-600 */
-                        'secondary-gray': '#F9FAFB',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        'primary-green': '#059669', /* emerald-600 */
                     },
                 }
             }
         }
-    </script>
-    <!-- Use Inter font family -->
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7fafc;
-        }
     </style>
-    <!-- Link to your custom style.css for minor overrides or animations -->
-    <link rel="stylesheet" href="assets/css/style.css"> 
+    <!-- Custom CSS for fade-in and badge styling -->
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="min-h-screen flex flex-col antialiased">
 
     <!-- Header & Navigation -->
-    <header class="bg-white shadow-md sticky top-0 z-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+    <header class="bg-white shadow-lg sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <h1 class="text-2xl font-extrabold text-primary-green tracking-tight">Shaylee Czech</h1>
-            <nav class="hidden md:flex space-x-6">
+            <nav class="hidden md:flex space-x-8">
                 <a href="#skills" class="text-gray-600 hover:text-primary-green transition duration-300 font-medium">Expertise</a>
+                <a href="#stats" class="text-gray-600 hover:text-primary-green transition duration-300 font-medium">Metrics</a>
                 <a href="#projects" class="text-gray-600 hover:text-primary-green transition duration-300 font-medium">Projects</a>
                 <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-600 hover:text-primary-green transition duration-300 font-medium">LinkedIn</a>
             </nav>
@@ -58,84 +48,96 @@
     <main class="flex-grow">
         
         <!-- Hero Section -->
-        <section id="hero" class="bg-primary-green text-white py-24 sm:py-40">
+        <section id="hero" class="bg-primary-green text-white py-20 sm:py-32">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div class="max-w-4xl mx-auto">
-                    <p class="text-emerald-300 font-semibold uppercase tracking-widest mb-4 text-sm">Cloud Engineering | DevSecOps | GRC Focused</p>
-                    <h2 class="text-5xl sm:text-7xl font-extrabold mb-8 leading-tight">
+                    <p class="text-emerald-300 font-semibold uppercase tracking-wider mb-3">Cloud Engineering | DevSecOps | CISSP Candidate</p>
+                    <h2 class="text-5xl sm:text-6xl font-extrabold mb-6 leading-tight">
                         I build and secure highly automated cloud infrastructure.
                     </h2>
-                    <p class="text-xl text-emerald-100 mb-12 max-w-3xl mx-auto">
-                        Leveraging Database Administration, Systems Engineering, and Automation, I deliver repeatable, compliant (NIST/CIS), and scalable cloud solutions.
+                    <p class="text-xl text-emerald-200 mb-8 font-light">
+                        Leveraging a strong foundation in Database Administration, Systems Engineering, and Automation, I focus on repeatable, compliant (NIST/CIS), and scalable cloud solutions.
                     </p>
-                    <a href="#projects" class="inline-flex items-center justify-center px-12 py-4 border border-transparent text-lg font-bold rounded-full shadow-xl text-primary-green bg-white hover:bg-gray-100 transition duration-300 transform hover:scale-105">
-                        View Automated Pipeline →
+                    <a href="#projects" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-primary-green bg-white hover:bg-gray-100 transition duration-300 transform hover:scale-105">
+                        View Automated Pipeline
                     </a>
                 </div>
             </div>
         </section>
-        
-        <!-- Live Stats Section -->
-        <section id="stats" class="bg-white py-12 shadow-inner">
+
+        <!-- Dynamic Stats Section -->
+        <section id="stats" class="py-12 bg-gray-50 border-b border-gray-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-wrap justify-center gap-4 sm:gap-8">
+                <h3 class="text-2xl font-extrabold text-gray-800 mb-8 text-center">Live Operational Metrics</h3>
+                
+                <div id="stats-container" class="grid grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-8 justify-items-center">
                     
                     <!-- Stat 1: Terraform Modules -->
-                    <div class="stat-badge bg-gray-100 text-gray-800 border border-gray-300">
-                        Terraform Modules: <span id="stat-terraform" class="font-bold text-primary-green">...</span>
+                    <div class="stat-badge flex flex-col items-center">
+                        <span id="stat-terraform" class="text-4xl font-extrabold text-gray-900 leading-none">...</span>
+                        <span class="text-xs font-semibold uppercase text-gray-500 mt-1">Terraform Modules</span>
                     </div>
 
                     <!-- Stat 2: Ansible Playbooks -->
-                    <div class="stat-badge bg-gray-100 text-gray-800 border border-gray-300">
-                        Ansible Playbooks: <span id="stat-ansible" class="font-bold text-primary-green">...</span>
+                    <div class="stat-badge flex flex-col items-center">
+                        <span id="stat-ansible" class="text-4xl font-extrabold text-gray-900 leading-none">...</span>
+                        <span class="text-xs font-semibold uppercase text-gray-500 mt-1">Ansible Playbooks</span>
                     </div>
 
                     <!-- Stat 3: Pipeline Runs -->
-                    <div class="stat-badge bg-gray-100 text-gray-800 border border-gray-300">
-                        CI/CD Runs: <span id="stat-ci-runs" class="font-bold text-primary-green">...</span>
+                    <div class="stat-badge flex flex-col items-center">
+                        <span id="stat-cicd" class="text-4xl font-extrabold text-gray-900 leading-none">...</span>
+                        <span class="text-xs font-semibold uppercase text-gray-500 mt-1">Total CI/CD Runs</span>
                     </div>
 
-                    <!-- Stat 4: Security Score (Mock) -->
-                    <div class="stat-badge bg-gray-100 text-gray-800 border border-gray-300">
-                        Security Score: <span id="stat-security" class="font-bold text-red-500">...</span>
+                    <!-- Stat 4: GitHub Commits (Dynamic API) -->
+                    <div class="stat-badge flex flex-col items-center">
+                        <span id="stat-commits" class="text-4xl font-extrabold text-primary-green leading-none">...</span>
+                        <span class="text-xs font-semibold uppercase text-primary-green mt-1">GitHub Commits</span>
                     </div>
 
+                    <!-- Stat 5: Security Score (Dynamic Color) -->
+                    <div class="stat-badge flex flex-col items-center">
+                        <span id="stat-security" class="text-4xl font-extrabold leading-none">...</span>
+                        <span class="text-xs font-semibold uppercase text-gray-500 mt-1">Compliance Score</span>
+                    </div>
                 </div>
             </div>
         </section>
-        
+
+
         <!-- Expertise Section -->
-        <section id="skills" class="py-20 bg-secondary-gray">
+        <section id="skills" class="py-16 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h3 class="text-4xl font-extrabold text-gray-900 mb-12 text-center">Core Technical Expertise</h3>
+                <h3 class="text-3xl font-extrabold text-gray-900 mb-10 text-center">Core Technical Expertise</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     
-                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 transform hover:shadow-2xl hover:scale-[1.02] transition duration-300">
-                        <div class="text-primary-green mb-4 text-4xl font-extrabold">CM</div>
-                        <h4 class="text-2xl font-bold text-gray-900 mb-3">DevSecOps & Automation</h4>
-                        <ul class="text-gray-700 space-y-2 text-base">
+                    <div class="bg-gray-50 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border border-emerald-200/50">
+                        <div class="text-primary-green mb-3 text-3xl font-bold">CM</div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-3">DevSecOps & Automation</h4>
+                        <ul class="text-gray-600 space-y-2 list-disc list-inside">
                             <li>IaC: Terraform, AWS (EC2, S3, EIP)</li>
                             <li>Config Mgmt: Ansible Playbooks, Handlers</li>
-                            <li>CI/CD: GitHub Actions, Automation Scripts</li>
+                            <li>CI/CD: GitHub Actions</li>
                             <li>Scripting: Python, Bash, SQL, PowerShell</li>
                         </ul>
                     </div>
 
-                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 transform hover:shadow-2xl hover:scale-[1.02] transition duration-300">
-                        <div class="text-primary-green mb-4 text-4xl font-extrabold">GRC</div>
-                        <h4 class="text-2xl font-bold text-gray-900 mb-3">Security & Compliance (GRC)</h4>
-                        <ul class="text-gray-700 space-y-2 text-base">
-                            <li>CISSP Preparation (Nov '25 Target)</li>
+                    <div class="bg-gray-50 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border border-emerald-200/50">
+                        <div class="text-primary-green mb-3 text-3xl font-bold">GRC</div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-3">Security & Compliance (GRC)</h4>
+                        <ul class="text-gray-600 space-y-2 list-disc list-inside">
+                            <li>CISSP Preparation (Nov '25)</li>
                             <li>NIST/CIS Benchmarks, HIPAA, ITAR</li>
                             <li>Endpoint Security (SentinelOne, Huntress)</li>
                             <li>Identity & Access (Entra ID, Okta, IAM)</li>
                         </ul>
                     </div>
 
-                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 transform hover:shadow-2xl hover:scale-[1.02] transition duration-300">
-                        <div class="text-primary-green mb-4 text-4xl font-extrabold">ARCH</div>
-                        <h4 class="text-2xl font-bold text-gray-900 mb-3">System Architecture</h4>
-                        <ul class="text-gray-700 space-y-2 text-base">
+                    <div class="bg-gray-50 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border border-emerald-200/50">
+                        <div class="text-primary-green mb-3 text-3xl font-bold">ARCH</div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-3">System Architecture</h4>
+                        <ul class="text-gray-600 space-y-2 list-disc list-inside">
                             <li>Database Security (Oracle, SQL Server)</li>
                             <li>Virtualization (Hyper-V, VMware)</li>
                             <li>Networking (SD-WAN, Firewall Mgmt)</li>
@@ -148,54 +150,44 @@
         </section>
 
         <!-- Project Spotlight Section -->
-        <section id="projects" class="py-20 bg-white">
+        <section id="projects" class="py-16 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h3 class="text-4xl font-extrabold text-gray-900 mb-12 text-center">Project Spotlight: CI/CD Pipeline</h3>
+                <h3 class="text-3xl font-extrabold text-gray-900 mb-10 text-center">Project Spotlight: CI/CD Pipeline</h3>
                 
-                <div class="bg-secondary-gray p-8 md:p-16 rounded-3xl shadow-2xl border-t-8 border-primary-green/70">
-                    <p class="text-lg font-semibold text-primary-green uppercase tracking-wider mb-3">The Infrastructure as Code Stack</p>
-                    <h4 class="text-3xl font-bold text-gray-900 mb-6">Fully Automated Terraform + Ansible DevSecOps Deployment</h4>
+                <div class="bg-white p-6 md:p-10 rounded-xl shadow-2xl hover:shadow-3xl transition duration-500 border-t-4 border-primary-green">
+                    <p class="text-sm font-semibold text-primary-green uppercase tracking-wider mb-2">Deployed via GitHub Actions</p>
+                    <h4 class="text-2xl font-bold text-gray-900 mb-4">Terraform + Ansible DevSecOps Stack</h4>
                     
-                    <p class="text-gray-700 text-xl mb-10 max-w-5xl mx-auto">
-                        This site is running inside a Docker container on an AWS EC2 instance, managed end-to-end by the pipeline described below. Every update you see is a result of a Git push triggering a secure, auditable, and repeatable process.
+                    <p class="text-gray-700 mb-6">
+                        This site is running inside a Docker container on an AWS EC2 instance. The entire deployment process—from infrastructure creation to content update—is fully automated via a CI/CD pipeline.
                     </p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-800">
-                        
-                        <!-- Feature 1: IaC -->
-                        <div class="p-4 border border-gray-300 rounded-lg bg-white shadow-sm">
-                            <span class="font-bold text-primary-green text-xl mb-1 block">1. Terraform (IaC)</span>
-                            <ul class="space-y-1 text-sm list-none pl-0">
-                                <li class="flex items-start"><span class="text-emerald-500 mr-2">✓</span> Manages EC2, EIP, and Security Group.</li>
-                                <li class="flex items-start"><span class="text-emerald-500 mr-2">✓</span> S3 Remote State for concurrency control.</li>
-                                <li class="flex items-start"><span class="text-emerald-500 mr-2">✓</span> Outputs public IP used by Ansible.</li>
-                            </ul>
-                        </div>
-                        
-                        <!-- Feature 2: Config Management -->
-                        <div class="p-4 border border-gray-300 rounded-lg bg-white shadow-sm">
-                            <span class="font-bold text-primary-green text-xl mb-1 block">2. Ansible (CM)</span>
-                            <ul class="space-y-1 text-sm list-none pl-0">
-                                <li class="flex items-start"><span class="text-emerald-500 mr-2">✓</span> Installs Docker and cleans up old services.</li>
-                                <li class="flex items-start"><span class="text-emerald-500 mr-2">✓</span> Acquires and renews SSL Certs (Certbot/Route53).</li>
-                                <li class="flex items-start"><span class="text-emerald-500 mr-2">✓</span> Deploys Nginx container via Host Network mode.</li>
-                            </ul>
-                        </div>
-                        
-                        <!-- Feature 3: CI/CD & Security -->
-                        <div class="p-4 border border-gray-300 rounded-lg bg-white shadow-sm">
-                            <span class="font-bold text-primary-green text-xl mb-1 block">3. CI/CD & Security</span>
-                            <ul class="space-y-1 text-sm list-none pl-0">
-                                <li class="flex items-start"><span class="text-emerald-500 mr-2">✓</span> GitHub Actions orchestrates plan/apply/config.</li>
-                                <li class="flex items-start"><span class="text-emerald-500 mr-2">✓</span> Credentials secured via GitHub Secrets.</li>
-                                <li class="flex items-start"><span class="text-emerald-500 mr-2">✓</span> Least Privilege IAM policies used throughout.</li>
-                            </ul>
-                        </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 text-gray-700">
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-primary-green mr-2 text-xl">✓</span>
+                                <span class="font-medium">Terraform IaC: Manages EC2, EIP, and Security Group (S3 Remote State).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-primary-green mr-2 text-xl">✓</span>
+                                <span class="font-medium">Ansible: Installs Docker, copies content, and forces Nginx restart using Handlers.</span>
+                            </li>
+                        </ul>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-primary-green mr-2 text-xl">✓</span>
+                                <span class="font-medium">GitHub Actions: Orchestrates the entire plan/apply/config cycle.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-primary-green mr-2 text-xl">✓</span>
+                                <span class="font-medium">Security: Uses GitHub Secrets and IAM Least Privilege policies.</span>
+                            </li>
+                        </ul>
                     </div>
                     
-                    <div class="mt-12 text-center">
-                        <a href="https://github.com/shayczech/web-server" target="_blank" class="inline-flex items-center px-10 py-4 border border-transparent text-lg font-bold rounded-full shadow-lg text-white bg-primary-green hover:bg-emerald-700 transition duration-300 transform hover:scale-105">
-                            View Pipeline Source Code →
+                    <div class="mt-8">
+                        <a href="https://github.com/shayczech/web-server" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-primary-green hover:bg-emerald-700 transition duration-300">
+                            View Source Code (The Pipeline) →
                         </a>
                     </div>
                 </div>
@@ -203,51 +195,87 @@
         </section>
 
     </main>
-    
-    <!-- JavaScript for Dynamic Stats -->
-    <script>
-        function updateStats() {
-            // Mock Data Source: In a real application, this would be an API fetch 
-            // from GitHub, AWS CloudWatch, or a custom statistics backend.
-            const statsData = {
-                terraformModules: 5,
-                ansiblePlaybooks: 8,
-                ciCdRuns: 105,
-                securityScore: 92, // Mocked BSLab A score
-            };
 
-            // Injecting Data into the DOM
-            document.getElementById('stat-terraform').textContent = statsData.terraformModules;
-            document.getElementById('stat-ansible').textContent = statsData.ansiblePlaybooks;
-            document.getElementById('stat-ci-runs').textContent = statsData.ciCdRuns + '+';
-            
-            const securitySpan = document.getElementById('stat-security');
-            securitySpan.textContent = statsData.securityScore + '%';
-            
-            // Apply color logic based on the mock score
-            if (statsData.securityScore >= 90) {
-                // Change to green/primary color for A score
-                securitySpan.classList.remove('text-red-500');
-                securitySpan.classList.add('text-primary-green');
-            }
-            // You could add logic here for yellow or red ranges
-        }
-
-        // Run the function when the page loads
-        document.addEventListener('DOMContentLoaded', updateStats);
-    </script>
-    
     <!-- Footer -->
     <footer class="bg-gray-800 text-white">
         <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
             <p class="text-sm">Relocating to Denver, CO | Seeking Cloud/DevSecOps Roles</p>
-            <div class="mt-3 space-x-6">
-                <a href="mailto:shayleeczech@gmail.com" class="text-gray-400 hover:text-white transition duration-300">Email</a>
+            <div class="mt-2 space-x-4">
+                <a href="mailto:shayleeczech@gmail.com" class="text-gray-400 hover:text-white">Email</a>
                 <span class="text-gray-600">|</span>
-                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-400 hover:text-white transition duration-300">LinkedIn</a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-400 hover:text-white">LinkedIn</a>
             </div>
         </div>
     </footer>
+
+    <!-- Client-Side JavaScript for Dynamic Stats -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fetchStats = async () => {
+                // CRITICAL FIX: Change from insecure 'http://localhost:3000' to secure, relative path
+                // Nginx will intercept '/api/stats' and proxy it internally to http://localhost:3000
+                const apiEndpoint = '/api/stats'; 
+                let data = null;
+
+                try {
+                    // Fetch data from the local API microservice
+                    const response = await fetch(apiEndpoint);
+                    
+                    if (!response.ok) {
+                        // Throw error to trigger fallback logic
+                        throw new Error(`API returned status ${response.status}. Check Nginx proxy_pass configuration.`);
+                    }
+                    
+                    data = await response.json();
+
+                } catch (error) {
+                    console.error('Error fetching dynamic stats:', error);
+                    // Fallback to static data if API fails or is unreachable
+                    data = {
+                        terraformModules: 4, 
+                        ansiblePlaybooks: 7,
+                        ciCdRuns: 110,
+                        securityScore: 85,
+                        githubCommits: 95
+                    };
+                }
+
+                // Function to update the DOM
+                const updateStat = (id, value, colorClass = 'text-gray-900') => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.textContent = value;
+                        el.classList.add(colorClass);
+                    }
+                };
+
+                // 1. Update general stats
+                updateStat('stat-terraform', data.terraformModules);
+                updateStat('stat-ansible', data.ansiblePlaybooks);
+                updateStat('stat-cicd', data.ciCdRuns);
+
+                // 2. Update GitHub Commits (Uses primary green color)
+                updateStat('stat-commits', data.githubCommits, 'text-primary-green');
+
+                // 3. Update Security Score with Dynamic Coloring
+                const securityScoreEl = document.getElementById('stat-security');
+                if (securityScoreEl) {
+                    let scoreColorClass = 'text-red-600'; // Default fail
+                    if (data.securityScore >= 90) {
+                        scoreColorClass = 'text-emerald-600'; // High score
+                    } else if (data.securityScore >= 80) {
+                        scoreColorClass = 'text-yellow-600'; // Warning
+                    }
+                    
+                    securityScoreEl.textContent = `${data.securityScore}%`;
+                    securityScoreEl.classList.add(scoreColorClass);
+                }
+
+            };
+
+            fetchStats();
+        });
+    </script>
 
 </body>
 </html>
