@@ -10,8 +10,9 @@
         name: 
           - certbot
           - python3-certbot-nginx 
-          - ca-certificates
           - python3-certbot-dns-route53 # DNS PLUGIN
+          - nginx # Added Nginx to the host for certbot plugin
+          - ca-certificates
           - curl
           - gnupg
           - python3-pip
@@ -38,7 +39,7 @@
 
     # --- 2. DEPLOY CONTENT AND PREPARE HOST DIRECTORIES ---
 
-    - name: 5. Create required HTML and SSL directories on host
+    - name: 5. Create required directories
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -46,10 +47,8 @@
         group: root
         mode: '0755'
       loop:
-        - /app/data
         - /app/html
-        - /etc/letsencrypt/live/shayleeczech.com # Directory for Certbot output
-        # Removed obsolete paths: /app/data, /app/mysql, /app/letsencrypt
+        - /etc/letsencrypt/live/shayleeczech.com # Only directories needed for static site + certs
       become: yes
 
     - name: 6. Place custom index.html (File copy from repo)
@@ -62,12 +61,12 @@
       notify: Restart Nginx Container
       become: yes
 
-# --- 3. RUN CERTBOT CHALLENGE (DNS METHOD) ---
+    # --- 3. RUN CERTBOT CHALLENGE (DNS METHOD) ---
 
     - name: 7. Run Certbot DNS Challenge to obtain SSL certificate
       ansible.builtin.shell: | # <<< FINAL RAW SHELL IMPLEMENTATION
         # Check if cert exists; if so, skip the whole script.
-        if [ -f /etc/letsencrypt/live/shayleeczech.com/fullchain.pem ]; then
+        if [ -f /etc/letsencrypt/live/shayleleeczech.com/fullchain.pem ]; then
           echo "Certificate already exists. Skipping acquisition."
           exit 0
         fi
@@ -79,6 +78,7 @@
       # REMOVED: args: timeout/creates
       become: yes
       # Removed complex failed_when: check. If Certbot fails (rc=1), the task will fail normally.
+
 
     # --- 4. DEPLOY SSL CONFIG AND START CONTAINERS ---
 
