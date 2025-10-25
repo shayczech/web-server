@@ -1,13 +1,162 @@
+<!--
+  DevSecOps Portfolio Landing Page
+  Demonstrates clean, responsive design suitable for a technical portfolio.
+  Uses Tailwind CSS for quick, modern styling.
+-->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Terraform & Docker Project</title>
-    <style> body { font-family: sans-serif; text-align: center; padding-top: 50px; } </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaylee Czech | DevSecOps & Cloud Engineering</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter font family -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc; /* Light gray background */
+        }
+    </style>
 </head>
-<body>
-    <h1>Deployed with Terraform & Docker!</h1>
-    <p>This page is served by Nginx running inside a Docker container on an AWS EC2 instance.</p>
-    <p>Infrastructure managed by Terraform.</p>
-    <p>Skills demonstrated: AWS, Terraform, Docker, Nginx, Git, Linux (Ubuntu)</p>
+<body class="min-h-screen flex flex-col antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-lg sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-extrabold text-indigo-700 tracking-tight">Shaylee Czech</h1>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#about" class="text-gray-600 hover:text-indigo-600 transition duration-300 font-medium">About</a>
+                <a href="#skills" class="text-gray-600 hover:text-indigo-600 transition duration-300 font-medium">Expertise</a>
+                <a href="#projects" class="text-gray-600 hover:text-indigo-600 transition duration-300 font-medium">Projects</a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-600 hover:text-indigo-600 transition duration-300 font-medium">LinkedIn</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        
+        <!-- Hero Section -->
+        <section id="hero" class="bg-indigo-700 text-white py-20 sm:py-32">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="max-w-3xl mx-auto">
+                    <p class="text-indigo-300 font-semibold uppercase tracking-wider mb-3">Cloud Engineering | DevSecOps | CISSP Candidate</p>
+                    <h2 class="text-5xl sm:text-6xl font-extrabold mb-6 leading-tight">
+                        I build and secure highly automated cloud infrastructure.
+                    </h2>
+                    <p class="text-xl text-indigo-200 mb-8">
+                        Leveraging a strong foundation in **Database Administration, Systems Engineering, and Automation**, I focus on repeatable, compliant (NIST/CIS), and scalable cloud solutions.
+                    </p>
+                    <a href="#projects" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-indigo-700 bg-white hover:bg-gray-100 transition duration-300 transform hover:scale-105">
+                        View Automated Pipeline
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expertise Section -->
+        <section id="skills" class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h3 class="text-3xl font-extrabold text-gray-900 mb-10 text-center">Core Technical Expertise</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    
+                    <div class="bg-gray-50 p-6 rounded-xl shadow-md border border-indigo-200/50">
+                        <div class="text-indigo-600 mb-3 text-3xl">🛠️</div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-3">DevSecOps & Automation</h4>
+                        <ul class="text-gray-600 space-y-2 list-disc list-inside">
+                            <li>**IaC:** Terraform, AWS (EC2, S3, EIP)</li>
+                            <li>**Config Mgmt:** Ansible Playbooks, Handlers</li>
+                            <li>**CI/CD:** GitHub Actions</li>
+                            <li>**Scripting:** Python, Bash, SQL, PowerShell</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-xl shadow-md border border-indigo-200/50">
+                        <div class="text-indigo-600 mb-3 text-3xl">🔒</div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-3">Security & Compliance (GRC)</h4>
+                        <ul class="text-gray-600 space-y-2 list-disc list-inside">
+                            <li>CISSP Preparation (Nov '25)</li>
+                            <li>NIST/CIS Benchmarks, HIPAA, ITAR</li>
+                            <li>Endpoint Security (SentinelOne, Huntress)</li>
+                            <li>Identity & Access (Entra ID, Okta, IAM)</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-xl shadow-md border border-indigo-200/50">
+                        <div class="text-indigo-600 mb-3 text-3xl">💻</div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-3">System Architecture</h4>
+                        <ul class="text-gray-600 space-y-2 list-disc list-inside">
+                            <li>Database Security (Oracle, SQL Server)</li>
+                            <li>Virtualization (Hyper-V, VMware)</li>
+                            <li>Networking (SD-WAN, Firewall Mgmt)</li>
+                            <li>DR/Backup (Veeam, Acronis, S3)</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Spotlight Section -->
+        <section id="projects" class="py-16 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h3 class="text-3xl font-extrabold text-gray-900 mb-10 text-center">Project Spotlight: CI/CD Pipeline</h3>
+                
+                <div class="bg-white p-6 md:p-10 rounded-xl shadow-2xl border-t-4 border-indigo-500">
+                    <p class="text-sm font-semibold text-indigo-600 uppercase tracking-wider mb-2">Deployed via GitHub Actions</p>
+                    <h4 class="text-2xl font-bold text-gray-900 mb-4">Terraform + Ansible DevSecOps Stack</h4>
+                    
+                    <p class="text-gray-700 mb-6">
+                        This site is running inside a Docker container on an AWS EC2 instance. The entire deployment process—from infrastructure creation to content update—is fully automated via a CI/CD pipeline.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 text-gray-700">
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2 text-xl">✓</span>
+                                <span class="font-medium">**Terraform IaC:** Manages EC2, EIP, and Security Group (S3 Remote State).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2 text-xl">✓</span>
+                                <span class="font-medium">**Ansible:** Installs Docker, copies content, and forces Nginx restart using **Handlers**.</span>
+                            </li>
+                        </ul>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2 text-xl">✓</span>
+                                <span class="font-medium">**GitHub Actions:** Orchestrates the entire plan/apply/config cycle.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2 text-xl">✓</span>
+                                <span class="font-medium">**Security:** Uses GitHub Secrets and IAM Least Privilege policies.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <a href="https://github.com/shayczech/web-server" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300">
+                            View Source Code (The Pipeline) →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm">Relocating to Denver, CO | Seeking Cloud/DevSecOps Roles ($125k+)</p>
+            <div class="mt-2 space-x-4">
+                <a href="mailto:shayleeczech@gmail.com" class="text-gray-400 hover:text-white">Email</a>
+                <span class="text-gray-600">|</span>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-400 hover:text-white">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>
