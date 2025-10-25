@@ -53,7 +53,7 @@ jobs:
         with:
           # This secret contains the private key AND the passphrase
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
       - name: Install Ansible
         run: |
           pip install ansible
