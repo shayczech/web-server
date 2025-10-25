@@ -64,15 +64,16 @@
 # --- 3. RUN CERTBOT CHALLENGE (DNS METHOD) ---
 
     - name: 7. Run Certbot DNS Challenge to obtain SSL certificate
-      ansible.builtin.shell: |
-        # Use DNS-01 Challenge, which does NOT require Port 80 to be open.
-        # It relies on the GitHub IAM Role having Route 53 permissions.
+      ansible.builtin.command: | # <<< CHANGED TO ansible.builtin.command
         certbot certonly --dns-route53 -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
+      # Note: We must also change 'chdir' to 'chdir' argument and set timeout
+      args:
+        chdir: /etc/nginx 
+        timeout: 300 # <<< ADDED SUPPORTED TIMEOUT HERE
       become: yes
       register: certbot_result
-      # The DNS challenge takes longer, so increase the timeout (default 30s is too fast)
-      args:
-        timeout: 300 
+      # Added 'creates' argument to prevent unnecessary re-runs
+      creates: /etc/letsencrypt/live/shayleeczech.com/fullchain.pem
       failed_when: certbot_result.rc != 0 and 'Certificate not yet due for renewal' not in certbot_result.stderr
 
     # --- 4. DEPLOY SSL CONFIG AND START CONTAINERS ---
