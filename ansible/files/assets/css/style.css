@@ -1,31 +1,57 @@
-/*
-  Custom Portfolio Styles
-  Used for small overrides, custom components, and animations that aren't easily done with Tailwind.
+/* Custom Portfolio Stylesheet
+  Supplements Tailwind CSS for animations and complex components.
 */
 
-/* 1. Global Fade-In Animation */
-/* Ensures a smooth, modern load experience */
-body {
-    animation: fadeIn 0.8s ease-in-out;
-}
+/* 1. Global Page Load Animation */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* 2. Style for the Dynamic Stat Badges */
-.stat-badge {
-    padding: 0.5rem 1rem; /* Tailwind p-2 px-4 */
-    border-radius: 9999px; /* Tailwind rounded-full */
-    font-size: 0.9rem; /* Tailwind text-sm */
-    font-weight: 500; /* Tailwind font-medium */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow */
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
+body {
+    /* Apply animation to all elements, staggered */
+    animation: fadeIn 0.8s ease-in-out forwards;
 }
 
-/* Highlight the number */
-.stat-badge span {
-    font-weight: 700; /* Tailwind font-bold */
+/* 2. Expertise Card Styling */
+.expertise-card {
+    @apply bg-gray-50 p-6 rounded-xl shadow-md border border-gray-200 transition-all duration-300 hover:shadow-lg hover:border-primary-green-300 hover:-translate-y-1;
 }
+.card-icon-wrapper {
+    @apply h-12 w-12 flex items-center justify-center rounded-full bg-primary-green-100 text-primary-green-700 font-bold text-lg mb-4;
+}
+.card-title {
+    @apply text-xl font-bold text-gray-900 mb-3;
+}
+.card-list {
+    @apply text-gray-600 space-y-2 list-disc list-inside;
+}
+
+
+/* 3. REFORMATTED Dynamic Stat Styling */
+.stat-item {
+    @apply flex flex-col items-center justify-center p-4;
+}
+
+.stat-value {
+    @apply text-5xl font-extrabold text-white;
+    /* Custom animation for numbers loading */
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Specific coloring for security score (applied by JS) */
+.stat-value.text-primary-green-300 {
+    color: #6EE7B7; /* Brighter green for 'A' score */
+}
+.stat-value.text-yellow-300 {
+    color: #FDE047; /* Yellow for 'B/C' score */
+}
+.stat-value.text-red-400 {
+    color: #F87171; /* Red for 'D/F' score */
+}
+
+
+.stat-label {
+    @apply text-sm font-medium text-primary-green-200 uppercase tracking-wider mt-2;
+}
+
