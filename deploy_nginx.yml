@@ -117,11 +117,11 @@
         volumes:
           - /app/html:/usr/share/nginx/html:ro
           - /etc/letsencrypt:/etc/letsencrypt:ro
-          - /app/config/nginx.conf:/etc/nginx/nginx.conf:ro # CRITICAL FIX: Mount config file
+          - /app/config/nginx.conf:/etc/nginx/conf.d/default.conf:ro # CRITICAL FIX: Mount config file
         network_mode: "host" # <<< CRITICAL FIX: Use host network stack
         recreate: true
       become: yes
-      
+
     - name: 11. Remove temporary AWS credentials file (SECURITY CRITICAL)
       ansible.builtin.file:
         path: /root/.aws/credentials
@@ -139,7 +139,7 @@
         volumes:
           - /app/html:/usr/share/nginx/html:ro
           - /etc/letsencrypt:/etc/letsencrypt:ro
-          - /app/config/nginx.conf:/etc/nginx/nginx.conf:ro # CRITICAL FIX: Mount config file
+          - /app/config/nginx.conf:/etc/nginx/conf.d/default.conf:ro # CRITICAL FIX: Mount config file
         network_mode: "host" # <<< CRITICAL FIX: Use host network stack
         recreate: true
       become: yes
