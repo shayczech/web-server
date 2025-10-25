@@ -214,15 +214,17 @@
                     const resourcesEl = document.getElementById('resources-count');
                     const scoreEl = document.getElementById('security-score');
 
-                    // Assumes API returns: { "commits": 142, "securityScore": 95, "resources": 5 }
-                    if (commitsEl && data.commits !== undefined) {
-                        commitsEl.textContent = data.commits;
+                    // UPDATED: Use 'data.githubCommits' from your API
+                    if (commitsEl && data.githubCommits !== undefined) {
+                        commitsEl.textContent = data.githubCommits;
                     }
-                    if (resourcesEl && data.resources !== undefined) {
-                        resourcesEl.textContent = data.resources;
+                    
+                    // UPDATED: Use 'data.terraformModules' from your API
+                    if (resourcesEl && data.terraformModules !== undefined) {
+                        resourcesEl.textContent = data.terraformModules;
                     }
 
-                    // Populate and colorize security score
+                    // Populate and colorize security score (This key is correct)
                     if (scoreEl && data.securityScore !== undefined) {
                         const score = data.securityScore;
                         scoreEl.textContent = `${score}%`;
