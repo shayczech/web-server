@@ -13,12 +13,6 @@ variable "key_name" {
   type        = string
 }
 
-variable "private_key_pem" {
-  description = "The content of the private key file for SSH access (used by provisioners)."
-  type        = string
-  sensitive   = true # Mark this as sensitive so Terraform doesn't log it
-}
-
 variable "index_html_path" {
   description = "The local path to the index.html file to be deployed."
   type        = string

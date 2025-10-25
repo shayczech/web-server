@@ -16,7 +16,6 @@ module "web_server" {
   ami_id          = var.ami_id                        # Pass the value from the root variables.tf
   instance_type   = var.instance_type                 # Pass the value from the root variables.tf
   key_name        = data.aws_key_pair.existing_key.key_name  # Updated to use the data source
-  private_key_pem = local_file.my_private_key.content # Pass the content of the generated private key file (sensitive)
   index_html_path = "${path.root}/index.html"         # Provide the path to the index.html file in the root directory
   server_name     = "web-server"                      # Optionally override the default name (defined in module variables.tf)
 }

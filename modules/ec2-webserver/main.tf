@@ -77,21 +77,5 @@ resource "aws_instance" "app_server" {
   tags = {
     Name = var.server_name
   }
-
-  # --- Connection Info for Provisioners - RE-ADDED ---
-  connection {
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = var.private_key_pem
-    host        = aws_eip.web_ip.public_ip # Connect via the EIP
-    timeout     = "5m"
-  }
-
-  # --- File Provisioner - RE-ADDED ---
-  provisioner "file" {
-    source      = var.index_html_path
-    destination = "/tmp/index.html"
-    on_failure = continue
-  }
 }
 
