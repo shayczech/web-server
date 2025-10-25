@@ -69,7 +69,16 @@
       become: yes
       ignore_errors: yes 
 
-    - name: 8. Run Certbot to obtain SSL certificate (The crucial step)
+    - name: 8. Aggressively ensure Port 80 is free
+      ansible.builtin.shell: |
+        # Forcefully kill any process using TCP Port 80
+        fuser -k -n tcp 80 || true
+        # Restart the Docker service to clear lingering network bindings
+        systemctl restart docker
+      become: yes
+      ignore_errors: yes
+
+    - name: 9. Run Certbot to obtain SSL certificate (The crucial step)
       ansible.builtin.shell: |
         # Use --nginx plugin which handles temporary serving and cleanup
         certbot certonly --nginx -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
@@ -81,7 +90,7 @@
 
     # --- 4. DEPLOY SSL CONFIG AND START CONTAINER ---
 
-    - name: 9. Deploy Nginx SSL Configuration File
+    - name: 10. Deploy Nginx SSL Configuration File
       ansible.builtin.copy:
         src: nginx_ssl.conf
         dest: /etc/nginx/sites-available/default
@@ -91,7 +100,7 @@
       notify: Restart Nginx Container
       become: yes
 
-    - name: 10. Start Nginx Container with SSL Configuration
+    - name: 11. Start Nginx Container with SSL Configuration
       community.docker.docker_container:
         name: portfolio-web
         image: nginx:latest
