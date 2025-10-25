@@ -62,7 +62,10 @@ jobs:
           # sed replaces the 'ec2_instance_ip' placeholder in inventory.ini 
           # with the actual IP stored in the environment variable.
           sed -i 's/ec2_instance_ip/${{ env.EC2_IP }}/g' inventory.ini
-
+      - name: Disable SSH Host Key Checking
+        run: |
+          # Creates a temporary Ansible configuration file to disable the strict check
+          echo -e "[defaults]\nhost_key_checking = False\n" > ansible.cfg
       - name: Run Ansible Playbook (Docker/Nginx Configuration)
         run: |
           ansible-playbook -i inventory.ini deploy_nginx.yml
