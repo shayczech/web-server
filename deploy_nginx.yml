@@ -61,43 +61,23 @@
       notify: Restart Nginx Container
       become: yes
 
- # --- 3. STOP NGINX AND RUN CERTBOT CHALLENGE ---
+# --- 3. RUN CERTBOT CHALLENGE (DNS METHOD) ---
 
-    - name: 7. Stop and Remove Portfolio Container (If Exists)
-      community.docker.docker_container:
-        name: portfolio-web
-        state: absent # Ensure container is gone, freeing Docker binding
-      become: yes
-      ignore_errors: yes 
-
-    - name: 8. Disable and Stop Host Nginx Service (Prevents Conflict on Port 80)
-      ansible.builtin.systemd:
-        name: nginx
-        state: stopped
-        enabled: no # Prevent automatic restart on next boot
-      become: yes
-      ignore_errors: yes
-
-    - name: 9. Aggressively Ensure Port 80 is Free (Final safety check)
+    - name: 7. Run Certbot DNS Challenge to obtain SSL certificate
       ansible.builtin.shell: |
-        fuser -k -n tcp 80 || true
-        systemctl restart docker 
-        sleep 5
-      become: yes
-      ignore_errors: yes
-      
-    # --- 4. RUN CERTBOT CHALLENGE ---
-
-    - name: 10. Run Certbot to obtain SSL certificate (The crucial step)
-      ansible.builtin.shell: |
-        certbot certonly --nginx -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
+        # Use DNS-01 Challenge, which does NOT require Port 80 to be open.
+        # It relies on the GitHub IAM Role having Route 53 permissions.
+        certbot certonly --dns-route53 -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
       become: yes
       register: certbot_result
+      # The DNS challenge takes longer, so increase the timeout (default 30s is too fast)
+      args:
+        timeout: 300 
       failed_when: certbot_result.rc != 0 and 'Certificate not yet due for renewal' not in certbot_result.stderr
 
-    # --- 5. DEPLOY SSL CONFIG AND START CONTAINERS ---
+    # --- 4. DEPLOY SSL CONFIG AND START CONTAINERS ---
 
-    - name: 11. Deploy Nginx SSL Configuration File
+    - name: 8. Deploy Nginx SSL Configuration File
       ansible.builtin.copy:
         src: nginx_ssl.conf
         dest: /etc/nginx/sites-available/default
@@ -107,7 +87,7 @@
       notify: Restart Nginx Container
       become: yes
 
-    - name: 12. Start Final Nginx Container with SSL
+    - name: 9. Start Final Nginx Container with SSL
       community.docker.docker_container:
         name: portfolio-web
         image: nginx:latest
