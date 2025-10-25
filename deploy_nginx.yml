@@ -1,0 +1,90 @@
+---
+- name: Deploy Secure Portfolio Web Server
+  hosts: webservers
+  tasks:
+    
+    - name: 1. Ensure essential packages are installed for Docker and Python
+      ansible.builtin.apt:
+        name: 
+          - ca-certificates
+          - curl
+          - gnupg
+          - python3-pip # Needed for Ansible's Docker module
+        state: present
+        update_cache: yes
+
+    - name: 2. Install Docker via official Convenience Script (quick and reliable install)
+      ansible.builtin.shell: 
+        cmd: curl -fsSL https://get.docker.com | sh
+
+    - name: 3. Install Python Docker Module (Required for managing containers with Ansible)
+      ansible.builtin.apt:
+        name: python3-docker
+        state: present
+
+    - name: 4. Ensure Docker bridge network 'proxy_net' exists
+      community.docker.docker_network:
+        name: proxy_net
+        state: present
+
+    - name: 5. Create required data and HTML directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+      loop:
+        - /app/data
+        - /app/html
+        - /app/mysql
+        - /app/letsencrypt
+
+    - name: 6. Place custom index.html (Simple file transfer)
+      ansible.builtin.copy:
+        content: "<h1>Shaylee Czech's DevSecOps Portfolio is LIVE! (Automated by Ansible)</h1>"
+        dest: /app/html/index.html
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: 7. Deploy MariaDB Database Container
+      community.docker.docker_container:
+        name: mariadb
+        image: mariadb:10.8 # Compatible version for NPM
+        state: started
+        restart_policy: unless-stopped
+        env:
+          MYSQL_ROOT_PASSWORD: "root_3236" # CHANGE THIS PASSWORD
+          MYSQL_DATABASE: "npm"
+          MYSQL_USER: "npmuser"
+          MYSQL_PASSWORD: "prox_3236" # CHANGE THIS PASSWORD
+        volumes:
+          - /app/mysql:/var/lib/mysql
+        networks:
+          - name: proxy_net # Use the same network name as your previous attempt
+
+    - name: 8. Deploy NGINX Proxy Manager Container 
+      community.docker.docker_container:
+        name: nginx-proxy-manager
+        image: jc21/nginx-proxy-manager:latest
+        state: started
+        restart_policy: unless-stopped
+        published_ports:
+          - "80:80"
+          - "81:81"
+          - "443:443"
+        volumes:
+          - /app/data:/data
+          - /app/html:/var/www/html:ro
+          - /app/letsencrypt:/etc/letsencrypt
+        networks:
+          - name: proxy_net
+        env:
+          # Configuration to point NPM to the new MariaDB container
+          DB_HOST: mariadb
+          DB_MYSQL_HOST: mariadb
+          DB_MYSQL_PORT: "3306"
+          DB_MYSQL_DATABASE: "npm"
+          DB_MYSQL_USER: "npmuser"
+          DB_MYSQL_PASSWORD: "prox_3236"

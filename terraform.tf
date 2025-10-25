@@ -1,25 +1,20 @@
 terraform {
+  required_version = ">= 1.0"
+
+  # 1. CONFIGURE S3 BACKEND FOR REMOTE STATE
+  backend "s3" {
+    bucket         = "shaylee-portfolio-tf-state-2025" # Your Bucket Name
+    key            = "portfolio/terraform.tfstate"     # State file path inside the bucket
+    region         = "us-east-2"                       # <--- CHANGE TO YOUR AWS REGION
+    encrypt        = true                              # Enables server-side encryption
+    # dynamodb_table = "terraform-locks"               # <--- UNCOMMENT OR REMOVE THIS LINE IF TABLE IS NOT CREATED
+  }
+
+  # 2. KEEP ONLY THE AWS PROVIDER
   required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
-
-    # --- ADD THIS BLOCK ---
-    # For generating the SSH key
-    tls = {
-      source  = "hashicorp/tls"
-      version = "~> 4.0"
-    }
-
-    # --- AND ADD THIS BLOCK ---
-    # For saving the private key to your computer
-    local = {
-      source  = "hashicorp/local"
-      version = "~> 2.4"
-    }
   }
-
-  required_version = ">= 1.0"
 }
-

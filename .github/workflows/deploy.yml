@@ -1,0 +1,68 @@
+name: DevSecOps Portfolio CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      # Set the AWS Region to be used by the AWS CLI and Terraform
+      AWS_REGION: us-east-2
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # --- PHASE 1: Terraform (IaC) ---
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init (Downloads providers and configures S3 backend)
+        id: init
+        run: terraform init
+
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply -auto-approve
+
+      - name: Get EC2 Public IP from Terraform Output
+        id: get_ip
+        run: |
+          # The output name MUST match the output in your outputs.tf file
+          EC2_IP=$(terraform output -raw instance_public_ip)
+          echo "EC2_IP=$EC2_IP" >> $GITHUB_ENV
+
+
+      # --- PHASE 2: Ansible (Configuration Management) ---
+      - name: Setup SSH Key for Ansible
+        run: |
+          mkdir -p ~/.ssh
+          # Write the private key content from the GitHub Secret to a file
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa_runner
+          chmod 600 ~/.ssh/id_rsa_runner
+
+      - name: Install Ansible
+        run: |
+          pip install ansible
+          ansible-galaxy collection install community.docker
+
+      - name: Update Inventory with Live IP
+        run: |
+          # sed replaces the 'ec2_instance_ip' placeholder in inventory.ini 
+          # with the actual IP stored in the environment variable.
+          sed -i 's/ec2_instance_ip/${{ env.EC2_IP }}/g' inventory.ini
+
+      - name: Run Ansible Playbook (Docker/Nginx Configuration)
+        run: |
+          ansible-playbook -i inventory.ini deploy_nginx.yml
