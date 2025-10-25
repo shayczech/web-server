@@ -88,4 +88,4 @@
           DB_MYSQL_DATABASE: "npm"
           DB_MYSQL_USER: "npmuser"
           DB_MYSQL_PASSWORD: "prox_3236"
-        force_recreate: true
+        recreate: true
