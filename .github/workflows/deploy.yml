@@ -31,11 +31,13 @@ jobs:
       - name: Terraform Init (Downloads providers and configures S3 backend)
         id: init
         run: terraform init
+        working-directory: infra/
 
       - name: Terraform Apply
         id: apply
         run: terraform apply -auto-approve
-
+        working-directory: infra/
+        
       - name: Get EC2 Public IP from Terraform Output
         id: get_ip
         run: |
