@@ -7,7 +7,6 @@ terraform {
     key            = "portfolio/terraform.tfstate"     # State file path inside the bucket
     region         = "us-east-2"                       # <--- CHANGE TO YOUR AWS REGION
     encrypt        = true                              # Enables server-side encryption
-    # dynamodb_table = "terraform-locks"               # <--- UNCOMMENT OR REMOVE THIS LINE IF TABLE IS NOT CREATED
   }
 
   # 2. KEEP ONLY THE AWS PROVIDER

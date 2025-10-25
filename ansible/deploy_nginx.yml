@@ -46,14 +46,24 @@
         - /etc/letsencrypt/ # Only directories needed for static site + certs
         - /root/.aws # Create AWS directory for credentials file
       become: yes
-
+    
+    # ---- WEBSITE CORE FILES -----  
     - name: 5. Place custom index.html (File copy from repo)
       ansible.builtin.copy:
-        src: index.html 
+        src: files/index.html 
         dest: /app/html/index.html
         owner: root
         group: root
         mode: '0644'
+      notify: Restart Nginx Container
+      become: yes
+    - name: 5b. Copy all aesthetic assets (CSS, Images, JS)
+      ansible.builtin.copy:
+        src: files/assets/
+        dest: /app/html/
+        owner: root
+        group: root
+        mode: '0755'
       notify: Restart Nginx Container
       become: yes
 
@@ -91,7 +101,7 @@
 
     - name: 8. Deploy Nginx SSL Configuration File
       ansible.builtin.copy:
-        src: nginx_ssl.conf
+        src: files/nginx_ssl.conf
         dest: /app/config/nginx.conf
         owner: root
         group: root
