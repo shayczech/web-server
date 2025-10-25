@@ -45,6 +45,7 @@
         group: root
         mode: '0755'
       loop:
+        - /app/data
         - /app/html
         - /etc/letsencrypt/live/shayleeczech.com # Directory for Certbot output
         # Removed obsolete paths: /app/data, /app/mysql, /app/letsencrypt
@@ -60,37 +61,31 @@
       notify: Restart Nginx Container
       become: yes
 
-    # --- 3. STOP NGINX AND RUN CERTBOT CHALLENGE ---
+ # --- 3. STOP NGINX AND RUN CERTBOT CHALLENGE ---
 
-    - name: 7. Stop Nginx container so Certbot can run challenge
-      community.docker.docker_container:
-        name: portfolio-web
-        state: absent # Destroys container so port 80 is free for Certbot
-      become: yes
-      ignore_errors: yes 
-
-    - name: 8. Aggressively ensure Port 80 is free
+    - name: 7. Stop Nginx container and run Certbot challenge
       ansible.builtin.shell: |
-        # Forcefully kill any process using TCP Port 80
+        # 7A. AGGRESSIVE CLEANUP: Stop Docker container
+        docker stop portfolio-web || true
+        docker rm portfolio-web || true
+        
+        # 7B. AGGRESSIVE PORT CLEANUP: Forcefully kill any process using Port 80
         fuser -k -n tcp 80 || true
         # Restart the Docker service to clear lingering network bindings
         systemctl restart docker
-      become: yes
-      ignore_errors: yes
-
-    - name: 9. Run Certbot to obtain SSL certificate (The crucial step)
-      ansible.builtin.shell: |
-        # Use --nginx plugin which handles temporary serving and cleanup
+        
+        # Give system a moment to clear the port
+        sleep 5
+        
+        # 7C. CERTBOT RUN: Use --nginx plugin which handles temporary serving and cleanup
         certbot certonly --nginx -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
-      args:
-        chdir: /etc/nginx 
       become: yes
       register: certbot_result
       failed_when: certbot_result.rc != 0 and 'Certificate not yet due for renewal' not in certbot_result.stderr
 
-    # --- 4. DEPLOY SSL CONFIG AND START CONTAINER ---
+    # --- 4. DEPLOY SSL CONFIG AND START CONTAINERS ---
 
-    - name: 10. Deploy Nginx SSL Configuration File
+    - name: 8. Deploy Nginx SSL Configuration File
       ansible.builtin.copy:
         src: nginx_ssl.conf
         dest: /etc/nginx/sites-available/default
@@ -100,15 +95,15 @@
       notify: Restart Nginx Container
       become: yes
 
-    - name: 11. Start Nginx Container with SSL Configuration
+    - name: 9. Start Final Nginx Container with SSL
       community.docker.docker_container:
-        name: portfolio-web
+        name: portfolio-web # Renamed to simple portfolio-web
         image: nginx:latest
         state: started
         restart_policy: always
         published_ports:
           - "80:80"
-          - "443:443" # Publish Port 443
+          - "443:443"
         volumes:
           - /app/html:/usr/share/nginx/html:ro
           - /etc/letsencrypt:/etc/letsencrypt:ro # Mount certs for Nginx to read
@@ -117,7 +112,7 @@
         recreate: true
       become: yes
 
-  # --- HANDLERS (Used for content updates and configuration changes) ---
+  # --- HANDLERS ---
   handlers:
     - name: Restart Nginx Container
       community.docker.docker_container:
