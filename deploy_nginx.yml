@@ -1,33 +1,43 @@
 ---
-- name: Deploy Secure Portfolio Web Server
+- name: Deploy Secure Portfolio Web Server (HTTPS)
   hosts: webservers
   tasks:
     
-    - name: 1. Ensure essential packages are installed for Docker and Python
+    # --- 1. INSTALLATION AND SETUP ---
+
+    - name: 1. Ensure essential packages are installed for Certbot and Nginx
       ansible.builtin.apt:
         name: 
+          - certbot
+          - python3-certbot-nginx 
           - ca-certificates
           - curl
           - gnupg
-          - python3-pip # Needed for Ansible's Docker module
+          - python3-pip
         state: present
         update_cache: yes
+      become: yes
 
     - name: 2. Install Docker via official Convenience Script (quick and reliable install)
       ansible.builtin.shell: 
         cmd: curl -fsSL https://get.docker.com | sh
+      become: yes
 
-    - name: 3. Install Python Docker Module (Required for managing containers with Ansible)
+    - name: 3. Install Python Docker Module
       ansible.builtin.apt:
         name: python3-docker
         state: present
+      become: yes
 
     - name: 4. Ensure Docker bridge network 'proxy_net' exists
       community.docker.docker_network:
         name: proxy_net
         state: present
+      become: yes
 
-    - name: 5. Create required data and HTML directories
+    # --- 2. DEPLOY CONTENT AND PREPARE HOST DIRECTORIES ---
+
+    - name: 5. Create required HTML and SSL directories on host
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -35,57 +45,83 @@
         group: root
         mode: '0755'
       loop:
-        - /app/data
         - /app/html
-        - /app/mysql
-        - /app/letsencrypt
+        - /etc/letsencrypt/live/shayleeczech.com # Directory for Certbot output
+        # Removed obsolete paths: /app/data, /app/mysql, /app/letsencrypt
+      become: yes
 
-    - name: 6. Place custom index.html (Simple file transfer)
+    - name: 6. Place custom index.html (File copy from repo)
       ansible.builtin.copy:
-        src: index.html
+        src: index.html 
         dest: /app/html/index.html
         owner: root
         group: root
         mode: '0644'
+      notify: Restart Nginx Container
+      become: yes
 
-    - name: 7. Deploy MariaDB Database Container
-      community.docker.docker_container:
-        name: mariadb
-        image: mariadb:10.8 # Compatible version for NPM
-        state: started
-        restart_policy: unless-stopped
-        env:
-          MYSQL_ROOT_PASSWORD: "root_3236" # CHANGE THIS PASSWORD
-          MYSQL_DATABASE: "npm"
-          MYSQL_USER: "npmuser"
-          MYSQL_PASSWORD: "prox_3236" # CHANGE THIS PASSWORD
-        volumes:
-          - /app/mysql:/var/lib/mysql
-        networks:
-          - name: proxy_net # Use the same network name as your previous attempt
+    # --- 3. STOP NGINX AND RUN CERTBOT CHALLENGE ---
 
-    - name: 8. Deploy NGINX Proxy Manager Container 
+    - name: 7. Stop Nginx container so Certbot can run challenge
       community.docker.docker_container:
-        name: nginx-proxy-manager
-        image: jc21/nginx-proxy-manager:latest
+        name: portfolio-web
+        state: absent # Destroys container so port 80 is free for Certbot
+      become: yes
+      ignore_errors: yes 
+
+    - name: 8. Run Certbot to obtain SSL certificate (The crucial step)
+      ansible.builtin.shell: |
+        certbot certonly --webroot -w /app/html -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
+      args:
+        chdir: /etc/nginx 
+      become: yes
+      register: certbot_result
+      failed_when: certbot_result.rc != 0 and 'Certificate not yet due for renewal' not in certbot_result.stderr
+
+    # --- 4. DEPLOY SSL CONFIG AND START CONTAINER ---
+
+    - name: 9. Deploy Nginx SSL Configuration File
+      ansible.builtin.copy:
+        src: nginx_ssl.conf
+        dest: /etc/nginx/sites-available/default
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Restart Nginx Container
+      become: yes
+
+    - name: 10. Start Nginx Container with SSL Configuration
+      community.docker.docker_container:
+        name: portfolio-web
+        image: nginx:latest
         state: started
-        restart_policy: unless-stopped
+        restart_policy: always
         published_ports:
           - "80:80"
-          - "81:81"
-          - "443:443"
+          - "443:443" # Publish Port 443
         volumes:
-          - /app/data:/data
-          - /app/html:/var/www/html:ro
-          - /app/letsencrypt:/etc/letsencrypt
+          - /app/html:/usr/share/nginx/html:ro
+          - /etc/letsencrypt:/etc/letsencrypt:ro # Mount certs for Nginx to read
         networks:
           - name: proxy_net
-        env:
-          # Configuration to point NPM to the new MariaDB container
-          DB_HOST: mariadb
-          DB_MYSQL_HOST: mariadb
-          DB_MYSQL_PORT: "3306"
-          DB_MYSQL_DATABASE: "npm"
-          DB_MYSQL_USER: "npmuser"
-          DB_MYSQL_PASSWORD: "prox_3236"
         recreate: true
+      become: yes
+
+  # --- HANDLERS (Used for content updates and configuration changes) ---
+  handlers:
+    - name: Restart Nginx Container
+      community.docker.docker_container:
+        name: portfolio-web
+        image: nginx:latest
+        state: started
+        restart_policy: always
+        published_ports:
+          - "80:80"
+          - "443:443"
+        volumes:
+          - /app/html:/usr/share/nginx/html:ro
+          - /etc/letsencrypt:/etc/letsencrypt:ro
+        networks:
+          - name: proxy_net
+        recreate: true
+      become: yes
