@@ -50,7 +50,7 @@
 
     - name: 5. Place custom index.html (File copy from repo)
       ansible.builtin.copy:
-        src: files/index.html 
+        src: index.html # FIXED: Changed from 'files/index.html'
         dest: /app/html/index.html
         owner: root
         group: root
@@ -60,7 +60,7 @@
       
     - name: 5b. Copy all aesthetic assets (CSS, Images, JS)
       ansible.builtin.copy:
-        src: files/assets/
+        src: assets/ # FIXED: Changed from 'files/assets/'
         dest: /app/html/
         owner: root
         group: root
@@ -70,7 +70,7 @@
 
     - name: 5c. Copy Node.js API files (server.js, package.json, Dockerfile)
       ansible.builtin.copy:
-        src: files/api/
+        src: api/ # FIXED: Changed from 'files/api/'
         dest: /app/api/
         owner: root
         group: root
@@ -137,7 +137,7 @@
 
     - name: 8. Deploy Nginx SSL Configuration File
       ansible.builtin.copy:
-        src: files/nginx_ssl.conf
+        src: nginx_ssl.conf # FIXED: Changed from 'files/nginx_ssl.conf'
         dest: /app/config/nginx.conf
         owner: root
         group: root
