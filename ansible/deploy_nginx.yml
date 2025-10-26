@@ -22,18 +22,21 @@
         update_cache: yes
       become: yes
 
-    # --- Install Trivy via APT ---
-    # --- Install Trivy via APT ---
-    - name: Add Trivy GPG key
-      ansible.builtin.apt_key:
+    # --- Install Trivy via APT (Modern Method) ---
+    # NOTE: We now use get_url to download the key to the modern /usr/share/keyrings/ location,
+    # and then reference that file directly in the apt_repository block using 'signed-by'.
+    - name: Download Trivy GPG Key to Keyrings location
+      ansible.builtin.get_url:
         url: https://aquasecurity.github.io/trivy-repo/deb/public.key
-        state: present
+        dest: /usr/share/keyrings/trivy.asc
+        mode: '0644'
+        force: true
       become: yes
       
-    # --- MODIFIED: Use Ansible fact for distribution codename ---
-    - name: Add Trivy APT repository
+    - name: Add Trivy APT repository with signed-by parameter
       ansible.builtin.apt_repository:
-        repo: "deb https://aquasecurity.github.io/trivy-repo/deb {{ ansible_distribution_release }} main"
+        # Use signed-by parameter and Ansible fact for distro release
+        repo: "deb [signed-by=/usr/share/keyrings/trivy.asc] https://aquasecurity.github.io/trivy-repo/deb {{ ansible_distribution_release }} main"
         state: present
         filename: trivy
       become: yes
