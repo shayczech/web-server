@@ -77,7 +77,7 @@
 
     - name: Place custom index.html (File copy from repo)
       ansible.builtin.copy:
-        src: index.html
+        src: files/index.html
         dest: /app/html/index.html
         owner: root
         group: root
@@ -87,7 +87,7 @@
       
     - name: Place custom resume.html (File copy from repo)
       ansible.builtin.copy:
-        src: resume.html 
+        src: files/resume.html 
         dest: /app/html/resume.html
         owner: root
         group: root
@@ -97,7 +97,7 @@
 
     - name: Copy Node.js API files (server.js, package.json, Dockerfile)
       ansible.builtin.copy:
-        src: api/
+        src: files/api/
         dest: /app/api/
         owner: root
         group: root
