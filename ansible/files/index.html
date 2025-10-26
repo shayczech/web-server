@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shaylee Czech | DevSecOps & Cloud Engineering</title>
     
-    <!-- Favicon (Green Checkmark) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2310B981%22></rect><path fill=%22%23FFFFFF%22 d=%22M77.6 30.7L45 63.3l-12.6-12.6c-1.6-1.6-4.2-1.6-5.8 0s-1.6 4.2 0 5.8l15.5 15.5c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2l35.5-35.5c-1.6-1.6 1.6-4.2 0-5.8s-4.2-1.6-5.8 0z%22></path></svg>">
+    <!-- UPDATED: Favicon (Teal Checkmark) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2314B8A6%22></rect><path fill=%22%23FFFFFF%22 d=%22M77.6 30.7L45 63.3l-12.6-12.6c-1.6-1.6-4.2-1.6-5.8 0s-1.6 4.2 0 5.8l15.5 15.5c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2l35.5-35.5c-1.6-1.6 1.6-4.2 0-5.8s-4.2-1.6-5.8 0z%22></path></svg>">
 
     <!-- 1. Load Tailwind CSS Library -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 2. Configure Tailwind Theme -->
+    <!-- 2. UPDATED: Configure Tailwind Theme (Teal) -->
     <script>
         tailwind.config = {
             theme: {
@@ -20,12 +20,20 @@
                         sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        'primary-green': {
-                            DEFAULT: '#10B981', // Emerald 500
-                            '50': '#ECFDF5', '100': '#D1FAE5', '200': '#A7F3D0',
-                            '300': '#6EE7B7', '400': '#34D399', '500': '#10B981',
-                            '600': '#059669', '700': '#047857', '800': '#065F46',
-                            '900': '#064E3B', '950': '#022C22'
+                        /* UPDATED: Swapped to 'primary-teal' */
+                        'primary-teal': {
+                            DEFAULT: '#14B8A6', // Teal 500
+                            '50': '#F0FDFA',
+                            '100': '#CCFBF1',
+                            '200': '#99F6E4',
+                            '300': '#5EEAD4',
+                            '400': '#2DD4BF',
+                            '500': '#14B8A6',
+                            '600': '#0D9488',
+                            '700': '#0F766E',
+                            '800': '#115E59',
+                            '900': '#134E4A',
+                            '950': '#042f2e'
                         }
                     }
                 }
@@ -49,35 +57,35 @@
         }
 
         /* 2. Expertise Card Styling */
-        /* UPDATED: Added text-center to center the icon */
         .expertise-card {
-            @apply bg-gray-50 p-8 rounded-xl shadow-md border border-gray-200 transition-all duration-300 hover:shadow-xl hover:border-primary-green-300 hover:-translate-y-1.5 text-center; 
+            /* UPDATED: border color */
+            @apply bg-gray-50 p-6 sm:p-8 rounded-xl shadow-md border border-gray-200 transition-all duration-300 hover:shadow-xl hover:border-primary-teal-300 hover:-translate-y-1.5 text-center;
         }
-        /* UPDATED: Changed from circle to responsive pill */
         .card-icon-wrapper {
-            @apply inline-flex items-center justify-center px-4 py-3 rounded-xl bg-gradient-to-br from-primary-green-100 to-primary-green-200 text-primary-green-700 font-bold text-xl mb-5 shadow-sm; 
+            /* UPDATED: gradient/text color and margins */
+            @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-br from-primary-teal-100 to-primary-teal-200 text-primary-teal-700 font-bold text-sm mb-4 shadow-sm px-4 py-3 transition-all duration-300;
         }
-        /* UPDATED: Made card titles larger, green, given more space, and re-aligned left */
         .card-title {
-            @apply text-2xl font-bold text-primary-green-700 mb-4 tracking-tight text-left;
+            /* UPDATED: text color and alignment */
+            @apply text-xl font-bold text-primary-teal-700 mb-3 tracking-tight text-left;
         }
-        /* UPDATED: Re-aligned left */
         .card-list {
+            /* UPDATED: alignment */
             @apply text-gray-600 space-y-2 list-disc list-inside text-left;
         }
 
         /* 3. Dynamic Stat Styling (Dark Bar) */
-        /* UPDATED: Added card styling (bg, padding, etc) */
         .stat-item {
-            @apply flex flex-col items-center justify-center p-6 bg-primary-green-800 rounded-xl shadow-lg border border-primary-green-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+            /* UPDATED: background and hover effect */
+            @apply flex flex-col items-center justify-center p-6 bg-primary-teal-800 rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-primary-teal-700/20;
         }
         .stat-value {
             @apply text-5xl font-extrabold text-white;
             animation: fadeIn 1s ease-in-out;
         }
         /* Specific coloring for security score (applied by JS) */
-        .stat-value.text-primary-green-300 {
-            color: #6EE7B7; /* Brighter green for 'A' score */
+        .stat-value.text-primary-teal-300 {
+            color: #5EEAD4; /* Brighter teal for 'A' score */
         }
         .stat-value.text-yellow-300 {
             color: #FDE047; /* Yellow for 'B/C' score */
@@ -85,131 +93,124 @@
         .stat-value.text-red-400 {
             color: #F87171; /* Red for 'D/F' score */
         }
-        /* UPDATED: Removed uppercase, increased size/brightness */
         .stat-label {
-            @apply text-base font-medium text-primary-green-200 tracking-wide mt-2;
+            /* UPDATED: text color and font */
+            @apply text-base font-medium text-primary-teal-100 mt-2;
         }
         
-        /* 5. NEW: Typed.js Cursor Styling */
+        /* 5. Typed.js Cursor Styling */
         .typed-cursor {
-            @apply text-primary-green-200 opacity-100;
+            /* UPDATED: text color */
+            @apply text-primary-teal-200 opacity-100;
             animation: blink 0.7s infinite;
         }
         @keyframes blink {
             50% { opacity: 0; }
         }
-
+        
         /* 6. NEW: Flow Diagram Styling */
         .flow-diagram-container {
-            @apply flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 my-8;
+            @apply flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 mt-10;
         }
         .flow-item {
             @apply flex flex-col md:flex-row items-center flex-1;
         }
         .flow-box {
-            @apply bg-gray-100 border border-gray-300 rounded-xl p-4 text-center w-full md:w-auto shadow-md transition-all duration-300 transform hover:shadow-lg hover:-translate-y-1;
-            min-width: 160px; /* Ensure boxes have some minimum width */
+            /* UPDATED: hover color */
+            @apply bg-gray-50 p-4 rounded-xl border border-gray-200 transition-all duration-300 w-full md:w-auto hover:shadow-lg hover:border-primary-teal-300 hover:-translate-y-1 hover:bg-white text-center;
+        }
+        .flow-box svg {
+            /* UPDATED: text color */
+            @apply h-6 w-6 text-primary-teal-600 mb-1 mx-auto;
         }
         .flow-label {
-            @apply block text-sm font-semibold text-primary-green-700;
+            @apply font-semibold text-gray-800 text-sm;
         }
         .flow-desc {
-            @apply block text-xs text-gray-500;
+            @apply text-xs text-gray-500;
         }
         .flow-arrow {
-            @apply w-full md:w-16 h-8 md:h-auto text-primary-green-500;
-            /* Mobile (vertical) arrow */
-            transform: rotate(90deg);
+            /* UPDATED: text color */
+            @apply w-8 h-8 text-primary-teal-500 transform rotate-90 md:rotate-0 mx-auto md:mx-4;
         }
-        .md\:flow-arrow-md {
-            /* Desktop (horizontal) arrow */
-            @apply md:transform-none;
-        }
-        /* Hide the last arrow on mobile */
+        /* Hide the arrow on the last item */
         .flow-item:last-child .flow-arrow {
             @apply hidden;
         }
-        /* Hide the last arrow on desktop */
-        .flow-item:last-child .md\:flow-arrow-md {
-            @apply md:hidden;
-        }
-
+        
     </style>
 
 </head>
 <body class="bg-gray-100 antialiased font-sans">
 
     <!-- Header & Navigation -->
-    <!-- UPDATED: Added relative positioning for mobile menu anchoring -->
-    <header class="bg-white shadow-lg sticky top-0 z-50 relative">
+    <header class="bg-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <!-- UPDATED: Added hover transition -->
-            <a href="index.html" class="text-2xl font-extrabold text-primary-green-700 tracking-tight transition-colors duration-300 hover:text-primary-green-800">
-                Shaylee Czech
-            </a>
             
-            <!-- Nav Links: Use absolute paths to work from both pages -->
-            <!-- UPDATED: Added "pill" styling and hover effect -->
-            <nav class="hidden md:flex space-x-4">
-                <a href="/index.html#about" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg">About</a>
-                <a href="/resume.html" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg">Experience</a>
-                <a href="/index.html#skills" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg">Skills</a>
-                <a href="/index.html#projects" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg">Projects</a>
-                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg">LinkedIn</a>
+            <!-- Site Title (links to homepage) -->
+            <!-- UPDATED: Uses new teal color and hover */ -->
+            <a href="index.html" class="text-2xl font-extrabold text-primary-teal-700 tracking-tight hover:text-primary-teal-800 transition-colors duration-300">Shaylee Czech</a>
+            
+            <!-- UPDATED: Desktop Navigation with pill style -->
+            <nav class="hidden md:flex items-center space-x-1">
+                <a href="/index.html#about" class="font-semibold text-primary-teal-600 bg-primary-teal-50 px-3 py-2 rounded-lg transition-all duration-300">About</a>
+                <a href="/resume.html" class="font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 px-3 py-2 rounded-lg transition-all duration-300">Experience</a>
+                <a href="/index.html#skills" class="font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 px-3 py-2 rounded-lg transition-all duration-300">Skills</a>
+                <a href="/index.html#projects" class="font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 px-3 py-2 rounded-lg transition-all duration-300">Projects</a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 px-3 py-2 rounded-lg transition-all duration-300">LinkedIn</a>
             </nav>
 
-            <!-- NEW: Mobile Menu Button -->
+            <!-- Mobile Menu Button -->
             <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-gray-600 hover:text-primary-green-600 focus:outline-none focus:text-primary-green-600">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <!-- This path is the hamburger icon -->
-                        <path id="menu-icon-open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        <!-- This path is the 'X' icon, hidden by default -->
-                        <path id="menu-icon-close" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                <button id="mobile-menu-button" class="text-gray-700 hover:text-primary-teal-600 focus:outline-none">
+                    <!-- Hamburger Icon -->
+                    <svg id="menu-icon" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <!-- Close Icon (hidden by default) -->
+                    <svg id="close-icon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
         </div>
 
-        <!-- NEW: Mobile Menu (hidden by default) -->
-        <!-- Positioned absolutely, relative to the header. Drops down from the top. -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full left-0 top-full z-40">
-            <nav class="flex flex-col space-y-2 p-4">
-                <a href="/index.html#about" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg mobile-nav-link">About</a>
-                <a href="/resume.html" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg mobile-nav-link">Experience</a>
-                <a href="/index.html#skills" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg mobile-nav-link">Skills</a>
-                <a href="/index.html#projects" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg mobile-nav-link">Projects</a>
-                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg mobile-nav-link">LinkedIn</a>
-            </nav>
-        </div>
+        <!-- UPDATED: Mobile Menu Panel (hidden by default) -->
+        <nav id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute top-full left-0 right-0 z-40">
+            <div class="px-2 pt-2 pb-4 space-y-1 sm:px-3">
+                <a href="/index.html#about" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-primary-teal-600 bg-primary-teal-50">About</a>
+                <a href="/resume.html" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-teal-600 hover:bg-primary-teal-50">Experience</a>
+                <a href="/index.html#skills" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-teal-600 hover:bg-primary-teal-50">Skills</a>
+                <a href="/index.html#projects" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-teal-600 hover:bg-primary-teal-50">Projects</a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="mobile-menu-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-teal-600 hover:bg-primary-teal-50">LinkedIn</a>
+            </div>
+        </nav>
     </header>
 
     <!-- Main Content -->
     <main class="flex-grow">
         
         <!-- Hero Section -->
-        <section id="about" class="bg-primary-green-600 text-white py-20 sm:py-32">
+        <!-- UPDATED: bg color -->
+        <section id="about" class="bg-primary-teal-600 text-white py-20 sm:py-32">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div class="max-w-3xl mx-auto">
                     
-                    <!-- This is the sub-headline we styled -->
                     <p class="text-white font-bold uppercase tracking-widest mb-4 text-lg">
                         Cloud Engineering | DevSecOps | CISSP Candidate
                     </p>
                     
-                    <!-- This is the typing headline -->
                     <h2 class="text-5xl sm:text-6xl font-extrabold mb-6 leading-tight min-h-[140px] sm:min-h-0">
                         Securing and <span id="typed-headline" class="text-white"></span>
                     </h2>
                     
-                    <!-- UPDATED: Wrapped this paragraph in a "glass" card to set it apart -->
                     <div class="bg-black/20 border border-white/10 rounded-xl p-6 mb-10 shadow-lg backdrop-blur-sm">
                         <p class="text-lg text-white font-medium">
                             This website is a living example of my ability to build, automate, and secure cloud infrastructure. Leveraging experience across systems, data, and automation, I implement practical DevSecOps strategies grounded in deep operational understanding.
                         </p>
                     </div>
                     
-                    <a href="#projects" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-primary-green-700 bg-white hover:bg-gray-100 transition duration-300 transform hover:scale-105">
+                    <a href="#projects" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-primary-teal-700 bg-white hover:bg-gray-100 transition duration-300 transform hover:scale-105">
                         View Automated Pipeline
                     </a>
                 </div>
@@ -217,10 +218,11 @@
         </section>
         
         <!-- Dynamic Stats Section -->
-        <section id="stats" class="bg-primary-green-900 text-white py-12">
+        <!-- UPDATED: bg color -->
+        <section id="stats" class="bg-primary-teal-900 text-white py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <!-- UPDATED: Grid gap increased to give cards space -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <!-- UPDATED: Removed md:grid-cols-3, added gap-6 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     
                     <!-- Stat 1: Commits -->
                     <div class="stat-item">
@@ -230,7 +232,8 @@
                     
                     <!-- Stat 2: Security Score -->
                     <div class="stat-item">
-                        <span id="security-score" class="stat-value">...</span>
+                        <!-- UPDATED: text color class -->
+                        <span id="security-score" class="stat-value text-primary-teal-300">...</span>
                         <p class="stat-label">Security Score</p>
                     </div>
                     
@@ -250,40 +253,35 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     
                     <div class="expertise-card">
-                        <div class="card-icon-wrapper">CM</div>
+                        <div class="card-icon-wrapper">Config Mgmt & Automation</div>
                         <h4 class="card-title">Config Mgmt & Automation</h4>
-                        <!-- UPDATED: Rephrased list items to remove parentheses -->
                         <ul class="card-list">
-                            <li>Terraform for Infrastructure as Code</li>
-                            <li>AWS: EC2, S3, IAM, EIP</li>
-                            <li>Ansible Playbooks & Handlers</li>
-                            <li>GitHub Actions for CI/CD</li>
-                            <li>Python, Bash, & PowerShell Scripting</li>
+                            <li>Terraform (IaC), AWS (EC2, S3, EIP)</li>
+                            <li>Ansible Playbooks, Handlers</li>
+                            <li>GitHub Actions (CI/CD)</li>
+                            <li>Python, Bash, SQL, PowerShell</li>
                         </ul>
                     </div>
 
                     <div class="expertise-card">
-                        <div class="card-icon-wrapper">GRC</div>
+                        <div class="card-icon-wrapper">Security & Compliance</div>
                         <h4 class="card-title">Security & Compliance</h4>
-                        <!-- UPDATED: Rephrased list items to remove parentheses -->
                         <ul class="card-list">
-                            <li>CISSP Certification Prep (Nov '25)</li>
-                            <li>Frameworks: NIST, CIS, HIPAA, ITAR</li>
-                            <li>Endpoint Security: SentinelOne, Huntress</li>
-                            <li>Identity & Access: Entra ID, Okta, IAM</li>
+                            <li>CISSP Preparation (Nov '25)</li>
+                            <li>NIST/CIS Benchmarks, HIPAA, ITAR</li>
+                            <li>Endpoint Security (SentinelOne, Huntress)</li>
+                            <li>Identity & Access (Entra ID, Okta, IAM)</li>
                         </ul>
                     </div>
 
-                    <!-- UPDATED: Fixed typo from classs= to class= -->
                     <div class="expertise-card">
-                        <div class="card-icon-wrapper">ARCH</div>
+                        <div class="card-icon-wrapper">System Architecture</div>
                         <h4 class="card-title">System Architecture</h4>
-                        <!-- UPDATED: Rephrased list items to remove parentheses -->
                         <ul class="card-list">
-                            <li>Database Security: Oracle, SQL Server</li>
-                            <li>Virtualization: Hyper-V, VMware</li>
-                            <li>Networking: SD-WAN, Firewall Mgmt</li>
-                            <li>DR/Backup: Veeam, Acronis, S3</li>
+                            <li>Database Security (Oracle, SQL Server)</li>
+                            <li>Virtualization (Hyper-V, VMware)</li>
+                            <li>Networking (SD-WAN, Firewall Mgmt)</li>
+                            <li>DR/Backup (Veeam, Acronis, S3)</li>
                         </ul>
                     </div>
 
@@ -296,21 +294,22 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h3 class="text-3xl font-extrabold text-gray-900 mb-10 text-center">Project Spotlight: This CI/CD Pipeline</h3>
                 
-                <div class="bg-white p-6 md:p-10 rounded-xl shadow-2xl border-t-4 border-primary-green-500">
-                    <p class="text-sm font-semibold text-primary-green-600 uppercase tracking-wider mb-2">Deployed via GitHub Actions</p>
+                <!-- UPDATED: border color -->
+                <div class="bg-white p-6 md:p-10 rounded-xl shadow-2xl border-t-4 border-primary-teal-500">
+                    <!-- UPDATED: text color -->
+                    <p class="text-sm font-semibold text-primary-teal-600 uppercase tracking-wider mb-2">Deployed via GitHub Actions</p>
                     <h4 class="text-2xl font-bold text-gray-900 mb-4">Terraform + Ansible DevSecOps Stack</h4>
                     
                     <p class="text-gray-700 mb-6">
                         This site is running inside a Docker container on an AWS EC2 instance. The entire deployment process—from infrastructure creation to content update—is fully automated via a CI/CD pipeline. It features a two-container architecture: an Nginx proxy serving this page, and a Node.js API container providing the dynamic stats above.
                     </p>
-
-                    <!-- NEW: Flow Diagram HTML -->
+                    
+                    <!-- Flow Diagram -->
                     <div class="flow-diagram-container">
                         <!-- Step 1: Git Push -->
                         <div class="flow-item">
                             <div class="flow-box">
-                                <!-- UPDATED: Swapped to Code Bracket Icon -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-green-600 mb-1 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-teal-600 mb-1 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                                 </svg>
                                 <span class="flow-label">1. Git Push</span>
@@ -325,8 +324,7 @@
                         <!-- Step 2: GitHub Actions -->
                         <div class="flow-item">
                             <div class="flow-box">
-                                <!-- RESTORED: Play Circle Icon -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-green-600 mb-1 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-teal-600 mb-1 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
@@ -342,8 +340,7 @@
                         <!-- Step 3: Terraform & Ansible -->
                         <div class="flow-item">
                             <div class="flow-box">
-                                <!-- RESTORED: Gear Icon -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-green-600 mb-1 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-teal-600 mb-1 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
@@ -359,8 +356,7 @@
                         <!-- Step 4: AWS EC2 -->
                         <div class="flow-item">
                             <div class="flow-box">
-                                <!-- UPDATED: Cloud Icon -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-green-600 mb-1 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-teal-600 mb-1 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
                                 </svg>
                                 <span class="flow-label">4. AWS EC2</span>
@@ -370,35 +366,10 @@
                         </div>
                     </div>
                     
-                    <!-- /END Flow Diagram HTML -->
-                    
-                    <!-- UPDATED: Project spotlight bullet points to reflect new features -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 text-gray-700 mt-10"> <!-- Added margin-top -->
-                        <ul class="space-y-3">
-                            <li class="flex items-start">
-                                <span class="text-emerald-500 mr-2 text-xl font-bold">✓</span>
-                                <span class="font-medium">Terraform IaC: Manages EC2, EIP, and Security Group, with PoLP via IAM Role integration.</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-emerald-500 mr-2 text-xl font-bold">✓</span>
-                                <span class="font-medium">Ansible: Deploys containers and hardens the host with a UFW firewall configuration.</span>
-                            </li>
-                        </ul>
-                        <ul class="space-y-3">
-                            <li class="flex items-start">
-                                <span class="text-emerald-500 mr-2 text-xl font-bold">✓</span>
-                                <span class="font-medium">Nginx Proxy: Serves content, terminates SSL, and includes an API resilience check.</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-emerald-500 mr-2 text-xl font-bold">✓</span>
-                                <span class="font-medium">GitHub Actions: Orchestrates the entire build/deploy cycle from a single `git push`.</span>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <!-- UPDATED: Button is larger, has more shadow, and is centered -->
-                    <div class="mt-8 text-center">
-                        <a href="https://github.com/shayczech/web-server" target="_blank" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-primary-green-600 hover:bg-primary-green-700 transition duration-300 transform hover:scale-105">
+                    <!-- Button -->
+                    <div class="mt-10 text-center">
+                        <!-- UPDATED: button color -->
+                        <a href="https://github.com/shayczech/web-server" target="_blank" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-primary-teal-600 hover:bg-primary-teal-700 transition duration-300 transform hover:scale-105">
                             View Source Code (The Pipeline) →
                         </a>
                     </div>
@@ -420,13 +391,7 @@
         </div>
     </footer>
 
-    <!-- 
-      DYNAMIC JAVASCRIPT BLOCK
-      - Correctly calls /api/stats
-      - Uses the correct JSON keys: 'githubCommits' and 'terraformModules'
-    -->
-    
-    <!-- NEW: Load the Typed.js library -->
+    <!-- Load the Typed.js library -->
     <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
     
     <script>
@@ -434,12 +399,25 @@
             
             // --- Stats API Function ---
             async function fetchStats() {
-                const response = await fetch('/api/stats');
-                if (!response.ok) {
-                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                // Try fetching from /api/stats, fallback to static JSON on failure
+                try {
+                    const response = await fetch('/api/stats');
+                    if (!response.ok) {
+                        // If API fails (e.g., 404, 500), throw to trigger catch block
+                        throw new Error(`API response not ok: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    return data;
+                } catch (apiError) {
+                    console.warn('API fetch failed, falling back to static stats.json', apiError);
+                    // Fallback fetch
+                    const fallbackResponse = await fetch('stats.json');
+                    if (!fallbackResponse.ok) {
+                        throw new Error(`Fallback stats.json not found: ${fallbackResponse.status}`);
+                    }
+                    const fallbackData = await fallbackResponse.json();
+                    return fallbackData;
                 }
-                const data = await response.json();
-                return data;
             }
 
             async function updateStatsUI() {
@@ -462,10 +440,11 @@
                         const score = data.securityScore;
                         scoreEl.textContent = `${score}%`;
                         
-                        scoreEl.classList.remove('text-primary-green-300', 'text-yellow-300', 'text-red-400');
+                        // UPDATED: Use primary-teal
+                        scoreEl.classList.remove('text-primary-teal-300', 'text-yellow-300', 'text-red-400');
 
                         if (score >= 90) {
-                            scoreEl.classList.add('text-primary-green-300'); // A
+                            scoreEl.classList.add('text-primary-teal-300'); // A
                         } else if (score >= 75) {
                             scoreEl.classList.add('text-yellow-300'); // B/C
                         } else {
@@ -484,7 +463,8 @@
                     
                     if (scoreEl) {
                         scoreEl.textContent = 'N/A';
-                        scoreEl.classList.remove('text-primary-green-300', 'text-yellow-300');
+                        // UPDATED: Use primary-teal
+                        scoreEl.classList.remove('text-primary-teal-300', 'text-yellow-300');
                         scoreEl.classList.add('text-red-400');
                     }
                 }
@@ -493,7 +473,7 @@
             // Initial update on page load
             updateStatsUI(); 
             
-            // --- NEW: Typed.js Function ---
+            // --- Typed.js Function ---
             if (document.getElementById('typed-headline')) {
               var options = {
                 strings: [
@@ -510,39 +490,34 @@
               };
               var typed = new Typed('#typed-headline', options);
             }
-
-            // --- NEW: Mobile Menu Toggle ---
+            
+            // --- Mobile Menu Toggle Logic ---
             const menuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
-            const iconOpen = document.getElementById('menu-icon-open');
-            const iconClose = document.getElementById('menu-icon-close');
-            const navLinks = document.querySelectorAll('.mobile-nav-link');
+            const menuIcon = document.getElementById('menu-icon');
+            const closeIcon = document.getElementById('close-icon');
+            const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
 
-            if (menuButton && mobileMenu && iconOpen && iconClose) {
+            if (menuButton) {
                 menuButton.addEventListener('click', () => {
-                    // Toggle the menu's visibility
+                    const isHidden = mobileMenu.classList.contains('hidden');
                     mobileMenu.classList.toggle('hidden');
-                    
-                    // Toggle the button's icons
-                    iconOpen.classList.toggle('hidden');
-                    iconClose.classList.toggle('hidden');
-                });
-
-                // --- NEW: Close menu when a link is clicked ---
-                // Useful for one-page anchor links
-                navLinks.forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileMenu.classList.add('hidden');
-                        iconOpen.classList.remove('hidden');
-                        iconClose.classList.add('hidden');
-                    });
+                    menuIcon.classList.toggle('hidden', !isHidden);
+                    closeIcon.classList.toggle('hidden', isHidden);
                 });
             }
+
+            // --- Close mobile menu on link click ---
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.classList.remove('hidden');
+                    closeIcon.classList.add('hidden');
+                });
+            });
         });
     </script>
 
 </body>
 </html>
-
-
 
