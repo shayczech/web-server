@@ -23,15 +23,17 @@
       become: yes
 
     # --- Install Trivy via APT ---
+    # --- Install Trivy via APT ---
     - name: Add Trivy GPG key
       ansible.builtin.apt_key:
         url: https://aquasecurity.github.io/trivy-repo/deb/public.key
         state: present
       become: yes
       
+    # --- MODIFIED: Use Ansible fact for distribution codename ---
     - name: Add Trivy APT repository
       ansible.builtin.apt_repository:
-        repo: deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main
+        repo: "deb https://aquasecurity.github.io/trivy-repo/deb {{ ansible_distribution_release }} main"
         state: present
         filename: trivy
       become: yes
@@ -40,7 +42,7 @@
       ansible.builtin.apt:
         name: trivy
         state: present
-        update_cache: yes
+        update_cache: yes # Update cache *after* adding repo and before install
       become: yes
       
     - name: Install Docker via official Convenience Script
