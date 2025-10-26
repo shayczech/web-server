@@ -137,6 +137,7 @@
         timeout: 5
         retries: 12 # Check for 1 minute (12 retries * 5s delay)
         delay: 5
+        ignore_errors: true # Added to prevent crash on connection refused
       register: api_check
       until: api_check.status == 200
       become: yes
