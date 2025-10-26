@@ -49,25 +49,27 @@
         }
 
         /* 2. Expertise Card Styling */
+        /* UPDATED: Added text-center to center the icon */
         .expertise-card {
-            @apply bg-gray-50 p-8 rounded-xl shadow-md border border-gray-200 transition-all duration-300 hover:shadow-xl hover:border-primary-green-300 hover:-translate-y-1.5; 
+            @apply bg-gray-50 p-8 rounded-xl shadow-md border border-gray-200 transition-all duration-300 hover:shadow-xl hover:border-primary-green-300 hover:-translate-y-1.5 text-center; 
         }
-        /* UPDATED: Removed fixed h/w and rounded-full. Added padding and rounded-xl to make it an adaptive pill shape. */
+        /* UPDATED: Changed from circle to responsive pill */
         .card-icon-wrapper {
             @apply inline-flex items-center justify-center px-4 py-3 rounded-xl bg-gradient-to-br from-primary-green-100 to-primary-green-200 text-primary-green-700 font-bold text-xl mb-5 shadow-sm; 
         }
-        /* UPDATED: Made card titles larger, green, and given more space */
+        /* UPDATED: Made card titles larger, green, given more space, and re-aligned left */
         .card-title {
-            @apply text-2xl font-bold text-primary-green-700 mb-4 tracking-tight;
+            @apply text-2xl font-bold text-primary-green-700 mb-4 tracking-tight text-left;
         }
+        /* UPDATED: Re-aligned left */
         .card-list {
-            @apply text-gray-600 space-y-2 list-disc list-inside;
+            @apply text-gray-600 space-y-2 list-disc list-inside text-left;
         }
 
         /* 3. Dynamic Stat Styling (Dark Bar) */
-        /* UPDATED: Added card styling (bg, rounded, shadow, hover) to create "boxes" */
+        /* UPDATED: Added card styling (bg, padding, etc) */
         .stat-item {
-            @apply flex flex-col items-center justify-center p-6 bg-primary-green-800 rounded-xl shadow-lg transition-all duration-300 hover:bg-primary-green-700 hover:-translate-y-1;
+            @apply flex flex-col items-center justify-center p-6 bg-primary-green-800 rounded-xl shadow-lg border border-primary-green-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
         }
         .stat-value {
             @apply text-5xl font-extrabold text-white;
@@ -83,9 +85,9 @@
         .stat-value.text-red-400 {
             color: #F87171; /* Red for 'D/F' score */
         }
-         /* UPDATED: Removed uppercase, increased font size, and brightened color */
+        /* UPDATED: Removed uppercase, increased size/brightness */
         .stat-label {
-            @apply text-base font-medium text-primary-green-100 mt-2;
+            @apply text-base font-medium text-primary-green-200 tracking-wide mt-2;
         }
         
         /* 5. NEW: Typed.js Cursor Styling */
@@ -96,28 +98,42 @@
         @keyframes blink {
             50% { opacity: 0; }
         }
-        
+
         /* 6. NEW: Flow Diagram Styling */
-        .flow-container {
-            @apply flex flex-col md:flex-row flex-wrap items-center justify-center gap-4 p-4 md:p-6 bg-gray-100 rounded-xl my-8 border border-gray-200;
+        .flow-diagram-container {
+            @apply flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 my-8;
         }
         .flow-item {
-            @apply flex flex-col items-center text-center;
+            @apply flex flex-col md:flex-row items-center flex-1;
         }
-        /* UPDATED: Added items-center, text-center, and hover effects */
         .flow-box {
-            @apply bg-white p-3 rounded-lg shadow-md border border-gray-200 w-40 h-24 flex flex-col justify-center items-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary-green-300;
+            @apply bg-gray-100 border border-gray-300 rounded-xl p-4 text-center w-full md:w-auto shadow-md transition-all duration-300 transform hover:shadow-lg hover:-translate-y-1;
+            min-width: 160px; /* Ensure boxes have some minimum width */
         }
         .flow-label {
-            @apply text-sm font-bold text-primary-green-700;
+            @apply block text-sm font-semibold text-primary-green-700;
         }
         .flow-desc {
-            @apply text-xs text-gray-500 mt-1;
+            @apply block text-xs text-gray-500;
         }
-        /* UPDATED: Changed color from text-gray-400 to text-primary-green-400 */
         .flow-arrow {
-            @apply w-12 h-12 text-primary-green-400 transform rotate-90 md:rotate-0; /* Stack on mobile, row on desktop */
+            @apply w-full md:w-16 h-8 md:h-auto text-primary-green-500;
+            /* Mobile (vertical) arrow */
+            transform: rotate(90deg);
         }
+        .md\:flow-arrow-md {
+            /* Desktop (horizontal) arrow */
+            @apply md:transform-none;
+        }
+        /* Hide the last arrow on mobile */
+        .flow-item:last-child .flow-arrow {
+            @apply hidden;
+        }
+        /* Hide the last arrow on desktop */
+        .flow-item:last-child .md\:flow-arrow-md {
+            @apply md:hidden;
+        }
+
     </style>
 
 </head>
@@ -126,18 +142,19 @@
     <!-- Header & Navigation -->
     <header class="bg-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <!-- UPDATED: Added transition and darker hover color -->
-            <a href="index.html" class="text-2xl font-extrabold text-primary-green-700 tracking-tight transition-all duration-300 hover:text-primary-green-800">Shaylee Czech</a>
+            <!-- UPDATED: Added hover transition -->
+            <a href="index.html" class="text-2xl font-extrabold text-primary-green-700 tracking-tight transition-colors duration-300 hover:text-primary-green-800">
+                Shaylee Czech
+            </a>
             
             <!-- Nav Links: Use absolute paths to work from both pages -->
-            <!-- UPDATED: Reduced spacing to accommodate new padding on links -->
+            <!-- UPDATED: Added "pill" styling and hover effect -->
             <nav class="hidden md:flex space-x-4">
-                <!-- UPDATED: Added padding, rounded corners, and a subtle hover background to each link. Made font semibold. -->
-                <a href="/index.html#about" class="text-gray-700 font-semibold hover:text-primary-green-600 transition-all duration-300 hover:bg-primary-green-50 rounded-lg px-3 py-2">About</a>
-                <a href="/resume.html" class="text-gray-700 font-semibold hover:text-primary-green-600 transition-all duration-300 hover:bg-primary-green-50 rounded-lg px-3 py-2">Experience</a>
-                <a href="/index.html#skills" class="text-gray-700 font-semibold hover:text-primary-green-600 transition-all duration-300 hover:bg-primary-green-50 rounded-lg px-3 py-2">Skills</a>
-                <a href="/index.html#projects" class="text-gray-700 font-semibold hover:text-primary-green-600 transition-all duration-300 hover:bg-primary-green-50 rounded-lg px-3 py-2">Projects</a>
-                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-700 font-semibold hover:text-primary-green-600 transition-all duration-300 hover:bg-primary-green-50 rounded-lg px-3 py-2">LinkedIn</a>
+                <a href="/index.html#about" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg">About</a>
+                <a href="/resume.html" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg">Experience</a>
+                <a href="/index.html#skills" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg">Skills</a>
+                <a href="/index.html#projects" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg">Projects</a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-600 hover:text-primary-green-700 hover:bg-primary-green-50 transition duration-300 font-semibold px-3 py-2 rounded-lg">LinkedIn</a>
             </nav>
         </div>
     </header>
@@ -177,7 +194,7 @@
         <!-- Dynamic Stats Section -->
         <section id="stats" class="bg-primary-green-900 text-white py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <!-- The stat-item class in the <style> block now handles the "box" styling -->
+                <!-- UPDATED: Grid gap increased to give cards space -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                     
                     <!-- Stat 1: Commits -->
@@ -210,22 +227,25 @@
                     <div class="expertise-card">
                         <div class="card-icon-wrapper">CM</div>
                         <h4 class="card-title">Config Mgmt & Automation</h4>
+                        <!-- UPDATED: Rephrased list items to remove parentheses -->
                         <ul class="card-list">
-                            <li>Terraform (IaC), AWS (EC2, S3, EIP)</li>
-                            <li>Ansible Playbooks, Handlers</li>
-                            <li>GitHub Actions (CI/CD)</li>
-                            <li>Python, Bash, SQL, PowerShell</li>
+                            <li>Terraform for Infrastructure as Code</li>
+                            <li>AWS: EC2, S3, IAM, EIP</li>
+                            <li>Ansible Playbooks & Handlers</li>
+                            <li>GitHub Actions for CI/CD</li>
+                            <li>Python, Bash, & PowerShell Scripting</li>
                         </ul>
                     </div>
 
                     <div class="expertise-card">
                         <div class="card-icon-wrapper">GRC</div>
                         <h4 class="card-title">Security & Compliance</h4>
+                        <!-- UPDATED: Rephrased list items to remove parentheses -->
                         <ul class="card-list">
-                            <li>CISSP Preparation (Nov '25)</li>
-                            <li>NIST/CIS Benchmarks, HIPAA, ITAR</li>
-                            <li>Endpoint Security (SentinelOne, Huntress)</li>
-                            <li>Identity & Access (Entra ID, Okta, IAM)</li>
+                            <li>CISSP Certification Prep (Nov '25)</li>
+                            <li>Frameworks: NIST, CIS, HIPAA, ITAR</li>
+                            <li>Endpoint Security: SentinelOne, Huntress</li>
+                            <li>Identity & Access: Entra ID, Okta, IAM</li>
                         </ul>
                     </div>
 
@@ -233,11 +253,12 @@
                     <div class="expertise-card">
                         <div class="card-icon-wrapper">ARCH</div>
                         <h4 class="card-title">System Architecture</h4>
+                        <!-- UPDATED: Rephrased list items to remove parentheses -->
                         <ul class="card-list">
-                            <li>Database Security (Oracle, SQL Server)</li>
-                            <li>Virtualization (Hyper-V, VMware)</li>
-                            <li>Networking (SD-WAN, Firewall Mgmt)</li>
-                            <li>DR/Backup (Veeam, Acronis, S3)</li>
+                            <li>Database Security: Oracle, SQL Server</li>
+                            <li>Virtualization: Hyper-V, VMware</li>
+                            <li>Networking: SD-WAN, Firewall Mgmt</li>
+                            <li>DR/Backup: Veeam, Acronis, S3</li>
                         </ul>
                     </div>
 
@@ -258,44 +279,45 @@
                         This site is running inside a Docker container on an AWS EC2 instance. The entire deployment process—from infrastructure creation to content update—is fully automated via a CI/CD pipeline. It features a two-container architecture: an Nginx proxy serving this page, and a Node.js API container providing the dynamic stats above.
                     </p>
 
-                    <!-- NEW: Flow Diagram Visual -->
-                    <div class="flow-container">
-                        
+                    <!-- NEW: Flow Diagram HTML -->
+                    <div class="flow-diagram-container">
                         <!-- Step 1: Git Push -->
                         <div class="flow-item">
                             <div class="flow-box">
                                 <!-- NEW: Icon -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-green-600 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                 </svg>
                                 <span class="flow-label">1. Git Push</span>
-                                <span class="flow-desc">(Developer)</span>
+                                <span class="flow-desc">(Code Change)</span>
                             </div>
+                            <!-- Arrow -->
+                            <svg class="flow-arrow md:flow-arrow-md" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                            </svg>
                         </div>
-
-                        <!-- Arrow -->
-                        <svg class="flow-arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
-
+                        
                         <!-- Step 2: GitHub Actions -->
                         <div class="flow-item">
                             <div class="flow-box">
                                 <!-- NEW: Icon -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-green-600 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 <span class="flow-label">2. GitHub Actions</span>
-                                <span class="flow-desc">(CI/CD Pipeline)</span>
+                                <span class="flow-desc">(CI/CD Trigger)</span>
                             </div>
+                            <!-- Arrow -->
+                            <svg class="flow-arrow md:flow-arrow-md" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                            </svg>
                         </div>
-
-                        <!-- Arrow -->
-                        <svg class="flow-arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
-
+                        
                         <!-- Step 3: Terraform & Ansible -->
                         <div class="flow-item">
                             <div class="flow-box">
-                                <!-- NEW: Icon -->
+                                <!-- UPDATED: Gear Icon -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-green-600 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -303,28 +325,30 @@
                                 <span class="flow-label">3. Terraform & Ansible</span>
                                 <span class="flow-desc">(Build & Configure)</span>
                             </div>
+                            <!-- Arrow -->
+                            <svg class="flow-arrow md:flow-arrow-md" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                            </svg>
                         </div>
                         
-                        <!-- Arrow -->
-                        <svg class="flow-arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
-
                         <!-- Step 4: AWS EC2 -->
                         <div class="flow-item">
                             <div class="flow-box">
                                 <!-- NEW: Icon -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-green-600 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
                                 </svg>
                                 <span class="flow-label">4. AWS EC2</span>
-                                <span class="flow-desc">(Nginx + Node.js API)</span>
+                                <span class="flow-desc">(Site is Live)</span>
                             </div>
+                            <!-- No arrow on last item -->
                         </div>
-
                     </div>
-                    <!-- END: Flow Diagram Visual -->
+                    
+                    <!-- /END Flow Diagram HTML -->
                     
                     <!-- UPDATED: Project spotlight bullet points to reflect new features -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 text-gray-700 mt-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 text-gray-700 mt-10"> <!-- Added margin-top -->
                         <ul class="space-y-3">
                             <li class="flex items-start">
                                 <span class="text-emerald-500 mr-2 text-xl font-bold">✓</span>
@@ -466,6 +490,4 @@
 
 </body>
 </html>
-
-
 
