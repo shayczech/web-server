@@ -17,17 +17,25 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # --- NEW: Snyk SAST Scan ---
-      # Scans the Node.js API code before infrastructure/deployment steps
-      - name: Run Snyk to check for vulnerabilities in Node.js code
+      # --- NEW: Setup Node.js and Install Dependencies for Snyk ---
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Matches your Dockerfile base image
+
+      - name: Install Node.js Dependencies
+        run: npm install
+        working-directory: ansible/files/api/ # Specify the directory with package.json
+
+      # --- Snyk SAST Scan (FIXED) ---
+      - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
           # Ensure SNYK_TOKEN is set in GitHub repository secrets
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }} 
         with:
-          # Scan the specific directory containing Node.js code
-          # Adjust this path if your Node.js code is elsewhere
-          command: monitor ansible/files/api/ 
+          # Pass the path to scan as part of the command
+          command: monitor ansible/files/api/
           args: --fail-on=high # Fail build if high or critical severity vulns found
 
       # --- Configure AWS Credentials (Existing) ---
@@ -92,3 +100,4 @@ jobs:
         run: |
           ansible-playbook -i inventory.ini deploy_nginx.yml --private-key ~/.ssh/id_rsa_runner
         working-directory: ansible/
+
