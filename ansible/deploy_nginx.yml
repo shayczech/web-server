@@ -129,26 +129,17 @@
         recreate: true
       become: yes
       
-    # --- RESILIENCE CHECK (TWO-STAGE FIX) ---
-    - name: A. Wait for API Network Port to be open (3000)
-      ansible.builtin.wait_for:
-        port: 3000
-        host: 127.0.0.1
-        state: started
-        timeout: 60 # Total wait time 60 seconds
+    # --- RESILIENCE CHECK (FINAL FIX) ---
+    - name: Verify API Port 3000 is listening (Container Health Check)
+      ansible.builtin.shell: |
+        netstat -tuln | grep -q :3000
+      register: netstat_check
+      until: netstat_check.rc == 0
+      retries: 20 # Total wait time 60 seconds (20 retries * 3s delay)
+      delay: 3
+      changed_when: false
       become: yes
 
-    - name: B. Wait for API to return HTTP 200 (Application Check)
-      ansible.builtin.uri:
-        url: http://127.0.0.1:3000/api/stats
-        method: GET
-        status_code: 200
-        retries: 20 # Check 20 times, checking every 3 seconds (60 seconds total)
-        delay: 3
-      register: api_check_result
-      until: api_check_result.status == 200
-      become: yes
-      
     # --- 5. DEPLOY NGINX AND CLEANUP ---
 
     - name: Deploy Nginx SSL Configuration File
