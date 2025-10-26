@@ -5,6 +5,18 @@
     
     # --- 1. INSTALLATION AND SETUP ---
 
+    # --- NEW: Aggressive Cache/Repo Cleanup Task ---
+    - name: Clean up old Trivy repo files and cache
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/apt/sources.list.d/trivy.list # Removes the old source file
+        - /etc/apt/trusted.gpg.d/trivy.gpg   # Removes old GPG key methods
+        - /var/cache/apt/pkgcache.bin        # Cleans APT cache
+      ignore_errors: true # Ignore if the file doesn't exist
+      become: true
+
     - name: Ensure essential packages are installed
       ansible.builtin.apt:
         name: 
@@ -17,7 +29,8 @@
           - python3-pip
           - lsof
           - net-tools
-          - apt-transport-https # Needed for Trivy repo
+          - apt-transport-https 
+          - lsb-release
         state: present
         update_cache: yes
       become: yes
@@ -45,7 +58,7 @@
       ansible.builtin.apt:
         name: trivy
         state: present
-        update_cache: yes # Update cache *after* adding repo and before install
+        update_cache: yes
       become: yes
       
     - name: Install Docker via official Convenience Script
@@ -105,7 +118,6 @@
         mode: '0755'
       become: yes
       
-    # --- NEW: Copy the .trivyignore file ---
     - name: Copy .trivyignore file to API directory
       ansible.builtin.copy:
         src: .trivyignore # Source is relative to playbook directory (ansible/)
@@ -161,7 +173,7 @@
         force_tag: yes
       become: yes
 
-    # --- MODIFIED: Run Trivy Scan using .trivyignore ---
+    # --- Run Trivy Scan using .trivyignore ---
     - name: Scan stats-api image for vulnerabilities (using .trivyignore)
       ansible.builtin.command: >
         trivy image 
@@ -247,4 +259,3 @@
         network_mode: "host"
         recreate: true
       become: yes
-
