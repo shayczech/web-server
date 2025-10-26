@@ -17,44 +17,40 @@
           - python3-pip
           - lsof
           - net-tools
-          - apt-transport-https # Needed for adding repositories
-          - software-properties-common # Needed for adding repositories
+          - apt-transport-https # Needed for Trivy repo
         state: present
         update_cache: yes
       become: yes
 
+    # --- Install Trivy via APT ---
+    - name: Add Trivy GPG key
+      ansible.builtin.apt_key:
+        url: https://aquasecurity.github.io/trivy-repo/deb/public.key
+        state: present
+      become: yes
+      
+    - name: Add Trivy APT repository
+      ansible.builtin.apt_repository:
+        repo: deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main
+        state: present
+        filename: trivy
+      become: yes
+      
+    - name: Install Trivy
+      ansible.builtin.apt:
+        name: trivy
+        state: present
+        update_cache: yes
+      become: yes
+      
     - name: Install Docker via official Convenience Script
       ansible.builtin.shell: 
         cmd: curl -fsSL https://get.docker.com | sh
-      args:
-        creates: /usr/bin/docker # Prevents re-running if docker exists
       become: yes
 
     - name: Install Python Docker Module
       ansible.builtin.apt:
         name: python3-docker
-        state: present
-      become: yes
-      
-    # --- NEW: Install Trivy for Container Scanning ---
-    - name: Add Trivy GPG key
-      ansible.builtin.get_url:
-        url: https://aquasecurity.github.io/trivy-repo/deb/public.key
-        dest: /usr/share/keyrings/trivy.asc
-        mode: '0644'
-      become: yes
-
-    - name: Add Trivy APT repository
-      ansible.builtin.apt_repository:
-        repo: "deb [signed-by=/usr/share/keyrings/trivy.asc] https://aquasecurity.github.io/trivy-repo/deb {{ ansible_distribution_release }} main"
-        state: present
-        filename: trivy
-        update_cache: yes
-      become: yes
-
-    - name: Install Trivy
-      ansible.builtin.apt:
-        name: trivy
         state: present
       become: yes
 
@@ -77,7 +73,7 @@
 
     - name: Place custom index.html (File copy from repo)
       ansible.builtin.copy:
-        src: files/index.html
+        src: files/index.html 
         dest: /app/html/index.html
         owner: root
         group: root
@@ -97,11 +93,21 @@
 
     - name: Copy Node.js API files (server.js, package.json, Dockerfile)
       ansible.builtin.copy:
-        src: files/api/
+        src: files/api/ 
         dest: /app/api/
         owner: root
         group: root
-        mode: '0755' # Ensure Dockerfile is executable if needed, though usually not
+        mode: '0755'
+      become: yes
+      
+    # --- NEW: Copy the .trivyignore file ---
+    - name: Copy .trivyignore file to API directory
+      ansible.builtin.copy:
+        src: .trivyignore # Source is relative to playbook directory (ansible/)
+        dest: /app/api/.trivyignore # Destination on the EC2 instance
+        owner: root
+        group: root
+        mode: '0644'
       become: yes
 
     # --- 3. SECURITY AND CREDENTIALS ---
@@ -114,26 +120,25 @@
     - name: Execute simulated code policy check
       ansible.builtin.shell: |
         echo "Running pylint against placeholder file to demonstrate policy check..."
-        # Example check (adjust linters/rules as needed for real policy)
-        pylint --disable=all --enable=W0107 /app/api/server.js || true 
-        # The '|| true' keeps the pipeline running for this example.
-        # Remove '|| true' for real enforcement to fail the build on lint errors.
+        pylint --disable=all --enable=W0107 /app/api/server.js || true
       args:
         chdir: /app/api/
-      changed_when: false # This task doesn't change system state
+      changed_when: false
       become: yes
 
-    - name: Run Certbot DNS Challenge to obtain SSL certificate
+    # --- MODIFIED: Improved Certbot task ---
+    - name: Check Certbot certificate validity and obtain/renew if needed
       ansible.builtin.shell: |
-        # Check if cert exists and is valid for >30 days
-        if openssl x509 -checkend 2592000 -noout -in /etc/letsencrypt/live/shayleeczech.com/fullchain.pem; then
-          echo "Certificate already exists and is valid. Skipping acquisition."
+        # Check if cert exists and is valid for > 30 days
+        if openssl x509 -checkend 2592000 -noout -in /etc/letsencrypt/live/shayleeczech.com/fullchain.pem > /dev/null 2>&1; then
+          echo "Certificate is valid for more than 30 days. Skipping renewal."
           exit 0
+        else
+          echo "Certificate expiring soon or does not exist. Running Certbot."
+          certbot certonly --dns-route53 -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
         fi
-        # Obtain or renew cert
-        certbot certonly --dns-route53 -d shayleeczech.com -d www.shayleeczech.com --non-interactive --agree-tos -m shayleeczech@gmail.com --no-self-upgrade --force-renewal
       register: certbot_result
-      changed_when: "'Successfully received certificate' in certbot_result.stdout or 'renewed' in certbot_result.stdout"
+      changed_when: "'Certificate is valid' not in certbot_result.stdout" 
       become: yes
 
 
@@ -145,44 +150,45 @@
         tag: latest
         source: build
         build:
-          path: /app/api/ # Use files copied to the host machine
-          pull: yes # Ensure base image is up-to-date
+          path: /app/api/ 
+          pull: yes
         state: present
-        force_tag: yes # Overwrite if 'latest' tag already exists
+        force_tag: yes
       become: yes
 
-    # --- NEW: Run Trivy Scan on Built Image ---
-    - name: Scan stats-api image for vulnerabilities
+    # --- MODIFIED: Run Trivy Scan using .trivyignore ---
+    - name: Scan stats-api image for vulnerabilities (using .trivyignore)
       ansible.builtin.command: >
-        trivy image
-        --exit-code 1
-        --severity HIGH,CRITICAL
-        --ignore-unfixed
-        --skip-ids CVE-2024-21538  # <-- Make sure this line is present
+        trivy image 
+        --exit-code 1 
+        --severity HIGH,CRITICAL 
+        --ignore-unfixed 
         stats-api:latest
+      args:
+        chdir: /app/api/ # Run from dir containing .trivyignore
       register: trivy_scan_result
-      changed_when: false
-      failed_when: trivy_scan_result.rc != 0
+      changed_when: false 
+      failed_when: trivy_scan_result.rc != 0 
       become: yes
-
+      
     - name: Start Stats API container
       community.docker.docker_container:
         name: stats-api
-        image: stats-api:latest # Use the image built and scanned
+        image: stats-api:latest 
         state: started
         restart_policy: always
-        network_mode: "host" # Shares host network so Nginx can proxy via localhost:3000
-        recreate: true # Ensure container uses the newly built image
+        network_mode: "host" 
+        recreate: true
       become: yes
       
-    # --- RESILIENCE CHECK (FINAL FIX) ---
-    - name: Verify API Port 3000 is listening (Container Health Check)
+    # --- RESILIENCE CHECK ---
+    - name: Verify API Port 3000 is listening
       ansible.builtin.wait_for:
         port: 3000
-        host: 127.0.0.1 # Check localhost
+        host: 127.0.0.1 
         state: started
-        delay: 5 # Initial delay
-        timeout: 60 # Max wait time
+        delay: 5    
+        timeout: 60 
       changed_when: false
       become: yes
 
@@ -195,10 +201,19 @@
         owner: root
         group: root
         mode: '0644'
-      notify: Restart Nginx Container # Notify handler to restart Nginx if conf changes
+      notify: Restart Nginx Container
       become: yes
 
-    - name: Ensure Nginx container is running with latest config
+    - name: Final Aggressive Port Cleanup Before Container Start
+      ansible.builtin.shell: |
+        fuser -k -n tcp 80 || true
+        fuser -k -n tcp 443 || true
+        systemctl restart docker || true
+        sleep 10
+      become: yes
+      ignore_errors: yes
+
+    - name: Start Final Nginx Container with SSL
       community.docker.docker_container:
         name: portfolio-web
         image: nginx:latest
@@ -209,7 +224,7 @@
           - /etc/letsencrypt:/etc/letsencrypt:ro
           - /app/config/nginx.conf:/etc/nginx/conf.d/default.conf:ro
         network_mode: "host"
-        recreate: true # Force recreate to pick up volume changes if needed (like cert renewal)
+        recreate: true
       become: yes
 
   # --- HANDLERS ---
@@ -217,6 +232,14 @@
     - name: Restart Nginx Container
       community.docker.docker_container:
         name: portfolio-web
-        state: started # Ensures it's running
-        restart: yes # Specifically triggers a restart
+        image: nginx:latest
+        state: started
+        restart_policy: always
+        volumes:
+          - /app/html:/usr/share/nginx/html:ro
+          - /etc/letsencrypt:/etc/letsencrypt:ro
+          - /app/config/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+        network_mode: "host"
+        recreate: true
       become: yes
+
