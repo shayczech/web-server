@@ -228,21 +228,22 @@
                         This site is running inside a Docker container on an AWS EC2 instance. The entire deployment process—from infrastructure creation to content update—is fully automated via a CI/CD pipeline. It features a two-container architecture: an Nginx proxy serving this page, and a Node.js API container providing the dynamic stats above.
                     </p>
                     
+                    <!-- UPDATED: Project spotlight bullet points to reflect new features -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 text-gray-700">
                         <ul class="space-y-3">
                             <li class="flex items-start">
                                 <span class="text-emerald-500 mr-2 text-xl font-bold">✓</span>
-                                <span class="font-medium">Terraform IaC: Manages EC2, EIP, and Security Group (S3 Remote State).</span>
+                                <span class="font-medium">Terraform IaC: Manages EC2, EIP, and Security Group, with PoLP via IAM Role integration.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-emerald-500 mr-2 text-xl font-bold">✓</span>
-                                <span class="font-medium">Ansible: Installs Docker, builds/deploys two containers, and configures Nginx.</span>
+                                <span class="font-medium">Ansible: Deploys containers and hardens the host with a UFW firewall configuration.</span>
                             </li>
                         </ul>
                         <ul class="space-y-3">
                             <li class="flex items-start">
                                 <span class="text-emerald-500 mr-2 text-xl font-bold">✓</span>
-                                <span class="font-medium">Nginx Proxy: Serves static content and reverse-proxies /api/stats to the Node.js API.</span>
+                                <span class="font-medium">Nginx Proxy: Serves content, terminates SSL, and includes an API resilience check.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-emerald-500 mr-2 text-xl font-bold">✓</span>
