@@ -17,6 +17,20 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # --- NEW: Snyk SAST Scan ---
+      # Scans the Node.js API code before infrastructure/deployment steps
+      - name: Run Snyk to check for vulnerabilities in Node.js code
+        uses: snyk/actions/node@master
+        env:
+          # Ensure SNYK_TOKEN is set in GitHub repository secrets
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }} 
+        with:
+          # Scan the specific directory containing Node.js code
+          # Adjust this path if your Node.js code is elsewhere
+          command: monitor ansible/files/api/ 
+          args: --fail-on=high # Fail build if high or critical severity vulns found
+
+      # --- Configure AWS Credentials (Existing) ---
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -24,7 +38,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # --- PHASE 1: Terraform (IaC) ---
+      # --- PHASE 1: Terraform (IaC) (Existing) ---
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
@@ -46,7 +60,7 @@ jobs:
           echo "EC2_IP=$EC2_IP" >> $GITHUB_ENV
         working-directory: infra/
 
-# --- PHASE 2: Ansible (Configuration Management) ---
+      # --- PHASE 2: Ansible (Configuration Management) (Existing) ---
 
       - name: Setup SSH Key for Ansible (No Passphrase)
         run: |
@@ -58,13 +72,14 @@ jobs:
       - name: Install Ansible
         run: |
           pip install ansible
+          # Ensure community.docker collection is installed
           ansible-galaxy collection install community.docker
 
       - name: Update Inventory with Live IP
         run: |
-          # sed replaces the 'ec2_instance_ip' placeholder in inventory.ini 
-          # with the actual IP stored in the environment variable.
-          sed -i 's/ec2_instance_ip/${{ env.EC2_IP }}/g' inventory.ini
+          # sed replaces the placeholder in inventory.ini 
+          # Use a different delimiter like '#' if IP might contain '/'
+          sed -i 's#ec2_instance_ip#${{ env.EC2_IP }}#g' inventory.ini
         working-directory: ansible/
 
       - name: Disable SSH Host Key Checking
@@ -73,7 +88,7 @@ jobs:
           echo -e "[defaults]\nhost_key_checking = False\n" > ansible.cfg
         working-directory: ansible/
 
-      - name: Run Ansible Playbook (Docker/Nginx Configuration)
+      - name: Run Ansible Playbook (Docker/Nginx Configuration & Security Scans)
         run: |
           ansible-playbook -i inventory.ini deploy_nginx.yml --private-key ~/.ssh/id_rsa_runner
         working-directory: ansible/
