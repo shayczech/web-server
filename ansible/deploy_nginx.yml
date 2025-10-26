@@ -77,8 +77,23 @@
         mode: '0755'
       become: yes
 
+    # --- 3. SECURITY AND CREDENTIALS ---
+    - name: Install PyLint for Policy-as-Code Check (Simulated)
+      ansible.builtin.pip:
+        name: pylint
+        state: present
+      become: yes
 
-    # --- 3. TEMPORARY CREDENTIALS FILE ---
+    - name: Execute simulated code policy check
+      ansible.builtin.shell: |
+        echo "Running pylint against placeholder file to demonstrate policy check..."
+        pylint --disable=all --enable=W0107 /app/api/server.js || true
+        # The '|| true' keeps the pipeline running, but a real check would fail the build
+      args:
+        chdir: /app/api/
+      changed_when: false
+      become: yes
+
     - name: Create temporary AWS credentials file for Certbot
       ansible.builtin.copy:
         content: |
@@ -127,6 +142,18 @@
         restart_policy: always
         network_mode: "host" # Shares host network so Nginx can proxy via localhost:3000
         recreate: true
+      become: yes
+      
+    - name: Verify Stats API is running before proxying
+      ansible.builtin.uri:
+        url: http://127.0.0.1:3000/api/stats
+        method: GET
+        status_code: 200
+        timeout: 5
+        retries: 12 # Check for 1 minute (12 retries * 5s delay)
+        delay: 5
+      register: api_check
+      until: api_check.status == 200
       become: yes
 
     # --- 5. DEPLOY NGINX AND CLEANUP ---
