@@ -10,7 +10,13 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package*.json ./
-RUN npm install
+
+# This is a best practice to reduce the image size and attack surface.
+RUN npm install --production
+
+# This attempts to fix any known vulnerabilities in the node_modules
+# We use '|| true' so it doesn't fail the build if it can't auto-fix
+RUN npm audit fix || true
 
 # Copy application source code
 COPY . .
