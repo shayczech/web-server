@@ -36,11 +36,7 @@
     <!-- 3. Load Custom Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- 
-      4. STYLES MOVED INLINE
-      All custom styles from style.css are now here, inside a 'text/tailwindcss' tag
-      so the CDN script can process them.
-    -->
+    <!-- 4. INLINE CUSTOM STYLES (processed by Tailwind CDN) -->
     <style type="text/tailwindcss">
         /* 1. Global Page Load Animation */
         @keyframes fadeIn {
@@ -59,23 +55,22 @@
         .card-icon-wrapper {
             @apply h-14 w-14 flex items-center justify-center rounded-full bg-gradient-to-br from-primary-green-100 to-primary-green-200 text-primary-green-700 font-bold text-xl mb-5 shadow-sm; 
         }
+        /* UPDATED: Made card titles larger, green, and given more space */
         .card-title {
-            @apply text-xl font-bold text-gray-900 mb-3;
+            @apply text-2xl font-bold text-primary-green-700 mb-4 tracking-tight;
         }
         .card-list {
             @apply text-gray-600 space-y-2 list-disc list-inside;
         }
 
-        /* 3. Dynamic Stat Styling */
+        /* 3. Dynamic Stat Styling (Dark Bar) */
         .stat-item {
             @apply flex flex-col items-center justify-center p-4;
         }
-
         .stat-value {
             @apply text-5xl font-extrabold text-white;
             animation: fadeIn 1s ease-in-out;
         }
-
         /* Specific coloring for security score (applied by JS) */
         .stat-value.text-primary-green-300 {
             color: #6EE7B7; /* Brighter green for 'A' score */
@@ -86,9 +81,17 @@
         .stat-value.text-red-400 {
             color: #F87171; /* Red for 'D/F' score */
         }
-
         .stat-label {
             @apply text-sm font-medium text-primary-green-200 uppercase tracking-wider mt-2;
+        }
+        
+        /* 5. NEW: Typed.js Cursor Styling */
+        .typed-cursor {
+            @apply text-primary-green-200 opacity-100;
+            animation: blink 0.7s infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
         }
     </style>
 
@@ -105,7 +108,7 @@
                 <a href="/index.html#about" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">About</a>
                 <a href="/index.html#skills" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Expertise</a>
                 <a href="/index.html#projects" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Projects</a>
-                <a href="/resume.html" class="text-gray-600 hover:text-primary-green-600 transition duration-3D00 font-medium">Resume</a>
+                <a href="/resume.html" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Resume</a>
                 <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">LinkedIn</a>
             </nav>
         </div>
@@ -118,13 +121,24 @@
         <section id="about" class="bg-primary-green-600 text-white py-20 sm:py-32">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div class="max-w-3xl mx-auto">
-                    <p class="text-primary-green-200 font-semibold uppercase tracking-wider mb-3">Cloud Engineering | DevSecOps | CISSP Candidate</p>
-                    <h2 class="text-5xl sm:text-6xl font-extrabold mb-6 leading-tight">
-                        Securing and automating cloud infrastructure for compliance and scale.
-                    </h2>
-                    <p class="text-xl text-primary-green-100 mb-10">
-                        Leveraging a strong foundation in Database Administration, Systems Engineering, and Automation, I focus on repeatable, compliant (NIST/CIS), and scalable cloud solutions.
+                    
+                    <!-- This is the sub-headline we styled -->
+                    <p class="text-white font-bold uppercase tracking-widest mb-4 text-lg">
+                        Cloud Engineering | DevSecOps | CISSP Candidate
                     </p>
+                    
+                    <!-- This is the typing headline -->
+                    <h2 class="text-5xl sm:text-6xl font-extrabold mb-6 leading-tight min-h-[140px] sm:min-h-0">
+                        Securing and <span id="typed-headline" class="text-white"></span>
+                    </h2>
+                    
+                    <!-- UPDATED: Wrapped this paragraph in a "glass" card to set it apart -->
+                    <div class="bg-black/20 border border-white/10 rounded-xl p-6 mb-10 shadow-lg backdrop-blur-sm">
+                        <p class="text-lg text-white font-medium">
+                            I build, automate, and secure cloud infrastructure. My experience bridges the gap between traditional systems, database management, and modern DevSecOps practices.
+                        </p>
+                    </div>
+                    
                     <a href="#projects" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-primary-green-700 bg-white hover:bg-gray-100 transition duration-300 transform hover:scale-105">
                         View Automated Pipeline
                     </a>
@@ -237,10 +251,7 @@
                         </ul>
                     </div>
                     
-                    <!-- 
-                      BUTTON UPDATED HERE: 
-                      - Added 'text-center' to the parent div
-                    -->
+                    <!-- UPDATED: Button is larger, has more shadow, and is centered -->
                     <div class="mt-8 text-center">
                         <a href="https://github.com/shayczech/web-server" target="_blank" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-primary-green-600 hover:bg-primary-green-700 transition duration-300 transform hover:scale-105">
                             View Source Code (The Pipeline) →
@@ -269,10 +280,14 @@
       - Correctly calls /api/stats
       - Uses the correct JSON keys: 'githubCommits' and 'terraformModules'
     -->
+    
+    <!-- NEW: Load the Typed.js library -->
+    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // Function to fetch LIVE stats from the API
+            // --- Stats API Function ---
             async function fetchStats() {
                 const response = await fetch('/api/stats');
                 if (!response.ok) {
@@ -282,32 +297,26 @@
                 return data;
             }
 
-            // This function is kept from your original code to handle the UI
             async function updateStatsUI() {
                  try {
                     const data = await fetchStats(); 
                     
-                    // Populate stats - Safely check if elements exist
                     const commitsEl = document.getElementById('commits-count');
                     const resourcesEl = document.getElementById('resources-count');
                     const scoreEl = document.getElementById('security-score');
 
-                    // UPDATED: Use 'data.githubCommits' from your API
                     if (commitsEl && data.githubCommits !== undefined) {
                         commitsEl.textContent = data.githubCommits;
                     }
                     
-                    // UPDATED: Use 'data.terraformModules' from your API
                     if (resourcesEl && data.terraformModules !== undefined) {
                         resourcesEl.textContent = data.terraformModules;
                     }
 
-                    // Populate and colorize security score (This key is correct)
                     if (scoreEl && data.securityScore !== undefined) {
                         const score = data.securityScore;
                         scoreEl.textContent = `${score}%`;
                         
-                        // Clear previous color classes first
                         scoreEl.classList.remove('text-primary-green-300', 'text-yellow-300', 'text-red-400');
 
                         if (score >= 90) {
@@ -321,7 +330,6 @@
 
                 } catch (error) {
                     console.error('Error updating stats UI:', error);
-                    // Set all stats to 'N/A' on failure - Safely check if elements exist
                     const commitsEl = document.getElementById('commits-count');
                     const resourcesEl = document.getElementById('resources-count');
                     const scoreEl = document.getElementById('security-score');
@@ -331,7 +339,6 @@
                     
                     if (scoreEl) {
                         scoreEl.textContent = 'N/A';
-                        // Keep default color, or use red
                         scoreEl.classList.remove('text-primary-green-300', 'text-yellow-300');
                         scoreEl.classList.add('text-red-400');
                     }
@@ -340,10 +347,26 @@
 
             // Initial update on page load
             updateStatsUI(); 
+            
+            // --- NEW: Typed.js Function ---
+            if (document.getElementById('typed-headline')) {
+              var options = {
+                strings: [
+                  'automating cloud infrastructure.',
+                  'deploying container apps.',
+                  'scaling CI/CD pipelines.'
+                ],
+                typeSpeed: 50,  // How fast it types
+                backSpeed: 30,   // How fast it deletes
+                backDelay: 3000, // Wait 3s after typing
+                startDelay: 500, // Wait 0.5s before starting
+                loop: true,
+                smartBackspace: true
+              };
+              var typed = new Typed('#typed-headline', options);
+            }
         });
     </script>
 
 </body>
 </html>
-
-
