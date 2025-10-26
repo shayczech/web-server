@@ -16,10 +16,6 @@ RUN npm install --production
 # --- Attempt to fix vulnerable NPM packages ---
 RUN npm audit fix || true
 
-# --- NEW: Explicitly update the package flagged by Trivy ---
-# We force update cross-spawn to the known fixed version 7.0.5
-RUN npm update cross-spawn@7.0.5
-
 # Copy application source code
 COPY . .
 
