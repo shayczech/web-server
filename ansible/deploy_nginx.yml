@@ -16,6 +16,7 @@
           - gnupg
           - python3-pip
           - lsof
+          - net-tools
         state: present
         update_cache: yes
       become: yes
