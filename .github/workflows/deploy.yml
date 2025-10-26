@@ -17,17 +17,17 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # --- NEW: Setup Node.js and Install Dependencies for Snyk ---
+      # --- Setup Node.js and Install Dependencies for Snyk ---
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18' # Matches your Dockerfile base image
 
-      - name: Install Node.js Dependencies
+      - name: Install Node.js Dependencies (for Snyk Scan)
         run: npm install
         working-directory: ansible/files/api/ # Specify the directory with package.json
 
-      # --- Snyk SAST Scan (FIXED) ---
+      # --- Snyk SAST Scan ---
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
@@ -38,6 +38,10 @@ jobs:
           command: monitor ansible/files/api/
           args: --fail-on=high # Fail build if high or critical severity vulns found
 
+      # --- *** NEW FIX: Clean up node_modules *** ---
+      - name: Clean up node_modules to prevent Ansible copy hang
+        run: rm -rf ansible/files/api/node_modules
+        
       # --- Configure AWS Credentials (Existing) ---
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -86,7 +90,6 @@ jobs:
       - name: Update Inventory with Live IP
         run: |
           # sed replaces the placeholder in inventory.ini 
-          # Use a different delimiter like '#' if IP might contain '/'
           sed -i 's#ec2_instance_ip#${{ env.EC2_IP }}#g' inventory.ini
         working-directory: ansible/
 
