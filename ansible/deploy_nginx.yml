@@ -150,7 +150,7 @@
         state: present
         force_tag: yes # Overwrite if 'latest' tag already exists
       become: yes
-      
+
     # --- NEW: Run Trivy Scan on Built Image ---
     - name: Scan stats-api image for vulnerabilities
       ansible.builtin.command: >
@@ -158,7 +158,7 @@
         --exit-code 1
         --severity HIGH,CRITICAL
         --ignore-unfixed
-        --ignore-ids CVE-2024-21538  # <-- Make sure this line is present
+        --skip-ids CVE-2024-21538  # <-- Make sure this line is present
         stats-api:latest
       register: trivy_scan_result
       changed_when: false
