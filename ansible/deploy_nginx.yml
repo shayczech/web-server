@@ -79,8 +79,8 @@
 
     # --- 3. SECURITY AND CREDENTIALS ---
     - name: Install PyLint for Policy-as-Code Check (Simulated)
-      ansible.builtin.pip:
-        name: pylint
+      ansible.builtin.apt:
+        name: pylint 
         state: present
       become: yes
 
@@ -93,21 +93,6 @@
         chdir: /app/api/
       changed_when: false
       become: yes
-
-    - name: Create temporary AWS credentials file for Certbot
-      ansible.builtin.copy:
-        content: |
-          [default]
-          aws_access_key_id = {{ lookup('env', 'AWS_ACCESS_KEY_ID') }}
-          aws_secret_access_key = {{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}
-        dest: /root/.aws/credentials
-        owner: root
-        group: root
-        mode: '0600' # Secure permissions
-      become: yes
-      environment:
-        AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
 
     - name: Run Certbot DNS Challenge to obtain SSL certificate
       ansible.builtin.shell: |
@@ -189,12 +174,6 @@
           - /app/config/nginx.conf:/etc/nginx/conf.d/default.conf:ro
         network_mode: "host"
         recreate: true
-      become: yes
-      
-    - name: Remove temporary AWS credentials file (SECURITY CRITICAL)
-      ansible.builtin.file:
-        path: /root/.aws/credentials
-        state: absent
       become: yes
 
   # --- HANDLERS ---

@@ -1,6 +1,58 @@
 provider "aws" {
   region = "us-east-2" # <<< MUST MATCH YOUR CONFIGURED REGION
 }
+
+# --- NEW 1: IAM Policy for Route 53 (Certbot) ---
+resource "aws_iam_policy" "certbot_policy" {
+  name        = "${var.server_name}-CertbotPolicy"
+  description = "Allows Certbot to create and delete DNS records in Route 53 for validation."
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "route53:GetChange",
+          "route53:ListHostedZones",
+          "route53:ChangeResourceRecordSets", # The main action Certbot needs
+          "route53:ListResourceRecordSets"
+        ]
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+# --- NEW 2: IAM Role for the EC2 Instance ---
+resource "aws_iam_role" "ec2_certbot_role" {
+  name               = "${var.server_name}-EC2CertbotRole"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      },
+    ]
+  })
+}
+
+# --- NEW 3: Attach the Policy to the Role ---
+resource "aws_iam_role_policy_attachment" "certbot_attach" {
+  role       = aws_iam_role.ec2_certbot_role.name
+  policy_arn = aws_iam_policy.certbot_policy.arn
+}
+
+# --- NEW 4: IAM Instance Profile (Links Role to EC2) ---
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "${var.server_name}-EC2Profile"
+  role = aws_iam_role.ec2_certbot_role.name
+}
+
 # 1. Define the Security Group (The Firewall)
 # This now opens SSH (port 22) AND HTTP (port 80)
 resource "aws_security_group" "allow_web" {
@@ -75,7 +127,7 @@ resource "aws_instance" "app_server" {
   instance_type = var.instance_type
   key_name      = var.key_name
   vpc_security_group_ids = [aws_security_group.allow_web.id]
-
+  iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
   tags = {
     Name = var.server_name
   }
