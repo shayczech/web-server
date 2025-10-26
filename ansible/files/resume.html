@@ -71,15 +71,44 @@
 
         /* 4. Skill Tag Styling */
         .skill-tag {
-            @apply inline-flex items-center px-3 py-1.5 rounded-full bg-primary-teal-100 text-primary-teal-700 text-xs font-semibold mr-2 mb-2 transition-all duration-200 ease-in-out;
+            @apply inline-flex items-center px-3.5 py-1.5 rounded-full text-sm font-semibold mr-2.5 mb-2.5 transition-all duration-200 ease-in-out shadow-sm bg-primary-teal-600 text-white border border-primary-teal-700;
         }
         .skill-tag:hover {
-            @apply bg-primary-teal-200 -translate-y-px;
+            @apply -translate-y-0.5 shadow-md bg-primary-teal-700 border-primary-teal-800;
         }
 
         /* 5. Job Card Styling */
         .job-card {
             transition: all 0.3s ease-in-out;
+            @apply relative overflow-hidden;
+        }
+        .job-card::before {
+            content: '';
+            @apply absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-teal-500 to-primary-teal-600;
+        }
+        .job-header {
+            @apply flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4;
+        }
+        .job-title {
+            @apply text-2xl font-bold text-gray-900 mb-1;
+        }
+        .job-company {
+            @apply text-lg font-semibold text-primary-teal-700 mb-1;
+        }
+        .job-duration {
+            @apply text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full inline-block;
+        }
+        .job-description {
+            @apply text-gray-700 leading-relaxed;
+        }
+        .job-description li {
+            @apply flex items-start mb-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200;
+        }
+        .job-description li svg {
+            @apply flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-3 mt-0.5;
+        }
+        .job-description li span {
+            @apply flex-1;
         }
         
         /* 6. Technology Icon Grid */
@@ -106,13 +135,28 @@
 
         /* 8. NEW: Spotlight Card Styling (from index.html) */
         .spotlight-card {
-            @apply bg-gray-50 p-8 rounded-xl shadow-md border border-gray-200 transition-all duration-300 hover:shadow-xl hover:border-primary-teal-300 hover:-translate-y-1.5; 
+            @apply bg-white p-8 rounded-2xl shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-2xl hover:border-primary-teal-300 hover:-translate-y-2 relative overflow-hidden; 
+        }
+        .spotlight-card::before {
+            content: '';
+            @apply absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-teal-500 to-primary-teal-600;
         }
         .spotlight-title {
-            @apply text-2xl font-bold text-primary-teal-700 mb-4 tracking-tight;
+            @apply text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary-teal-700 to-primary-teal-600 mb-6 tracking-tight relative;
+        }
+        .spotlight-title::after {
+            content: '';
+            @apply absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-primary-teal-400 to-primary-teal-500 rounded-full;
         }
         .spotlight-list {
-            @apply text-gray-600 space-y-2 list-disc list-inside;
+            @apply text-gray-700 space-y-3 list-none;
+        }
+        .spotlight-list li {
+            @apply flex items-start;
+        }
+        .spotlight-list li::before {
+            content: '▶';
+            @apply text-primary-teal-500 mr-3 mt-0.5 text-sm font-bold;
         }
         
     </style>
@@ -162,9 +206,21 @@
     <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         
         <!-- Page Title -->
-        <div class="text-center mb-10">
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900">DevSecOps & Cloud</h1> 
-            <p class="mt-3 text-lg text-gray-600">A showcase of target-role skills and supporting professional experience.</p>
+        <div class="bg-gradient-to-r from-primary-teal-500 to-primary-teal-600 rounded-2xl p-8 mb-12 text-white">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full mb-6">
+                    <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-4xl sm:text-5xl font-black text-white mb-4 tracking-tight">
+                    DevSecOps & Cloud
+                </h1>
+                <p class="text-lg text-white/90 font-medium max-w-2xl mx-auto leading-relaxed">
+                    A comprehensive showcase of target-role skills and supporting professional experience in cloud infrastructure, automation, and security
+                </p>
+            </div>
         </div>
         
         <!-- 
@@ -172,7 +228,13 @@
             This section is new and highlights the target skills first.
         -->
         <section id="competencies" class="mb-16">
-            <h3 class="text-3xl font-extrabold text-gray-900 mb-12 text-center">Core Competencies</h3>
+            <div class="text-center mb-12">
+                <h3 class="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary-teal-600 via-primary-teal-500 to-primary-teal-700 mb-4 tracking-tight">
+                    Core Competencies
+                </h3>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary-teal-500 to-primary-teal-600 mx-auto rounded-full"></div>
+                <p class="text-lg text-gray-600 mt-4 font-medium">The skills that drive my expertise</p>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 
                 <div class="spotlight-card">
@@ -209,9 +271,10 @@
             <!-- Link to project -->
             <div class="mt-10 text-center">
                 <a href="/index.html#projects" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-primary-teal-600 hover:bg-primary-teal-700 transition duration-300 transform hover:scale-105">
-                    <!-- UPDATED ICON: Replaced beaker with code-bracket -->
-                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M6.28 5.22a.75.75 0 010 1.06L2.56 10l3.72 3.72a.75.75 0 11-1.06 1.06L.97 10.53a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 0zm7.44 0a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 11-1.06-1.06L17.44 10l-3.72-3.72a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                    <!-- Gear icon -->
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                     </svg>
                     See these skills in my live CI/CD project
                 </a>
@@ -224,7 +287,13 @@
             This section is now the support for the skills above.
         -->
         <section id="experience" class="mb-16">
-            <h3 class="text-3xl font-extrabold text-gray-900 mb-12 text-center">Professional Timeline</h3>
+            <div class="text-center mb-12">
+                <h3 class="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-800 via-gray-700 to-gray-900 mb-4 tracking-tight">
+                    Professional Timeline
+                </h3>
+                <div class="w-32 h-1 bg-gradient-to-r from-gray-400 to-gray-600 mx-auto rounded-full"></div>
+                <p class="text-lg text-gray-600 mt-4 font-medium">My journey in technology and security</p>
+            </div>
             
             <!-- Filter Buttons (UPDATED) -->
             <div id="filter-container" class="flex flex-wrap justify-center gap-3 mb-12">
@@ -246,10 +315,14 @@
             <div id="experience-list" class="space-y-8">
 
                 <!-- Job 1: RBS IT -->
-                <div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-teal-500" data-tags="security automation">
-                    <h3 class="text-2xl font-bold text-gray-900">System Engineer</h3>
-                    <p class="text-gray-700 font-medium">RBS IT | Wichita, KS</p>
-                    <p class="text-gray-500 text-sm mb-2">Feb 2025 - Present (9 mos)</p>
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="security automation">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">System Engineer</h3>
+                            <p class="job-company">RBS IT | Wichita, KS</p>
+                        </div>
+                        <span class="job-duration">Feb 2025 - Present (9 mos)</span>
+                    </div>
                     
                     <div class="my-4 flex flex-wrap gap-2">
                         <span class="skill-tag">Incident Management</span>
@@ -259,31 +332,35 @@
                         <span class="skill-tag">Active Directory</span>
                     </div>
                     
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Drove proactive security strategy and operational excellence for 75+ MSP clients (over 3,000 devices), ensuring Tier 3 resolution while maintaining continuous system integrity, network reliability, and uptime for mission-critical operations.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Spearheaded vulnerability management at scale by developing and deploying <span class="keyword">Python</span> scripts to automatically identify and flag deprecated client hardware and software, mitigating potential security risks and enforcing system hygiene.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Managed an advanced security stack, including 24/7 incident response and threat monitoring using <span class="keyword">RMM</span> platforms, advanced email protection (<span class="keyword">Proofpoint</span>), and <span class="keyword">Microsoft Purview</span> for rapid containment and reconciliation.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Administered comprehensive security and recovery solutions, including continuous endpoint monitoring (<span class="keyword">Huntress</span>, <span class="keyword">SentinelOne</span>, <span class="keyword">Microsoft Defender</span>) and robust Disaster Recovery platforms (<span class="keyword">Acronis</span>, <span class="keyword">Veeam</span>).</span>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Job 2: Leading Edge -->
-                <div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-teal-500" data-tags="security cloud">
-                    <h3 class="text-2xl font-bold text-gray-900">System Engineer</h3>
-                    <p class="text-gray-700 font-medium">Leading Edge Technology Partners | Hutchinson, KS</p>
-                    <p class="text-gray-500 text-sm mb-2">Oct 2024 - Feb 2025 (5 mos)</p>
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="security cloud">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">System Engineer</h3>
+                            <p class="job-company">Leading Edge Technology Partners | Hutchinson, KS</p>
+                        </div>
+                        <span class="job-duration">Oct 2024 - Feb 2025 (5 mos)</span>
+                    </div>
                     
                     <div class="my-4 flex flex-wrap gap-2">
                         <span class="skill-tag">Backup & Recovery</span>
@@ -291,31 +368,35 @@
                         <span class="skill-tag">Disaster Recovery</span>
                     </div>
                     
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Managed secure Identity and Access Management (IAM) for 45 clients (1500+ devices) via <span class="keyword">Microsoft Active Directory</span> and <span class="keyword">Microsoft 365</span>, reinforcing security best practices.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Maintained high security and operational integrity by managing network segmentation and perimeter defense via <span class="keyword">SonicWall</span> firewalls (VPNs, TCP/IP, DNS/DHCP).</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Oversaw Disaster Recovery (DR) readiness and data protection by administering <span class="keyword">Veeam Backup & Recovery</span> and <span class="keyword">Synology</span> storage solutions.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Contributed to secure system deployment within <span class="keyword">Hyper-V</span> and <span class="keyword">VMware</span> virtualized environments, focusing on proper resource isolation and high-availability architecture.</span>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Job 3: WTS -->
-                <div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-teal-500" data-tags="security cloud">
-                    <h3 class="text-2xl font-bold text-gray-900">IT Support Manager</h3>
-                    <p class="text-gray-700 font-medium">WTS | Wichita, KS</p>
-                    <p class="text-gray-500 text-sm mb-2">May 2024 - Oct 2024 (6 mos)</p>
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="security cloud">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">IT Support Manager</h3>
+                            <p class="job-company">WTS | Wichita, KS</p>
+                        </div>
+                        <span class="job-duration">May 2024 - Oct 2024 (6 mos)</span>
+                    </div>
                     
                     <div class="my-4 flex flex-wrap gap-2">
                         <span class="skill-tag">Project Management</span>
@@ -324,31 +405,35 @@
                         <span class="skill-tag">Supervisory Skills</span>
                     </div>
                     
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Facilitated Security and Compliance Audits (GRC) by driving rigorous adherence to <span class="keyword">NIST</span> and <span class="keyword">CIS Benchmarks</span> and implementing protocols such as <span class="keyword">HIPAA</span> and <span class="keyword">ITAR</span>.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Architected and maintained secure, high-availability systems, including <span class="keyword">VMware</span> environments, redundant <span class="keyword">SonicWall</span> firewalls, and <span class="keyword">VeloCloud SD-WAN</span>.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Directed IT support for 25+ clients, leading the team in implementing proactive security measures and optimizing maintenance procedures to reduce incident volume.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Designed and executed client IT strategies using <span class="keyword">Atera</span> & <span class="keyword">ConnectWise RMM</span> for automated monitoring and patch management, combined with <span class="keyword">Proofpoint</span> for email threat detection.</span>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Job 4: Village Travel -->
-                <div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-teal-500" data-tags="security cloud">
-                    <h3 class="text-2xl font-bold text-gray-900">Infrastructure Administrator</h3>
-                    <p class="text-gray-700 font-medium">Village Travel | Wichita, KS</p>
-                    <p class="text-gray-500 text-sm mb-2">Oct 2023 - May 2024 (8 mos)</p>
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="security cloud">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Infrastructure Administrator</h3>
+                            <p class="job-company">Village Travel | Wichita, KS</p>
+                        </div>
+                        <span class="job-duration">Oct 2023 - May 2024 (8 mos)</span>
+                    </div>
                     
                     <div class="my-4 flex flex-wrap gap-2">
                         <span class="skill-tag">NIST</span>
@@ -357,31 +442,35 @@
                         <span class="skill-tag">Jira</span>
                     </div>
                     
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Spearheaded the secure migration of on-premises <span class="keyword">Active Directory</span> to <span class="keyword">Microsoft Entra ID (Azure AD)</span>, establishing modern IAM and enabling <span class="keyword">Intune</span> and <span class="keyword">Conditional Access</span>.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Conducted comprehensive <span class="keyword">NIST</span>-based infrastructure audits to identify and remediate security weaknesses, optimizing resource utilization and reducing the attack surface.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Configured and implemented <span class="keyword">Jira</span> as a unified platform for enhanced ticketing, asset management, and security incident tracking.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Developed and formally enforced robust backup and disaster recovery processes and policies to strengthen organizational resilience.</span>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Job 5: Flint Hills -->
-                <div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-teal-500" data-tags="security automation cloud">
-                    <h3 class="text-2xl font-bold text-gray-900">Database Administrator</h3>
-                    <p class="text-gray-700 font-medium">Flint Hills Resources | Wichita, KS</p>
-                    <p class="text-gray-500 text-sm mb-2">Jan 2023 - Jun 2023 (6 mos)</p>
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="security automation cloud">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Database Administrator</h3>
+                            <p class="job-company">Flint Hills Resources | Wichita, KS</p>
+                        </div>
+                        <span class="job-duration">Jan 2023 - Jun 2023 (6 mos)</span>
+                    </div>
                     
                     <div class="my-4 flex flex-wrap gap-2">
                         <span class="skill-tag">Microsoft SQL Server</span>
@@ -391,27 +480,31 @@
                         <span class="skill-tag">AWS</span>
                     </div>
                     
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Improved database security posture by consolidating redundant servers and migrating standalone <span class="keyword">Oracle</span> databases to a managed multitenant architecture.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Developed automation scripts (<span class="keyword">Bash</span>, <span class="keyword">PowerShell</span>, and <span class="keyword">SQL</span>) for daily administration and monitoring tasks, enhancing operational efficiency and security checks.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Managed, upgraded, and migrated highly available <span class="keyword">SQL Server</span>, <span class="keyword">MySQL</span>, and <span class="keyword">Oracle</span> databases using <span class="keyword">AWS DMS</span> and other administration tools.</span>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Job 6: TDS (Full-time) -->
-                <div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-teal-500" data-tags="security automation cloud">
-                    <h3 class="text-2xl font-bold text-gray-900">Database Administrator</h3>
-                    <p class="text-gray-700 font-medium">TDS Telecommunications LLC | Remote</p>
-                    <p class="text-gray-500 text-sm mb-2">Apr 2019 - Dec 2022 (3 yrs 9 mos)</p>
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="security automation cloud">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Database Administrator</h3>
+                            <p class="job-company">TDS Telecommunications LLC | Remote</p>
+                        </div>
+                        <span class="job-duration">Apr 2019 - Dec 2022 (3 yrs 9 mos)</span>
+                    </div>
                     
                     <div class="my-4 flex flex-wrap gap-2">
                         <span class="skill-tag">Oracle RAC</span>
@@ -421,54 +514,62 @@
                         <span class="skill-tag">GoldenGate Replication</span>
                     </div>
                     
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Orchestrated the security-focused upgrade of over 400 <span class="keyword">Oracle</span> databases from 12c to 19c, including rigorous vulnerability and performance testing.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Developed and implemented automation scripts (<span class="keyword">Python</span>, <span class="keyword">Bash</span>, <span class="keyword">SQL</span>) for weekly database refresh processes, streamlining operations and ensuring consistent security configurations.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Maintained the security and integrity of over 400 <span class="keyword">SQL Server</span> and <span class="keyword">Oracle</span> databases via regular patching, refreshes, encryption, and secure upgrades (<span class="keyword">GoldenGate</span>, <span class="keyword">Oracle RAC</span>).</span>
                         </li>
                     </ul>
                 </div>
                 
                 <!-- Job 7: TDS (Intern) -->
-                <div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-teal-500" data-tags="cloud">
-                    <h3 class="text-2xl font-bold text-gray-900">Database Administration Intern</h3>
-                    <p class="text-gray-700 font-medium">TDS Telecommunications LLC | Bend, OR</p>
-                    <p class="text-gray-500 text-sm mb-2">Jul 2018 - Mar 2019 (9 mos)</p>
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="cloud">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Database Administration Intern</h3>
+                            <p class="job-company">TDS Telecommunications LLC | Bend, OR</p>
+                        </div>
+                        <span class="job-duration">Jul 2018 - Mar 2019 (9 mos)</span>
+                    </div>
                     
                     <div class="my-4 flex flex-wrap gap-2">
                         <span class="skill-tag">User Management</span>
                         <span class="skill-tag">Oracle DBA</span>
                     </div>
                     
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Provided <span class="keyword">Oracle</span> database operational support and assisted the TDS DBA team with maintaining database related standards, procedures, and technical documentation.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Audited and improved existing <span class="keyword">Bash automation</span> scripts for weekly processes.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Performed operational database tasks including user and space management.</span>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Job 8: TDS (Network Intern) -->
-                <div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-teal-500" data-tags="automation">
-                    <h3 class="text-2xl font-bold text-gray-900">Network Engineer Intern</h3>
-                    <p class="text-gray-700 font-medium">TDS Telecommunications LLC | Bend, OR</p>
-                    <p class="text-gray-500 text-sm mb-2">Jan 2018 - Jun 2018 (6 mos)</p>
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="automation">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Network Engineer Intern</h3>
+                            <p class="job-company">TDS Telecommunications LLC | Bend, OR</p>
+                        </div>
+                        <span class="job-duration">Jan 2018 - Jun 2018 (6 mos)</span>
+                    </div>
                     
                     <div class="my-4 flex flex-wrap gap-2">
                         <span class="skill-tag">Python</span>
@@ -476,27 +577,31 @@
                         <span class="skill-tag">Network Analysis</span>
                     </div>
                     
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Developed a regression model using data mining and machine learning techniques in <span class="keyword">Python</span>.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Analyzed large data sets to improve efficiency of field technicians and reduce truck rolls.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Used access point data and <span class="keyword">PNM</span> protocols to get insights into end-user experience to make improvements to network infrastructure.</span>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Job 9: Sunriver -->
-                <div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-teal-500" data-tags="cloud">
-                    <h3 class="text-2xl font-bold text-gray-900">Technical Support Engineer</h3>
-                    <p class="text-gray-700 font-medium">Sunriver Computer Services | Sunriver, OR</p>
-                    <p class="text-gray-500 text-sm mb-2">Jun 2017 - Dec 2017 (7 mos)</p>
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="cloud">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Technical Support Engineer</h3>
+                            <p class="job-company">Sunriver Computer Services | Sunriver, OR</p>
+                        </div>
+                        <span class="job-duration">Jun 2017 - Dec 2017 (7 mos)</span>
+                    </div>
                     
                     <div class="my-4 flex flex-wrap gap-2">
                         <span class="skill-tag">Microsoft 365</span>
@@ -504,27 +609,31 @@
                         <span class="skill-tag">CRM</span>
                     </div>
                     
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Oversaw the installation of operating systems, network systems, software, and hardware for 20+ local businesses.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.DeepL-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Monitored system operations to detect potential problems and implemented network systems to support communication.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Provided technical direction and guidance to team members and performed quality assurance reviews.</span>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Job 10: WWU -->
-                <div class="job-card bg-white p-6 rounded-xl shadow-lg border-l-4 border-primary-teal-500" data-tags="cloud">
-                    <h3 class="text-2xl font-bold text-gray-900">Computer Assistant</h3>
-                    <p class="text-gray-700 font-medium">Western Washington University | Bellingham, WA</p>
-                    <p class="text-gray-500 text-sm mb-2">Sep 2016 - Jun 2017 (10 mos)</p>
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="cloud">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Computer Assistant</h3>
+                            <p class="job-company">Western Washington University | Bellingham, WA</p>
+                        </div>
+                        <span class="job-duration">Sep 2016 - Jun 2017 (10 mos)</span>
+                    </div>
                     
                     <div class="my-4 flex flex-wrap gap-2">
                         <span class="skill-tag">Technical Support</span>
@@ -532,14 +641,13 @@
                         <span class="skill-tag">3D Printing</span>
                     </div>
                     
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
-
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Worked on the development team doing software projects as needed and assisted in technical support and visual/print media support.</span>
                         </li>
-                        <li class="flex items-start">
-                            <svg class="flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                             <span>Taught workshops in <span class="keyword">3D Printing</span>, <span class="keyword">Raspberry Pi</span>, and <span class="keyword">Arduino</span>.</span>
                         </li>
                     </ul>
@@ -554,7 +662,13 @@
             This section now acts as a "see all" for tech.
         -->
         <section id="toolkit" class="mb-16">
-            <h3 class="text-3xl font-extrabold text-gray-900 mb-12 text-center">Core toolkit</h3>
+            <div class="text-center mb-12">
+                <h3 class="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary-teal-700 via-primary-teal-600 to-primary-teal-800 mb-4 tracking-tight">
+                    Core Toolkit
+                </h3>
+                <div class="w-20 h-1 bg-gradient-to-r from-primary-teal-400 to-primary-teal-600 mx-auto rounded-full"></div>
+                <p class="text-lg text-gray-600 mt-4 font-medium">Technologies I work with daily</p>
+            </div>
             <div class="tech-grid">
                 
                 <!-- AWS (FIXED) -->
