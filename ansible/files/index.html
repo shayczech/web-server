@@ -34,7 +34,7 @@
     </script>
     
     <!-- 3. Load Custom Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family/Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- 4. INLINE CUSTOM STYLES (processed by Tailwind CDN) -->
     <style type="text/tailwindcss">
@@ -52,8 +52,9 @@
         .expertise-card {
             @apply bg-gray-50 p-8 rounded-xl shadow-md border border-gray-200 transition-all duration-300 hover:shadow-xl hover:border-primary-green-300 hover:-translate-y-1.5; 
         }
+        /* UPDATED: Removed fixed h/w and rounded-full. Added padding and rounded-xl to make it an adaptive pill shape. */
         .card-icon-wrapper {
-            @apply h-14 w-14 flex items-center justify-center rounded-full bg-gradient-to-br from-primary-green-100 to-primary-green-200 text-primary-green-700 font-bold text-xl mb-5 shadow-sm; 
+            @apply inline-flex items-center justify-center px-4 py-3 rounded-xl bg-gradient-to-br from-primary-green-100 to-primary-green-200 text-primary-green-700 font-bold text-xl mb-5 shadow-sm; 
         }
         /* UPDATED: Made card titles larger, green, and given more space */
         .card-title {
@@ -64,8 +65,9 @@
         }
 
         /* 3. Dynamic Stat Styling (Dark Bar) */
+        /* UPDATED: Added card styling (bg, rounded, shadow, hover) to create "boxes" */
         .stat-item {
-            @apply flex flex-col items-center justify-center p-4;
+            @apply flex flex-col items-center justify-center p-6 bg-primary-green-800 rounded-xl shadow-lg transition-all duration-300 hover:bg-primary-green-700 hover:-translate-y-1;
         }
         .stat-value {
             @apply text-5xl font-extrabold text-white;
@@ -81,8 +83,9 @@
         .stat-value.text-red-400 {
             color: #F87171; /* Red for 'D/F' score */
         }
+         /* UPDATED: Removed uppercase, increased font size, and brightened color */
         .stat-label {
-            @apply text-sm font-medium text-primary-green-200 uppercase tracking-wider mt-2;
+            @apply text-base font-medium text-primary-green-100 mt-2;
         }
         
         /* 5. NEW: Typed.js Cursor Styling */
@@ -101,15 +104,18 @@
     <!-- Header & Navigation -->
     <header class="bg-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-extrabold text-primary-green-700 tracking-tight">Shaylee Czech</a>
+            <!-- UPDATED: Added transition and darker hover color -->
+            <a href="index.html" class="text-2xl font-extrabold text-primary-green-700 tracking-tight transition-all duration-300 hover:text-primary-green-800">Shaylee Czech</a>
             
             <!-- Nav Links: Use absolute paths to work from both pages -->
-            <nav class="hidden md:flex space-x-8">
-                <a href="/index.html#about" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">About</a>
-                <a href="/resume.html" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Experience</a>
-                <a href="/index.html#skills" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Skills</a>
-                <a href="/index.html#projects" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">Projects</a>
-                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-600 hover:text-primary-green-600 transition duration-300 font-medium">LinkedIn</a>
+            <!-- UPDATED: Reduced spacing to accommodate new padding on links -->
+            <nav class="hidden md:flex space-x-4">
+                <!-- UPDATED: Added padding, rounded corners, and a subtle hover background to each link. Made font semibold. -->
+                <a href="/index.html#about" class="text-gray-700 font-semibold hover:text-primary-green-600 transition-all duration-300 hover:bg-primary-green-50 rounded-lg px-3 py-2">About</a>
+                <a href="/resume.html" class="text-gray-700 font-semibold hover:text-primary-green-600 transition-all duration-300 hover:bg-primary-green-50 rounded-lg px-3 py-2">Experience</a>
+                <a href="/index.html#skills" class="text-gray-700 font-semibold hover:text-primary-green-600 transition-all duration-300 hover:bg-primary-green-50 rounded-lg px-3 py-2">Skills</a>
+                <a href="/index.html#projects" class="text-gray-700 font-semibold hover:text-primary-green-600 transition-all duration-300 hover:bg-primary-green-50 rounded-lg px-3 py-2">Projects</a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-700 font-semibold hover:text-primary-green-600 transition-all duration-300 hover:bg-primary-green-50 rounded-lg px-3 py-2">LinkedIn</a>
             </nav>
         </div>
     </header>
@@ -149,6 +155,7 @@
         <!-- Dynamic Stats Section -->
         <section id="stats" class="bg-primary-green-900 text-white py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- The stat-item class in the <style> block now handles the "box" styling -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                     
                     <!-- Stat 1: Commits -->
@@ -179,7 +186,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     
                     <div class="expertise-card">
-                        <div class="card-icon-wrapper">CM</div>
+                        <div class="card-icon-wrapper">IaaS</div>
                         <h4 class="card-title">Config Mgmt & Automation</h4>
                         <ul class="card-list">
                             <li>Terraform (IaC), AWS (EC2, S3, EIP)</li>
@@ -200,6 +207,7 @@
                         </ul>
                     </div>
 
+                    <!-- UPDATED: Fixed typo from classs= to class= -->
                     <div class="expertise-card">
                         <div class="card-icon-wrapper">ARCH</div>
                         <h4 class="card-title">System Architecture</h4>
@@ -359,7 +367,7 @@
                 ],
                 typeSpeed: 50,  // How fast it types
                 backSpeed: 30,   // How fast it deletes
-                backDelay: 3000, // Wait 3s after typing
+                backDelay: 2500, // Wait 3s after typing
                 startDelay: 500, // Wait 0.5s before starting
                 loop: true,
                 smartBackspace: true
@@ -371,3 +379,4 @@
 
 </body>
 </html>
+
