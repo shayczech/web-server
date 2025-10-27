@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaylee Czech | GRC Compliance Dashboard</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230D9488%22></rect><path fill=%22%23FFFFFF%22 d=%22M77.6 30.7L45 63.3l-12.6-12.6c-1.6-1.6-4.2-1.6-5.8 0s-1.6 4.2 0 5.8l15.5 15.5c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2l35.5-35.5c1.6-1.6 1.6-4.2 0-5.8s-4.2-1.6-5.8 0z%22></path></svg>">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-teal': {
+                            DEFAULT: '#0D9488', // Teal 600
+                            '50': '#F0FDFA',
+                            '100': '#CCFBF1',
+                            '200': '#99F6E4',
+                            '300': '#5EEAD4',
+                            '400': '#2DD4BF',
+                            '500': '#14B8A6',
+                            '600': '#0D9488',
+                            '700': '#0F766E',
+                            '800': '#115E59',
+                            '900': '#134E4A',
+                            '950': '#042f2e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        
+    <style type="text/tailwindcss">
+        /* Copied from resume.html */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+
+        /* GRC DASHBOARD SPECIFIC STYLES */
+        .compliance-card {
+            /* Using your .spotlight-card styling for a premium look */
+            @apply bg-white p-8 rounded-2xl shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-2xl hover:border-primary-teal-300 hover:-translate-y-2 relative overflow-hidden; 
+        }
+        .compliance-card::before {
+            content: '';
+            @apply absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-teal-500 to-primary-teal-600;
+        }
+        .status-header {
+            @apply flex items-center mb-4 pb-2 border-b border-gray-100;
+        }
+        .status-icon {
+            @apply flex-shrink-0 h-8 w-8 mr-3;
+        }
+        .status-pass {
+            @apply text-green-500;
+        }
+        .status-fail {
+            @apply text-red-500;
+        }
+        .status-warn {
+            @apply text-yellow-500;
+        }
+        .compliance-tag {
+            @apply inline-block px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 mr-2 mb-2;
+        }
+        .cissp-domain {
+            @apply bg-primary-teal-100 text-primary-teal-800;
+        }
+        .control-list li {
+             @apply flex items-start text-gray-700 leading-relaxed text-sm mb-2;
+        }
+        .control-list li::before {
+            content: '✓';
+            @apply text-green-500 mr-2 mt-0.5 font-bold;
+        }
+        .keyword {
+             @apply font-semibold text-primary-teal-700;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 antialiased font-sans">
+
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            
+            <a href="index.html" class="text-2xl font-extrabold text-primary-teal-700 tracking-tight hover:text-primary-teal-600 transform transition-all duration-300 hover:scale-[1.03] uppercase">Shaylee Czech</a>
+            
+            <nav class="hidden md:flex items-center space-x-1">
+                <a href="/index.html#about" class="px-3 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">About</a>
+                <a href="/resume.html" class="px-3 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">Experience</a>
+                <a href="/grc.html" class="px-3 py-2 rounded-lg font-semibold text-white bg-primary-teal-600">GRC Dashboard</a>
+                <a href="/index.html#projects" class="px-3 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">Projects</a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="px-3 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">LinkedIn</a>
+            </nav>
+            </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <div class="bg-gradient-to-r from-primary-teal-600 to-primary-teal-700 rounded-2xl p-8 mb-12 text-white">
+            <div class="text-center">
+                <h1 class="text-4xl sm:text-5xl font-black text-white mb-4 tracking-tight">
+                    GRC Compliance Dashboard
+                </h1>
+                <p class="text-lg text-white/90 font-medium max-w-2xl mx-auto leading-relaxed">
+                    Mapping the DevSecOps pipeline's technical capabilities to **NIST, CIS, and HIPAA** requirements—the language of compliance and risk management.
+                </p>
+            </div>
+        </div>
+        
+        <section id="grc-dashboard" class="mb-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <div class="compliance-card">
+                    <div class="status-header">
+                        <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                        <h4 class="text-xl font-bold text-gray-900">Vulnerability & Patch Management</h4>
+                    </div>
+                    <p class="text-gray-700 mb-4">The CI/CD pipeline enforces **shift-left security** by automatically scanning for vulnerabilities in code and containers, stopping non-compliant images.</p>
+                    <div class="space-y-1">
+                        <span class="compliance-tag bg-green-100 text-green-800">NIST SP 800-53: RA-5 (Scanning)</span>
+                        <span class="compliance-tag cissp-domain">CISSP Domain 6: Security Assessment</span>
+                    </div>
+                    <ul class="control-list mt-4">
+                        <li>**Snyk** (SAST) checks <span class="keyword">package.json</span> for vulnerable dependencies.</li>
+                        <li>**Trivy** scans the <span class="keyword">Docker image</span> for OS and package vulnerabilities.</li>
+                        <li>**Ansible** installs all required patches and security updates on the host OS.</li>
+                    </ul>
+                </div>
+
+                <div class="compliance-card">
+                    <div class="status-header">
+                        <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-6 3h18a2.25 2.25 0 0 1 2.25 2.25v6.75a2.25 2.25 0 0 1-2.25 2.25H3.75a2.25 2.25 0 0 1-2.25-2.25v-6.75a2.25 2.25 0 0 1 2.25-2.25Z" /></svg>
+                        <h4 class="text-xl font-bold text-gray-900">Principle of Least Privilege (PoLP)</h4>
+                    </div>
+                    <p class="text-gray-700 mb-4">Infrastructure is deployed using **AWS IAM Instance Profiles**, ensuring the EC2 host has **zero hardcoded credentials** and only the bare minimum permissions (Route 53 DNS update).</p>
+                    <div class="space-y-1">
+                        <span class="compliance-tag bg-green-100 text-green-800">NIST SP 800-53: AC-3 (Access Enforcement)</span>
+                        <span class="compliance-tag cissp-domain">CISSP Domain 5: Identity & Access Management</span>
+                    </div>
+                     <ul class="control-list mt-4">
+                        <li>**GitHub Secrets** are used for SSH, never stored on the host.</li>
+                        <li>**IAM Role** is scope-limited to only update DNS records in Route 53.</li>
+                        <li>The application containers themselves run without any cloud credentials.</li>
+                    </ul>
+                </div>
+                
+                <div class="compliance-card">
+                    <div class="status-header">
+                        <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-3.75M19.5 21v-1.5m-14.25 0V5.25a2.25 2.25 0 0 1 2.25-2.25h10.5a2.25 2.25 0 0 1 2.25 2.25v13.5m-10.5-13.5h6" /></svg>
+                        <h4 class="text-xl font-bold text-gray-900">Secure Baselines & Configuration</h4>
+                    </div>
+                    <p class="text-gray-700 mb-4">**Ansible** ensures the host OS is configured to a secure baseline (CIS/NIST), installing and managing the **UFW firewall** and preventing unapproved configuration changes.</p>
+                    <div class="space-y-1">
+                        <span class="compliance-tag bg-green-100 text-green-800">CIS Control 7 (Configuration Management)</span>
+                        <span class="compliance-tag cissp-domain">CISSP Domain 3: Security Architecture</span>
+                    </div>
+                    <ul class="control-list mt-4">
+                        <li>**Ansible** enforces the host baseline (hardening, user management).</li>
+                        <li>**Terraform** defines network baselines (Security Groups) and prevents drift.</li>
+                        <li>**Docker images** are defined by code (**Dockerfile**) and are immutable.</li>
+                    </ul>
+                </div>
+
+                <div class="compliance-card">
+                    <div class="status-header">
+                        <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-6 3h18a2.25 2.25 0 0 1 2.25 2.25v6.75a2.25 2.25 0 0 1-2.25 2.25H3.75a2.25 2.25 0 0 1-2.25-2.25v-6.75a2.25 2.25 0 0 1 2.25-2.25Z" /></svg>
+                        <h4 class="text-xl font-bold text-gray-900">Data & Communication Protection</h4>
+                    </div>
+                    <p class="text-gray-700 mb-4">The Nginx reverse proxy enforces **HTTPS/TLS 1.2+** for all public traffic and automates certificate renewal (Certbot), fulfilling HIPAA and security requirements for data in transit.</p>
+                    <div class="space-y-1">
+                        <span class="compliance-tag bg-green-100 text-green-800">HIPAA (Technical Safeguard: Encryption)</span>
+                        <span class="compliance-tag cissp-domain">CISSP Domain 4: Network Security</span>
+                    </div>
+                    <ul class="control-list mt-4">
+                        <li>**Nginx** acts as the secure edge, enforcing SSL/TLS termination.</li>
+                        <li>**Certbot** ensures automatic renewal, preventing certificate expiration risks.</li>
+                        <li>The system runs behind a public **Elastic IP** which is firewalled by the host **UFW**.</li>
+                    </ul>
+                </div>
+            </div>
+            
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-16">
+        </footer>
+
+</body>
+</html>
