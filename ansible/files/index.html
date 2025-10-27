@@ -11,6 +11,9 @@
     <!-- 1. Load Tailwind CSS Library -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Typed.js for animated typing effect -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    
     <!-- 2. Configure Tailwind Theme (Teal Palette) -->
     <script>
         tailwind.config = {
@@ -70,31 +73,37 @@
             @apply text-base font-medium text-primary-teal-200 tracking-wide; /* Mixed Case */
         }
         
-        /* 3. Typed.js Cursor Styling */
-        .typed-cursor {
-            @apply text-primary-teal-200 opacity-100;
-            animation: blink 0.7s infinite;
-        }
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
+        /* 3. Animated Keywords - Using Tailwind classes */
 
         /* 4. Flow Diagram Styling */
         .flow-diagram {
-            @apply flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4;
+            @apply flex flex-col md:flex-row items-center justify-center space-y-6 md:space-y-0 md:space-x-6;
         }
-        /* UPDATED: Set fixed height for uniform boxes */
+        /* UPDATED: Enhanced flow boxes */
         .flow-box {
-            @apply flex flex-col items-center p-6 bg-white rounded-xl shadow-md border border-gray-200 transition-all duration-300 hover:shadow-lg hover:border-primary-teal-300 hover:-translate-y-1 w-full md:w-40 text-center h-32;
+            @apply flex flex-col items-center p-6 bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:border-primary-teal-300 hover:-translate-y-2 hover:scale-105 w-full md:w-44 text-center h-36 relative overflow-hidden;
+        }
+        .flow-box::before {
+            content: '';
+            @apply absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-teal-500 to-primary-teal-600;
         }
         .flow-box svg {
-            @apply h-8 w-8 mb-2 text-primary-teal-600;
+            @apply h-10 w-10 mb-3 text-primary-teal-600 transition-colors duration-300;
+        }
+        .flow-box:hover svg {
+            @apply text-primary-teal-700;
         }
         .flow-box span {
-            @apply text-sm font-semibold text-gray-800 mt-auto; /* Push text to bottom */
+            @apply text-sm font-bold text-gray-800 mt-auto transition-colors duration-300; /* Push text to bottom */
+        }
+        .flow-box:hover span {
+            @apply text-primary-teal-700;
         }
         .flow-arrow {
-            @apply text-primary-teal-500 w-8 h-8 transform rotate-90 md:rotate-0;
+            @apply text-primary-teal-500 w-8 h-8 transform rotate-90 md:rotate-0 transition-all duration-300;
+        }
+        .flow-arrow:hover {
+            @apply text-primary-teal-600 scale-110;
         }
     </style>
 
@@ -145,65 +154,144 @@
     <main class="flex-grow">
         
         <!-- Hero Section -->
-        <section id="about" class="bg-primary-teal-600 text-white py-20 sm:py-32">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <div class="max-w-3xl mx-auto">
+        <section id="about" class="bg-gradient-to-br from-primary-teal-600 via-primary-teal-700 to-primary-teal-800 text-white py-20 sm:py-32 relative overflow-hidden">
+            <!-- Background Pattern -->
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute top-0 left-0 w-full h-full" style="background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 0%, transparent 50%);"></div>
+            </div>
+            
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                <div class="max-w-4xl mx-auto">
                     
-                    <p class="text-white font-bold uppercase tracking-widest mb-4 text-lg">
-                        Cloud Engineering | DevSecOps | CISSP Candidate
-                    </p>
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-white/10 backdrop-blur-sm rounded-full mb-8">
+                        <svg class="w-10 h-10 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </div>
                     
-                    <h2 class="text-5xl sm:text-6xl font-extrabold mb-6 leading-tight min-h-[140px] sm:min-h-0">
-                        Securing and <span id="typed-headline" class="text-white"></span>
+                    <div class="flex items-center justify-center space-x-4 mb-8">
+                        <div class="h-px bg-gradient-to-r from-transparent via-white/30 to-transparent flex-1"></div>
+                        <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-2">
+                            <p class="text-white/95 font-bold uppercase tracking-widest text-sm">
+                                Cloud Engineering | DevSecOps | CISSP Candidate
+                            </p>
+                        </div>
+                        <div class="h-px bg-gradient-to-r from-transparent via-white/30 to-transparent flex-1"></div>
+                    </div>
+                    
+                    <h2 class="text-6xl sm:text-7xl font-black mb-8 leading-tight">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/80">Securing and</span> 
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-teal-200 to-white">
+                            <span class="typed-headline">automating</span><br>cloud infrastructure
+                        </span>
                     </h2>
                     
-                    <div class="bg-black/20 border border-white/10 rounded-xl p-6 mb-10 shadow-lg backdrop-blur-sm">
-                        <p class="text-lg text-white font-medium">
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 mb-12 shadow-2xl">
+                        <p class="text-xl text-white/95 font-medium leading-relaxed">
                             This website is a living example of my ability to build, automate, and secure cloud infrastructure. Leveraging experience across systems, data, and automation, I implement practical DevSecOps strategies grounded in deep operational understanding.
                         </p>
                     </div>
                     
-                    <a href="#projects" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-primary-teal-700 bg-white hover:bg-gray-100 transition duration-300 transform hover:scale-105">
-                        View Automated Pipeline
-                    </a>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        <a href="#projects" class="inline-flex items-center justify-center px-10 py-4 border border-transparent text-lg font-semibold rounded-full shadow-xl text-primary-teal-700 bg-white hover:bg-gray-100 transition duration-300 transform hover:scale-105">
+                            View Automated Pipeline
+                        </a>
+                        <a href="/resume.html" class="inline-flex items-center justify-center px-10 py-4 border-2 border-white/30 text-lg font-semibold rounded-full shadow-lg text-white bg-transparent hover:bg-white/10 transition duration-300 transform hover:scale-105">
+                            View Experience
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
         
         <!-- Dynamic Stats Section -->
-        <section id="stats" class="bg-primary-teal-900 text-white py-12">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <section id="stats" class="bg-gradient-to-r from-primary-teal-900 via-primary-teal-800 to-primary-teal-900 text-white py-16 relative overflow-hidden">
+            <!-- Background Pattern -->
+            <div class="absolute inset-0 opacity-5">
+                <div class="absolute top-0 left-0 w-full h-full" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px);"></div>
+            </div>
+            
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-primary-teal-200 to-white mb-4 tracking-tight">
+                        Live Infrastructure Metrics
+                    </h3>
+                    <div class="w-32 h-1 bg-gradient-to-r from-primary-teal-400 to-primary-teal-600 mx-auto rounded-full"></div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     
                     <!-- Stat 1: Commits -->
-                    <div class="stat-item">
-                        <span id="commits-count" class="stat-value">...</span>
-                        <p class="stat-label">Total Project Commits</p>
+                    <div class="stat-item group">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-gradient-to-r from-primary-teal-600 to-primary-teal-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                            <div class="relative bg-primary-teal-800/80 backdrop-blur-sm border border-primary-teal-600/50 rounded-xl p-8">
+                                <div class="text-center">
+                                    <span id="commits-count" class="stat-value block">...</span>
+                                    <p class="stat-label">Total Project Commits</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Stat 2: Security Score -->
-                    <div class="stat-item">
-                        <span id="security-score" class="stat-value">...</span>
-                        <p class="stat-label">Security Score</p>
+                    <div class="stat-item group">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-gradient-to-r from-primary-teal-600 to-primary-teal-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                            <div class="relative bg-primary-teal-800/80 backdrop-blur-sm border border-primary-teal-600/50 rounded-xl p-8">
+                                <div class="text-center">
+                                    <span id="security-score" class="stat-value block">...</span>
+                                    <p class="stat-label">Security Score</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Stat 3: IaC Resources -->
-                    <div class="stat-item">
-                        <span id="resources-count" class="stat-value">...</span>
-                        <p class="stat-label">Live IaC Resources</p>
+                    <div class="stat-item group">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-gradient-to-r from-primary-teal-600 to-primary-teal-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                            <div class="relative bg-primary-teal-800/80 backdrop-blur-sm border border-primary-teal-600/50 rounded-xl p-8">
+                                <div class="text-center">
+                                    <span id="resources-count" class="stat-value block">...</span>
+                                    <p class="stat-label">Live IaC Resources</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Project Spotlight Section -->
-        <section id="projects" class="py-16 bg-gray-50">
+        <section id="projects" class="py-20 bg-gradient-to-br from-gray-50 to-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h3 class="text-3xl font-extrabold text-gray-900 mb-10 text-center">Project Spotlight: This CI/CD Pipeline</h3>
+                <div class="text-center mb-16">
+                    <h3 class="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary-teal-700 via-primary-teal-600 to-primary-teal-800 mb-6 tracking-tight leading-tight">
+                        Project Spotlight
+                    </h3>
+                    <div class="w-40 h-1.5 bg-gradient-to-r from-primary-teal-400 to-primary-teal-600 mx-auto rounded-full mb-6"></div>
+                    <p class="text-xl text-gray-600 font-medium">This CI/CD Pipeline</p>
+                </div>
                 
-                <div class="bg-white p-6 md:p-10 rounded-xl shadow-2xl border-t-4 border-primary-teal-500">
-                    <p class="text-sm font-semibold text-primary-teal-600 uppercase tracking-wider mb-2">Deployed via GitHub Actions</p>
-                    <h4 class="text-2xl font-bold text-gray-900 mb-4">Terraform + Ansible DevSecOps Stack</h4>
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-2xl border border-gray-200 relative overflow-hidden">
+                    <!-- Background accent -->
+                    <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary-teal-500 via-primary-teal-600 to-primary-teal-500"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <p class="text-sm font-bold text-primary-teal-600 uppercase tracking-wider mb-2">Deployed via GitHub Actions</p>
+                                <h4 class="text-3xl font-black text-gray-900">Terraform + Ansible DevSecOps Stack</h4>
+                            </div>
+                            <div class="hidden md:flex items-center justify-center w-16 h-16 bg-primary-teal-100 rounded-full">
+                                <svg class="w-8 h-8 text-primary-teal-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                            </div>
+                        </div>
                     
                     <p class="text-gray-700 mb-6">
                         This site is running inside a Docker container on an AWS EC2 instance. The entire deployment process—from infrastructure creation to content update—is fully automated via a CI/CD pipeline. It features a two-container architecture: an Nginx proxy serving this page, and a Node.js API container providing the dynamic stats above.
@@ -262,8 +350,11 @@
                         </ul>
                     </div>
                     
-                    <div class="mt-8 text-center">
-                        <a href="https://github.com/shayczech/web-server" target="_blank" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-primary-teal-600 hover:bg-primary-teal-700 transition duration-300 transform hover:scale-105">
+                    <div class="mt-12 text-center">
+                        <a href="https://github.com/shayczech/web-server" target="_blank" class="inline-flex items-center justify-center px-10 py-4 border border-transparent text-lg font-semibold rounded-full shadow-xl text-white bg-gradient-to-r from-primary-teal-600 to-primary-teal-700 hover:from-primary-teal-700 hover:to-primary-teal-800 transition duration-300 transform hover:scale-105 hover:shadow-2xl">
+                            <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                            </svg>
                             View Source Code (The Pipeline) →
                         </a>
                     </div>
@@ -285,8 +376,6 @@
         </div>
     </footer>
 
-    <!-- Load Typed.js library -->
-    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -389,25 +478,19 @@
 
 
             // Initial update on page load
-            updateStatsUI(); 
+            updateStatsUI();
             
-            // --- Typed.js Function ---
-            if (document.getElementById('typed-headline')) {
-              var options = {
-                strings: [
-                  'automating cloud infrastructure.',
-                  'deploying container apps.',
-                  'scaling CI/CD pipelines.'
-                ],
-                typeSpeed: 50,  
-                backSpeed: 30,   
-                backDelay: 3000, 
-                startDelay: 500, 
+            // --- Typed.js Animation ---
+            const typed = new Typed('.typed-headline', {
+                strings: ['automating', 'deploying', 'scaling'],
+                typeSpeed: 50,
+                backSpeed: 30,
+                backDelay: 2500,
+                startDelay: 3000,
                 loop: true,
-                smartBackspace: true
-              };
-              var typed = new Typed('#typed-headline', options);
-            }
+                showCursor: false,
+                smartBackspace: false
+            });
         });
     </script>
 
