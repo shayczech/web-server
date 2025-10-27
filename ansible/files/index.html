@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shaylee Czech | DevSecOps & Cloud Engineering</title>
     
-    <!-- Favicon (Teal Checkmark) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230D9488%22></rect><path fill=%22%23FFFFFF%22 d=%22M77.6 30.7L45 63.3l-12.6-12.6c-1.6-1.6-4.2-1.6-5.8 0s-1.6 4.2 0 5.8l15.5 15.5c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2l35.5-35.5c1.6-1.6 1.6-4.2 0-5.8s-4.2-1.6-5.8 0z%22></path></svg>">
+    <!-- Favicon (Initials) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230D9488%22></rect><text x=%2250%22 y=%2270%22 font-family=%22Arial, sans-serif%22 font-size=%2255%22 font-weight=%22bold%22 text-anchor=%22middle%22 fill=%22%23FFFFFF%22>SC</text></svg>">
 
     <!-- 1. Load Tailwind CSS Library -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -225,10 +225,15 @@
                     </div>
                     
                     <h2 class="text-6xl sm:text-7xl font-black mb-8 leading-tight">
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/90 drop-shadow-2xl">Securing and</span> 
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-teal-200 via-primary-teal-100 to-white drop-shadow-2xl">
-                            <span class="typed-headline">automating</span><br>cloud infrastructure
-                        </span>
+                        <div class="whitespace-nowrap">
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-cyan-100 to-white drop-shadow-2xl">Securing and</span> 
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-purple-300 to-purple-200 drop-shadow-2xl">
+                                <span class="typed-headline">automating</span>
+                            </span>
+                        </div>
+                        <div class="text-transparent bg-clip-text bg-gradient-to-r from-slate-200 via-slate-100 to-white drop-shadow-2xl">
+                            cloud infrastructure
+                        </div>
                     </h2>
                     
                     <div class="bg-gradient-to-br from-white/15 via-white/10 to-white/5 backdrop-blur-md border border-white/30 rounded-2xl p-8 mb-12 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02] relative overflow-hidden">
@@ -546,11 +551,11 @@
             
             // --- Typed.js Animation ---
             const typed = new Typed('.typed-headline', {
-                strings: ['automating', 'deploying', 'scaling'],
+                strings: ['', 'automating', 'deploying', 'scaling'],
                 typeSpeed: 50,
                 backSpeed: 30,
                 backDelay: 2500,
-                startDelay: 3000,
+                startDelay: 1000,
                 loop: true,
                 showCursor: false,
                 smartBackspace: false
