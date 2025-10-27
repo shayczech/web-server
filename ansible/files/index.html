@@ -114,15 +114,68 @@
     <header class="bg-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <!-- Site Title (links to homepage) -->
-            <a href="index.html" class="text-2xl font-extrabold text-primary-teal-700 tracking-tight hover:text-primary-teal-600 transform transition-all duration-300 hover:scale-[1.03] uppercase">Shaylee Czech</a>
+            <a href="index.html" class="group flex items-center space-x-3 hover:scale-[1.02] transform transition-all duration-300">
+                <!-- Icon -->
+                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-primary-teal-500 to-primary-teal-700 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                    <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </div>
+                <!-- Name and Title -->
+                <div class="flex flex-col">
+                    <span class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary-teal-700 via-primary-teal-600 to-primary-teal-800 tracking-tight group-hover:from-primary-teal-600 group-hover:to-primary-teal-700 transition-all duration-300">
+                        Shaylee Czech
+                    </span>
+                    <span class="text-sm font-bold text-gray-500 tracking-wide -mt-1" style="font-variant: small-caps; letter-spacing: 0.05em;">
+                        DevSecOps Engineer
+                    </span>
+                </div>
+            </a>
             
             <!-- Navigation (Desktop) - Skills link points to resume page -->
-            <nav class="hidden md:flex items-center space-x-1">
-                 <a href="/index.html#about" class="px-3 py-2 rounded-lg font-semibold text-white bg-primary-teal-600">About</a>
-                <a href="/resume.html" class="px-3 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">Experience</a>
-                <a href="/grc.html" class="px-3 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">GRC Dashboard</a>                
-                <a href="/index.html#projects" class="px-3 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">Projects</a>
-                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="px-3 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">LinkedIn</a>
+            <nav class="hidden md:flex items-center space-x-2">
+                 <a href="/index.html#about" class="group px-4 py-2 rounded-lg font-semibold text-white bg-gradient-to-r from-primary-teal-600 to-primary-teal-700 hover:from-primary-teal-700 hover:to-primary-teal-800 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>About</span>
+                </a>
+                <a href="/resume.html" class="group px-4 py-2 rounded-lg font-semibold text-gray-700 hover:text-white hover:bg-gradient-to-r hover:from-primary-teal-500 hover:to-primary-teal-600 shadow-sm hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14,2 14,8 20,8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10,9 9,9 8,9"></polyline>
+                    </svg>
+                    <span>Experience</span>
+                </a>
+                <a href="/grc.html" class="group px-4 py-2 rounded-lg font-semibold text-gray-700 hover:text-white hover:bg-gradient-to-r hover:from-primary-teal-500 hover:to-primary-teal-600 shadow-sm hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                    </svg>
+                    <span>GRC Dashboard</span>
+                </a>                
+                <a href="/index.html#projects" class="group px-4 py-2 rounded-lg font-semibold text-gray-700 hover:text-white hover:bg-gradient-to-r hover:from-primary-teal-500 hover:to-primary-teal-600 shadow-sm hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                    <span>Projects</span>
+                </a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="group px-4 py-2 rounded-lg font-semibold text-gray-700 hover:text-white hover:bg-gradient-to-r hover:from-primary-teal-500 hover:to-primary-teal-600 shadow-sm hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                        <rect x="2" y="9" width="4" height="12"></rect>
+                        <circle cx="4" cy="4" r="2"></circle>
+                    </svg>
+                    <span>LinkedIn</span>
+                </a>
             </nav>
 
              <!-- Mobile Menu Button -->
@@ -154,7 +207,7 @@
     <main class="flex-grow">
         
         <!-- Hero Section -->
-        <section id="about" class="bg-gradient-to-br from-primary-teal-600 via-primary-teal-700 to-primary-teal-800 text-white py-20 sm:py-32 relative overflow-hidden">
+        <section id="about" class="bg-gradient-to-br from-primary-teal-600 via-primary-teal-700 to-primary-teal-800 text-white py-16 sm:py-24 relative overflow-hidden">
             <!-- Background Pattern -->
             <div class="absolute inset-0 opacity-10">
                 <div class="absolute top-0 left-0 w-full h-full" style="background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 0%, transparent 50%);"></div>
@@ -162,14 +215,6 @@
             
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
                 <div class="max-w-4xl mx-auto">
-                    
-                    <div class="inline-flex items-center justify-center w-20 h-20 bg-white/10 backdrop-blur-sm rounded-full mb-8">
-                        <svg class="w-10 h-10 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                        </svg>
-                    </div>
-                    
                     <div class="flex items-center justify-center space-x-4 mb-8">
                         <div class="h-px bg-gradient-to-r from-transparent via-white/30 to-transparent flex-1"></div>
                         <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-2">
@@ -181,24 +226,28 @@
                     </div>
                     
                     <h2 class="text-6xl sm:text-7xl font-black mb-8 leading-tight">
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/80">Securing and</span> 
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-teal-200 to-white">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/90 drop-shadow-2xl">Securing and</span> 
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-teal-200 via-primary-teal-100 to-white drop-shadow-2xl">
                             <span class="typed-headline">automating</span><br>cloud infrastructure
                         </span>
                     </h2>
                     
-                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 mb-12 shadow-2xl">
-                        <p class="text-xl text-white/95 font-medium leading-relaxed">
+                    <div class="bg-gradient-to-br from-white/15 via-white/10 to-white/5 backdrop-blur-md border border-white/30 rounded-2xl p-8 mb-12 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02] relative overflow-hidden">
+                        <!-- Subtle gradient overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-teal-500/5 via-transparent to-primary-teal-400/5 rounded-2xl"></div>
+                        <p class="text-xl text-white/95 font-medium leading-relaxed relative z-10">
                             This website is a living example of my ability to build, automate, and secure cloud infrastructure. Leveraging experience across systems, data, and automation, I implement practical DevSecOps strategies grounded in deep operational understanding.
                         </p>
                     </div>
                     
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <a href="#projects" class="inline-flex items-center justify-center px-10 py-4 border border-transparent text-lg font-semibold rounded-full shadow-xl text-primary-teal-700 bg-white hover:bg-gray-100 transition duration-300 transform hover:scale-105">
-                            View Automated Pipeline
+                    <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                        <a href="#projects" class="group inline-flex items-center justify-center px-10 py-4 border border-transparent text-lg font-semibold rounded-full shadow-2xl text-primary-teal-700 bg-gradient-to-r from-white to-gray-50 hover:from-gray-50 hover:to-white hover:shadow-3xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-r from-primary-teal-500/10 via-transparent to-primary-teal-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <span class="relative z-10">View Automated Pipeline</span>
                         </a>
-                        <a href="/resume.html" class="inline-flex items-center justify-center px-10 py-4 border-2 border-white/30 text-lg font-semibold rounded-full shadow-lg text-white bg-transparent hover:bg-white/10 transition duration-300 transform hover:scale-105">
-                            View Experience
+                        <a href="/resume.html" class="group inline-flex items-center justify-center px-10 py-4 border-2 border-white/40 text-lg font-semibold rounded-full shadow-2xl text-white bg-gradient-to-r from-white/10 via-white/5 to-white/10 hover:from-white/20 hover:via-white/10 hover:to-white/20 hover:shadow-3xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden backdrop-blur-sm">
+                            <div class="absolute inset-0 bg-gradient-to-r from-primary-teal-400/20 via-transparent to-primary-teal-300/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <span class="relative z-10">View Experience</span>
                         </a>
                     </div>
                 </div>
@@ -223,40 +272,34 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     
                     <!-- Stat 1: Commits -->
-                    <div class="stat-item group">
-                        <div class="relative">
-                            <div class="absolute inset-0 bg-gradient-to-r from-primary-teal-600 to-primary-teal-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
-                            <div class="relative bg-primary-teal-800/80 backdrop-blur-sm border border-primary-teal-600/50 rounded-xl p-8">
-                                <div class="text-center">
-                                    <span id="commits-count" class="stat-value block">...</span>
-                                    <p class="stat-label">Total Project Commits</p>
-                                </div>
+                    <div class="group relative">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-teal-600 to-primary-teal-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                        <div class="relative bg-gray-800/90 backdrop-blur-sm border border-primary-teal-500/60 rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300">
+                            <div class="text-center">
+                                <span id="commits-count" class="stat-value block">...</span>
+                                <p class="stat-label">Total Project Commits</p>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Stat 2: Security Score -->
-                    <div class="stat-item group">
-                        <div class="relative">
-                            <div class="absolute inset-0 bg-gradient-to-r from-primary-teal-600 to-primary-teal-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
-                            <div class="relative bg-primary-teal-800/80 backdrop-blur-sm border border-primary-teal-600/50 rounded-xl p-8">
-                                <div class="text-center">
-                                    <span id="security-score" class="stat-value block">...</span>
-                                    <p class="stat-label">Security Score</p>
-                                </div>
+                    <div class="group relative">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-teal-600 to-primary-teal-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                        <div class="relative bg-gray-800/90 backdrop-blur-sm border border-primary-teal-500/60 rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300">
+                            <div class="text-center">
+                                <span id="security-score" class="stat-value block">...</span>
+                                <p class="stat-label">Security Score</p>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Stat 3: IaC Resources -->
-                    <div class="stat-item group">
-                        <div class="relative">
-                            <div class="absolute inset-0 bg-gradient-to-r from-primary-teal-600 to-primary-teal-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
-                            <div class="relative bg-primary-teal-800/80 backdrop-blur-sm border border-primary-teal-600/50 rounded-xl p-8">
-                                <div class="text-center">
-                                    <span id="resources-count" class="stat-value block">...</span>
-                                    <p class="stat-label">Live IaC Resources</p>
-                                </div>
+                    <div class="group relative">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-teal-600 to-primary-teal-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                        <div class="relative bg-gray-800/90 backdrop-blur-sm border border-primary-teal-500/60 rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300">
+                            <div class="text-center">
+                                <span id="resources-count" class="stat-value block">...</span>
+                                <p class="stat-label">Live IaC Resources</p>
                             </div>
                         </div>
                     </div>
