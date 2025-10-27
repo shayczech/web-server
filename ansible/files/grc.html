@@ -46,18 +46,35 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
         body {
             animation: fadeIn 0.8s ease-in-out forwards;
         }
 
         /* GRC DASHBOARD SPECIFIC STYLES */
         .compliance-card {
-            /* Using your .spotlight-card styling for a premium look */
             @apply bg-white p-8 rounded-2xl shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-2xl hover:border-primary-teal-300 hover:-translate-y-2 relative overflow-hidden; 
         }
         .compliance-card::before {
             content: '';
             @apply absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-teal-500 to-primary-teal-600;
+        }
+        .compliance-card:hover::before {
+            @apply h-2 transition-all duration-300;
         }
         .status-header {
             @apply flex items-center mb-4 pb-2 border-b border-gray-100;
@@ -75,20 +92,55 @@
             @apply text-yellow-500;
         }
         .compliance-tag {
-            @apply inline-block px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 mr-2 mb-2;
+            @apply inline-block px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 mr-2 mb-2 transition-all duration-200 hover:scale-105;
         }
         .cissp-domain {
             @apply bg-primary-teal-100 text-primary-teal-800;
         }
         .control-list li {
-             @apply flex items-start text-gray-700 leading-relaxed text-sm mb-2;
+             @apply text-gray-700 leading-relaxed text-sm mb-2 pl-6 relative;
         }
         .control-list li::before {
             content: '✓';
-            @apply text-green-500 mr-2 mt-0.5 font-bold;
+            @apply text-green-500 font-bold absolute left-0 top-0;
         }
         .keyword {
              @apply font-semibold text-primary-teal-700;
+        }
+
+        /* NEW VISUAL COMPONENTS */
+        .metric-card {
+            @apply bg-white p-6 rounded-xl shadow-md border border-gray-200 transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+        }
+        .progress-bar {
+            @apply w-full bg-gray-200 rounded-full h-3 overflow-hidden;
+        }
+        .progress-fill {
+            @apply h-full bg-gradient-to-r from-primary-teal-500 to-primary-teal-600 rounded-full transition-all duration-1000 ease-out;
+        }
+        .framework-filter {
+            @apply px-4 py-2 rounded-lg font-semibold transition-all duration-200 cursor-pointer border-2;
+        }
+        .framework-filter.active {
+            @apply bg-primary-teal-600 text-white border-primary-teal-600;
+        }
+        .framework-filter.inactive {
+            @apply bg-white text-gray-600 border-gray-300 hover:border-primary-teal-300 hover:text-primary-teal-600;
+        }
+        .chart-container {
+            @apply bg-white p-6 rounded-xl shadow-md border border-gray-200;
+        }
+        .compliance-grid {
+            @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+        }
+        .mobile-menu {
+            @apply md:hidden fixed inset-0 bg-white z-50 transform transition-transform duration-300;
+        }
+        .mobile-menu.hidden {
+            @apply -translate-x-full;
+        }
+        .mobile-menu.visible {
+            @apply translate-x-0;
         }
     </style>
 </head>
@@ -99,6 +151,7 @@
             
             <a href="index.html" class="text-2xl font-extrabold text-primary-teal-700 tracking-tight hover:text-primary-teal-600 transform transition-all duration-300 hover:scale-[1.03] uppercase">Shaylee Czech</a>
             
+            <!-- Desktop Navigation -->
             <nav class="hidden md:flex items-center space-x-1">
                 <a href="/index.html#about" class="px-3 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">About</a>
                 <a href="/resume.html" class="px-3 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">Experience</a>
@@ -106,7 +159,33 @@
                 <a href="/index.html#projects" class="px-3 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">Projects</a>
                 <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="px-3 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">LinkedIn</a>
             </nav>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu hidden">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200">
+                <a href="index.html" class="text-xl font-extrabold text-primary-teal-700">Shaylee Czech</a>
+                <button id="mobile-menu-close" class="p-2 rounded-lg text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
+            <nav class="p-4 space-y-2">
+                <a href="/index.html#about" class="block px-4 py-3 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">About</a>
+                <a href="/resume.html" class="block px-4 py-3 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">Experience</a>
+                <a href="/grc.html" class="block px-4 py-3 rounded-lg font-semibold text-white bg-primary-teal-600">GRC Dashboard</a>
+                <a href="/index.html#projects" class="block px-4 py-3 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">Projects</a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="block px-4 py-3 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">LinkedIn</a>
+            </nav>
+        </div>
     </header>
 
     <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
@@ -117,79 +196,153 @@
                     GRC Compliance Dashboard
                 </h1>
                 <p class="text-lg text-white/90 font-medium max-w-2xl mx-auto leading-relaxed">
-                    Mapping the DevSecOps pipeline's technical capabilities to **NIST, CIS, and HIPAA** requirements—the language of compliance and risk management.
+                    Mapping the DevSecOps pipeline's technical capabilities to NIST, CIS, and HIPAA requirements—the language of compliance and risk management.
                 </p>
             </div>
         </div>
+
+        <!-- Compliance Overview Dashboard -->
+        <section class="mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Overall Compliance Score -->
+                <div class="metric-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Overall Score</h3>
+                        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-primary-teal-600 mb-2">94%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 94%"></div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">4 of 4 controls implemented</p>
+                </div>
+
+                <!-- NIST Compliance -->
+                <div class="metric-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">NIST SP 800-53</h3>
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="text-blue-600 font-bold text-sm">N</span>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold text-blue-600 mb-2">100%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill bg-gradient-to-r from-blue-500 to-blue-600" style="width: 100%"></div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">3 of 3 controls met</p>
+                </div>
+
+                <!-- CIS Controls -->
+                <div class="metric-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">CIS Controls</h3>
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                            <span class="text-green-600 font-bold text-sm">C</span>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold text-green-600 mb-2">100%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill bg-gradient-to-r from-green-500 to-green-600" style="width: 100%"></div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">1 of 1 control met</p>
+                </div>
+
+                <!-- HIPAA Compliance -->
+                <div class="metric-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">HIPAA</h3>
+                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                            <span class="text-purple-600 font-bold text-sm">H</span>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold text-purple-600 mb-2">100%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill bg-gradient-to-r from-purple-500 to-purple-600" style="width: 100%"></div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">1 of 1 control met</p>
+                </div>
+            </div>
+
+            <!-- Framework Filter Buttons -->
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <button class="framework-filter active" data-framework="all">All Frameworks</button>
+                <button class="framework-filter inactive" data-framework="nist">NIST SP 800-53</button>
+                <button class="framework-filter inactive" data-framework="cis">CIS Controls</button>
+                <button class="framework-filter inactive" data-framework="hipaa">HIPAA</button>
+                <button class="framework-filter inactive" data-framework="cissp">CISSP Domains</button>
+            </div>
+        </section>
         
         <section id="grc-dashboard" class="mb-16">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="compliance-grid">
                 
-                <div class="compliance-card">
+                <div class="compliance-card" data-frameworks="nist cissp">
                     <div class="status-header">
-                        <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                        <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                         <h4 class="text-xl font-bold text-gray-900">Vulnerability & Patch Management</h4>
                     </div>
-                    <p class="text-gray-700 mb-4">The CI/CD pipeline enforces **shift-left security** by automatically scanning for vulnerabilities in code and containers, stopping non-compliant images.</p>
+                    <p class="text-gray-700 mb-4">The CI/CD pipeline enforces shift-left security by automatically scanning for vulnerabilities in code and containers, stopping non-compliant images.</p>
                     <div class="space-y-1">
                         <span class="compliance-tag bg-green-100 text-green-800">NIST SP 800-53: RA-5 (Scanning)</span>
                         <span class="compliance-tag cissp-domain">CISSP Domain 6: Security Assessment</span>
                     </div>
                     <ul class="control-list mt-4">
-                        <li>**Snyk** (SAST) checks <span class="keyword">package.json</span> for vulnerable dependencies.</li>
-                        <li>**Trivy** scans the <span class="keyword">Docker image</span> for OS and package vulnerabilities.</li>
-                        <li>**Ansible** installs all required patches and security updates on the host OS.</li>
+                        <li>Snyk (SAST) checks <span class="keyword">package.json</span> for vulnerable dependencies.</li>
+                        <li>Trivy scans the <span class="keyword">Docker image</span> for OS and package vulnerabilities.</li>
+                        <li>Ansible installs all required patches and security updates on the host OS.</li>
                     </ul>
                 </div>
 
-                <div class="compliance-card">
+                <div class="compliance-card" data-frameworks="nist cissp">
                     <div class="status-header">
-                        <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-6 3h18a2.25 2.25 0 0 1 2.25 2.25v6.75a2.25 2.25 0 0 1-2.25 2.25H3.75a2.25 2.25 0 0 1-2.25-2.25v-6.75a2.25 2.25 0 0 1 2.25-2.25Z" /></svg>
+                        <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
                         <h4 class="text-xl font-bold text-gray-900">Principle of Least Privilege (PoLP)</h4>
                     </div>
-                    <p class="text-gray-700 mb-4">Infrastructure is deployed using **AWS IAM Instance Profiles**, ensuring the EC2 host has **zero hardcoded credentials** and only the bare minimum permissions (Route 53 DNS update).</p>
+                    <p class="text-gray-700 mb-4">Infrastructure is deployed using AWS IAM Instance Profiles, ensuring the EC2 host has zero hardcoded credentials and only the bare minimum permissions (Route 53 DNS update).</p>
                     <div class="space-y-1">
                         <span class="compliance-tag bg-green-100 text-green-800">NIST SP 800-53: AC-3 (Access Enforcement)</span>
                         <span class="compliance-tag cissp-domain">CISSP Domain 5: Identity & Access Management</span>
                     </div>
                      <ul class="control-list mt-4">
-                        <li>**GitHub Secrets** are used for SSH, never stored on the host.</li>
-                        <li>**IAM Role** is scope-limited to only update DNS records in Route 53.</li>
+                        <li>GitHub Secrets are used for SSH, never stored on the host.</li>
+                        <li>IAM Role is scope-limited to only update DNS records in Route 53.</li>
                         <li>The application containers themselves run without any cloud credentials.</li>
                     </ul>
                 </div>
                 
-                <div class="compliance-card">
+                <div class="compliance-card" data-frameworks="cis cissp">
                     <div class="status-header">
-                        <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-3.75M19.5 21v-1.5m-14.25 0V5.25a2.25 2.25 0 0 1 2.25-2.25h10.5a2.25 2.25 0 0 1 2.25 2.25v13.5m-10.5-13.5h6" /></svg>
+                        <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.108 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.164.398-.142.854.108 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.108-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.272-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.164-.398.142-.854-.108-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.806.272 1.204.108.397-.165.71-.505.78-.929l.15-.894z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                         <h4 class="text-xl font-bold text-gray-900">Secure Baselines & Configuration</h4>
                     </div>
-                    <p class="text-gray-700 mb-4">**Ansible** ensures the host OS is configured to a secure baseline (CIS/NIST), installing and managing the **UFW firewall** and preventing unapproved configuration changes.</p>
+                    <p class="text-gray-700 mb-4">Ansible ensures the host OS is configured to a secure baseline (CIS/NIST), installing and managing the UFW firewall and preventing unapproved configuration changes.</p>
                     <div class="space-y-1">
                         <span class="compliance-tag bg-green-100 text-green-800">CIS Control 7 (Configuration Management)</span>
                         <span class="compliance-tag cissp-domain">CISSP Domain 3: Security Architecture</span>
                     </div>
                     <ul class="control-list mt-4">
-                        <li>**Ansible** enforces the host baseline (hardening, user management).</li>
-                        <li>**Terraform** defines network baselines (Security Groups) and prevents drift.</li>
-                        <li>**Docker images** are defined by code (**Dockerfile**) and are immutable.</li>
+                        <li>Ansible enforces the host baseline (hardening, user management).</li>
+                        <li>Terraform defines network baselines (Security Groups) and prevents drift.</li>
+                        <li>Docker images are defined by code (Dockerfile) and are immutable.</li>
                     </ul>
                 </div>
 
-                <div class="compliance-card">
+                <div class="compliance-card" data-frameworks="hipaa cissp">
                     <div class="status-header">
-                        <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-6 3h18a2.25 2.25 0 0 1 2.25 2.25v6.75a2.25 2.25 0 0 1-2.25 2.25H3.75a2.25 2.25 0 0 1-2.25-2.25v-6.75a2.25 2.25 0 0 1 2.25-2.25Z" /></svg>
+                        <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
                         <h4 class="text-xl font-bold text-gray-900">Data & Communication Protection</h4>
                     </div>
-                    <p class="text-gray-700 mb-4">The Nginx reverse proxy enforces **HTTPS/TLS 1.2+** for all public traffic and automates certificate renewal (Certbot), fulfilling HIPAA and security requirements for data in transit.</p>
+                    <p class="text-gray-700 mb-4">The Nginx reverse proxy enforces HTTPS/TLS 1.2+ for all public traffic and automates certificate renewal (Certbot), fulfilling HIPAA and security requirements for data in transit.</p>
                     <div class="space-y-1">
                         <span class="compliance-tag bg-green-100 text-green-800">HIPAA (Technical Safeguard: Encryption)</span>
                         <span class="compliance-tag cissp-domain">CISSP Domain 4: Network Security</span>
                     </div>
                     <ul class="control-list mt-4">
-                        <li>**Nginx** acts as the secure edge, enforcing SSL/TLS termination.</li>
-                        <li>**Certbot** ensures automatic renewal, preventing certificate expiration risks.</li>
-                        <li>The system runs behind a public **Elastic IP** which is firewalled by the host **UFW**.</li>
+                        <li>Nginx acts as the secure edge, enforcing SSL/TLS termination.</li>
+                        <li>Certbot ensures automatic renewal, preventing certificate expiration risks.</li>
+                        <li>The system runs behind a public Elastic IP which is firewalled by the host UFW.</li>
                     </ul>
                 </div>
             </div>
@@ -200,6 +353,108 @@
 
     <footer class="bg-gray-800 text-white mt-16">
         </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+            mobileMenu.classList.add('visible');
+        });
+
+        mobileMenuClose.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+            mobileMenu.classList.remove('visible');
+        });
+
+        // Framework Filter Functionality
+        const filterButtons = document.querySelectorAll('.framework-filter');
+        const complianceCards = document.querySelectorAll('.compliance-card');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active button
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.classList.add('inactive');
+                });
+                button.classList.remove('inactive');
+                button.classList.add('active');
+
+                // Filter cards
+                const framework = button.getAttribute('data-framework');
+                
+                complianceCards.forEach(card => {
+                    if (framework === 'all') {
+                        card.style.display = 'block';
+                        card.style.animation = 'slideInLeft 0.5s ease-out';
+                    } else {
+                        const cardFrameworks = card.getAttribute('data-frameworks');
+                        if (cardFrameworks && cardFrameworks.includes(framework)) {
+                            card.style.display = 'block';
+                            card.style.animation = 'slideInLeft 0.5s ease-out';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+
+        // Animate progress bars on scroll
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const progressObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const progressFill = entry.target.querySelector('.progress-fill');
+                    if (progressFill) {
+                        const width = progressFill.style.width;
+                        progressFill.style.width = '0%';
+                        setTimeout(() => {
+                            progressFill.style.width = width;
+                        }, 200);
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe all metric cards
+        document.querySelectorAll('.metric-card').forEach(card => {
+            progressObserver.observe(card);
+        });
+
+        // Add hover effects to compliance cards
+        complianceCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Animate cards on page load
+        window.addEventListener('load', () => {
+            complianceCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease-out';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+        });
+    </script>
 
 </body>
 </html>
