@@ -87,6 +87,42 @@
         - /app/api
         - /etc/letsencrypt/
         - /root/.aws
+        - /var/log/nginx # <-- NEW: Directory for Nginx logs on the host
+      become: yes
+
+# --- NEW: INSTALLATION AND CONFIGURATION OF CLOUDWATCH AGENT ---
+    - name: Install CloudWatch Agent dependencies
+      ansible.builtin.apt:
+        name: unzip
+        state: present
+      become: yes
+
+    - name: Download CloudWatch Agent package
+      ansible.builtin.get_url:
+        url: https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+        dest: /tmp/amazon-cloudwatch-agent.deb
+      become: yes
+
+    - name: Install CloudWatch Agent
+      ansible.builtin.apt:
+        deb: /tmp/amazon-cloudwatch-agent.deb
+        state: present
+      become: yes
+      
+    - name: Copy CloudWatch Agent configuration file
+      ansible.builtin.copy:
+        src: amazon-cloudwatch-agent.json # Source from ansible/files/
+        dest: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+        owner: root
+        group: root
+        mode: '0644'
+      become: yes
+
+    - name: Start CloudWatch Agent service
+      ansible.builtin.service:
+        name: amazon-cloudwatch-agent
+        state: started
+        enabled: true
       become: yes
 
     - name: Place custom index.html (File copy from repo)
@@ -250,6 +286,7 @@
           - /app/html:/usr/share/nginx/html:ro
           - /etc/letsencrypt:/etc/letsencrypt:ro
           - /app/config/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+          - /var/log/nginx:/var/log/nginx # <-- NEW: Mount Nginx logs to host
         network_mode: "host"
         recreate: true
       become: yes
@@ -266,6 +303,7 @@
           - /app/html:/usr/share/nginx/html:ro
           - /etc/letsencrypt:/etc/letsencrypt:ro
           - /app/config/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+          - /var/log/nginx:/var/log/nginx # <-- NEW: Mount Nginx logs to host
         network_mode: "host"
         recreate: true
       become: yes
