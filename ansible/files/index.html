@@ -341,7 +341,7 @@
                         </div>
                     
                     <p class="text-gray-700 mb-6">
-                        This site demonstrates a comprehensive DevSecOps pipeline running on AWS infrastructure. The entire deployment process—from infrastructure creation to content update—is fully automated via GitHub Actions. It features a secure two-container architecture: an Nginx reverse proxy with SSL termination, and a Node.js API providing real-time GitHub statistics. The pipeline includes integrated security scanning, compliance mapping, and policy-as-code validation.
+                        This site demonstrates a comprehensive DevSecOps pipeline running on AWS infrastructure. The entire deployment process—from infrastructure creation to content update—is fully automated via GitHub Actions. It features a secure two-container architecture: an Nginx reverse proxy with SSL termination, and a Node.js API providing real-time GitHub statistics. The pipeline includes integrated security scanning, compliance mapping, policy-as-code validation, and centralized monitoring via CloudWatch.
                     </p>
                      
                     <!-- Flow Diagram -->
@@ -415,6 +415,10 @@
                             <li class="flex items-start">
                                 <span class="text-primary-teal-500 mr-2 text-xl font-bold">✓</span>
                                 <span class="font-medium">GitHub Actions: Orchestrates the entire build/deploy cycle from a single `git push`.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-primary-teal-500 mr-2 text-xl font-bold">✓</span>
+                                <span class="font-medium">CloudWatch Monitoring: Centralized logging and monitoring with automated Nginx access log collection for security analysis.</span>
                             </li>
                         </ul>
                     </div>

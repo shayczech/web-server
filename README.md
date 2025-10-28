@@ -15,6 +15,7 @@ The architecture evolved from a single static container to a **dynamic two-conta
     * `stats-api`: A Node.js/Express container that fetches data from the GitHub API and serves it on a local port (`3000`).
 * **Functionality:** The frontend (`index.html`) makes a secure, relative API call to `/api/stats`. Nginx proxies this request internally to the Node.js container, which returns dynamic data. The site also includes a new **GRC Compliance Dashboard** for compliance mapping.
 * **Security:** Implements Principle of Least Privilege (PoLP) via an IAM Instance Profile explicitly scope-limited for DNS updates (Certbot/Route 53). The CI/CD pipeline includes **Snyk** (SAST) and **Trivy** (Container Scanning) to shift-left vulnerability management, and enforces policy-as-code checks. Uses Certbot for automated SSL certificate acquisition.
+* **Monitoring & Logging:** **CloudWatch Agent** automatically collects and forwards Nginx access logs to AWS CloudWatch for centralized monitoring, security analysis, and compliance reporting.
 
 ## Technical Stack
 
@@ -23,7 +24,7 @@ The architecture evolved from a single static container to a **dynamic two-conta
 | Infrastructure as Code | Terraform (IaC, Remote State, IAM Roles) |
 | Configuration Management | Ansible (Playbooks, Handlers) |
 | CI/CD Orchestration | GitHub Actions (End-to-End Automation, Secrets) |
-| Cloud Platform | AWS (EC2, EIP, S3, **IAM Instance Profiles**, Route 53) |
+| Cloud Platform | AWS (EC2, EIP, S3, **IAM Instance Profiles**, Route 53, **CloudWatch**) |
 | Containers | **NGINX (Web/Proxy) & Node.js/Express (API)** |
 | Operating System | Ubuntu 24.04 LTS |
 | Security | Certbot (SSL), **Snyk (SAST)**, **Trivy (Container Scanning)**, UFW (Host Firewall), AWS IAM, GitHub Secrets, **Policy-as-Code (PaC)** |
@@ -37,6 +38,7 @@ The architecture evolved from a single static container to a **dynamic two-conta
 5.  **Host Hardening & PaC:**
     * **Ansible installs all OS patches and sets up a secure baseline (e.g., UFW).**
     * **A simulated PyLint task enforces Policy-as-Code checks before deployment.**
+    * **CloudWatch Agent is installed and configured to collect Nginx access logs for centralized monitoring.**
 6.  **API Deployment (Backend):**
     * Ansible copies the Node.js API source code and dependencies (including vulnerability patches in the Dockerfile).
     * Ansible builds the `stats-api:latest` Docker image.
@@ -52,7 +54,7 @@ The architecture evolved from a single static container to a **dynamic two-conta
 ## Future Enhancements
 
 * **State Locking:** Integrate a DynamoDB table for Terraform state locking to prevent concurrent updates.
-* **Monitoring & Logging:** Add CISSP-aligned security logging and monitoring via CloudWatch or an external SIEM solution.
+* **Enhanced Monitoring:** Expand CloudWatch monitoring to include custom metrics, alarms, and dashboards for comprehensive observability.
 * **Expansion:** Transition the application deployment to a Docker Compose manifest managed entirely by Ansible.
 
 ## Author
