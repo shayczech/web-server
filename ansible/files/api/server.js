@@ -9,6 +9,10 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*'); 
     res.setHeader('Access-Control-Allow-Methods', 'GET');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    // Prevent any caching of API responses
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     next();
 });
 
@@ -75,17 +79,55 @@ async function getTerraformModuleCount() {
     return results.reduce((sum, n) => sum + (Number.isFinite(n) ? n : 0), 0);
 }
 
+// Count Ansible playbooks across repositories
+// Heuristics: any .yml/.yaml file under paths commonly used for playbooks
+// e.g., ansible/**, playbooks/**, or filenames containing 'playbook'
+function isLikelyPlaybookPath(path) {
+    if (!path) return false;
+    const lower = path.toLowerCase();
+    if (!/\.ya?ml$/.test(lower)) return false;
+    if (lower.includes('/ansible/') || lower.startsWith('ansible/')) return true;
+    if (lower.includes('/playbooks/') || lower.startsWith('playbooks/')) return true;
+    if (lower.includes('playbook')) return true;
+    // Exclude typical CI config files to reduce false positives
+    if (lower.startsWith('.github/workflows/')) return false;
+    if (lower.includes('/.github/')) return false;
+    return false;
+}
+
+async function getRepoAnsiblePlaybookCount(repoName) {
+    try {
+        const response = await axios.get(
+            `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${repoName}/git/trees/HEAD?recursive=1`,
+            axiosOpts,
+        );
+        const tree = response.data && Array.isArray(response.data.tree) ? response.data.tree : [];
+        const count = tree.filter((node) => node.type === 'blob' && isLikelyPlaybookPath(node.path)).length;
+        return count;
+    } catch (error) {
+        console.warn(`GitHub playbook scan failed for ${repoName}: ${error.message}`);
+        return 0;
+    }
+}
+
+async function getTotalAnsiblePlaybooks() {
+    const results = await Promise.all(REPOSITORIES.map(getRepoAnsiblePlaybookCount));
+    return results.reduce((sum, n) => sum + (Number.isFinite(n) ? n : 0), 0);
+}
+
 // Primary Stats Endpoint
 app.get('/api/stats', async (req, res) => {
     try {
-        const [totalCommits, terraformModules] = await Promise.all([
+        const [totalCommits, terraformModules, ansiblePlaybooks] = await Promise.all([
             getTotalCommitCount(),
             getTerraformModuleCount(),
+            getTotalAnsiblePlaybooks(),
         ]);
 
         const data = {
             terraformModules: terraformModules || 0,
-            ansiblePlaybooks: 8, // static
+            ansiblePlaybooks: ansiblePlaybooks || 0,
+            iacResources: (terraformModules || 0) + (ansiblePlaybooks || 0),
             ciCdRuns: 105, // static
             securityScore: 94, // static fallback
             githubCommits: totalCommits || 0,
