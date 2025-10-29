@@ -17,7 +17,7 @@ RUN npm audit fix || true
 
 # --- NEW: Explicitly install the fixed version of cross-spawn ---
 # This forces the non-vulnerable version into the image layer
-RUN npm install cross-spawn@7.0.5 --no-save
+ 
 
 # Copy application source code
 COPY . .
