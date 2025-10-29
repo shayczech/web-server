@@ -273,7 +273,7 @@
                     <div class="w-32 h-1 bg-gradient-to-r from-primary-teal-400 to-primary-teal-600 mx-auto rounded-full"></div>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
                     
                     <!-- Stat 1: Commits -->
                     <div class="group relative">
@@ -281,7 +281,7 @@
                         <div class="relative bg-gray-800/90 backdrop-blur-sm border border-primary-teal-500/60 rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300">
                             <div class="text-center">
                                 <span id="commits-count" class="stat-value block">...</span>
-                                <p class="stat-label">Total Project Commits</p>
+                                <p class="stat-label">Total Git Commits</p>
                             </div>
                         </div>
                     </div>
@@ -303,7 +303,29 @@
                         <div class="relative bg-gray-800/90 backdrop-blur-sm border border-primary-teal-500/60 rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300">
                             <div class="text-center">
                                 <span id="resources-count" class="stat-value block">...</span>
-                                <p class="stat-label">Live IaC Resources</p>
+                                <p class="stat-label">Live IaC Modules</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stat 4: Ansible Playbooks -->
+                    <div class="group relative">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-teal-600 to-primary-teal-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                        <div class="relative bg-gray-800/90 backdrop-blur-sm border border-primary-teal-500/60 rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300">
+                            <div class="text-center">
+                                <span id="ansible-count" class="stat-value block">...</span>
+                                <p class="stat-label">Ansible Playbooks</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stat 5: CI/CD Runs -->
+                    <div class="group relative">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-teal-600 to-primary-teal-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                        <div class="relative bg-gray-800/90 backdrop-blur-sm border border-primary-teal-500/60 rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300">
+                            <div class="text-center">
+                                <span id="cicd-count" class="stat-value block">...</span>
+                                <p class="stat-label">CI/CD Runs</p>
                             </div>
                         </div>
                     </div>
@@ -510,6 +532,8 @@
                 const commitsEl = document.getElementById('commits-count');
                 const resourcesEl = document.getElementById('resources-count');
                 const scoreEl = document.getElementById('security-score');
+                const ansibleEl = document.getElementById('ansible-count');
+                const cicdEl = document.getElementById('cicd-count');
 
                 // Always update text content, even if it's 'N/A' from the fetch error handling
                 if (commitsEl) {
@@ -517,6 +541,12 @@
                 }
                 if (resourcesEl) {
                     resourcesEl.textContent = data.terraformModules ?? 'N/A';
+                }
+                if (ansibleEl) {
+                    ansibleEl.textContent = data.ansiblePlaybooks ?? 'N/A';
+                }
+                if (cicdEl) {
+                    cicdEl.textContent = data.ciCdRuns ?? 'N/A';
                 }
 
                 // Handle score styling
