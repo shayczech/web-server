@@ -145,7 +145,7 @@
       notify: Restart Nginx Container
       become: yes
 
-    - name: Place custom resume.html (File copy from repo)
+    - name: Place custom grc.html (File copy from repo)
       ansible.builtin.copy:
         src: files/grc.html 
         dest: /app/html/grc.html

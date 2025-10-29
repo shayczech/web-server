@@ -44,18 +44,17 @@ async function getCommitCount() {
     }
 }
 
-
 // Primary Stats Endpoint
 app.get('/api/stats', async (req, res) => {
     const totalCommits = await getCommitCount();
     
-    // Simulate other real-world data fetching
+    // Simple static stats - no more AWS complexity
     const data = {
-        terraformModules: 5, // Static for now, can be updated later
+        terraformModules: 5, // Static
         ansiblePlaybooks: 8,
         ciCdRuns: 105,
         securityScore: 92,
-        githubCommits: totalCommits, // REAL DYNAMIC DATA
+        githubCommits: totalCommits, // Only dynamic data
     };
 
     // Simulate network delay for realistic front-end loading effect
