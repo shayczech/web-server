@@ -12,55 +12,96 @@ app.use((req, res, next) => {
     next();
 });
 
-// Mock service for current project stats
-const GITHUB_REPO_OWNER = 'shayczech'; 
-const GITHUB_REPO_NAME = 'web-server'; // Your project repository
+// GitHub-only dynamic stats (no AWS)
+const GITHUB_REPO_OWNER = 'shayczech';
+// Repos to include in stats. Non-existent/private repos will be skipped safely
+const REPOSITORIES = [
+    'web-server',
+    'k8s-ci-cd-demo',
+    'terraform-aws-secure-vpc',
+];
 
-// Function to fetch the total number of commits
-async function getCommitCount() {
+const axiosOpts = {
+    timeout: 3000,
+    // headers: process.env.GITHUB_TOKEN ? { Authorization: `token ${process.env.GITHUB_TOKEN}` } : undefined,
+};
+
+// Fetch commit count for a single repo
+async function getRepoCommitCount(repoName) {
     try {
-        const response = await axios.get(`https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/commits?per_page=1`, {
-            // Optional: Use an environment variable for a GitHub Token if rate limits are an issue
-            // headers: { 'Authorization': `token ${process.env.GITHUB_TOKEN}` }
-        });
-        
-        // The last page link header usually contains the total number of pages/commits
+        const response = await axios.get(
+            `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${repoName}/commits?per_page=1`,
+            axiosOpts,
+        );
         const linkHeader = response.headers.link;
         if (linkHeader) {
             const match = linkHeader.match(/&page=(\d+)>; rel="last"/);
             if (match && match[1]) {
-                // If the last page number is found, that is the total commit count
                 return parseInt(match[1], 10);
             }
         }
-        // Fallback: Estimate commits by fetching all pages (inefficient, but works for small repos)
-        // Or, if no link header, return the number of commits on the first page
-        return response.data.length || 0; 
-        
+        return Array.isArray(response.data) ? response.data.length : 0;
     } catch (error) {
-        console.error('Error fetching GitHub commits:', error.message);
-        // Fallback safe mock data if API fails
-        return 75; 
+        console.warn(`GitHub commits failed for ${repoName}: ${error.message}`);
+        return 0;
     }
+}
+
+// Total commits across repositories
+async function getTotalCommitCount() {
+    const results = await Promise.all(REPOSITORIES.map(getRepoCommitCount));
+    return results.reduce((sum, n) => sum + (Number.isFinite(n) ? n : 0), 0);
+}
+
+// Count Terraform modules by scanning repo trees for .tf files
+async function getRepoTerraformFileCount(repoName) {
+    try {
+        // Use the repo tree API to list all files at HEAD
+        const response = await axios.get(
+            `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${repoName}/git/trees/HEAD?recursive=1`,
+            axiosOpts,
+        );
+        const tree = response.data && Array.isArray(response.data.tree) ? response.data.tree : [];
+        const tfCount = tree.filter((node) => node.type === 'blob' && /\.tf$/i.test(node.path)).length;
+        return tfCount;
+    } catch (error) {
+        console.warn(`GitHub tree scan failed for ${repoName}: ${error.message}`);
+        return 0;
+    }
+}
+
+async function getTerraformModuleCount() {
+    const results = await Promise.all(REPOSITORIES.map(getRepoTerraformFileCount));
+    return results.reduce((sum, n) => sum + (Number.isFinite(n) ? n : 0), 0);
 }
 
 // Primary Stats Endpoint
 app.get('/api/stats', async (req, res) => {
-    const totalCommits = await getCommitCount();
-    
-    // Simple static stats - no more AWS complexity
-    const data = {
-        terraformModules: 5, // Static
-        ansiblePlaybooks: 8,
-        ciCdRuns: 105,
-        securityScore: 92,
-        githubCommits: totalCommits, // Only dynamic data
-    };
+    try {
+        const [totalCommits, terraformModules] = await Promise.all([
+            getTotalCommitCount(),
+            getTerraformModuleCount(),
+        ]);
 
-    // Simulate network delay for realistic front-end loading effect
-    setTimeout(() => {
+        const data = {
+            terraformModules: terraformModules || 0,
+            ansiblePlaybooks: 8, // static
+            ciCdRuns: 105, // static
+            securityScore: 92, // static
+            githubCommits: totalCommits || 0,
+        };
+
         res.json(data);
-    }, 500); // 500ms delay
+    } catch (err) {
+        console.error('Unexpected stats error:', err && err.message ? err.message : err);
+        res.json({
+            terraformModules: 0,
+            ansiblePlaybooks: 8,
+            ciCdRuns: 105,
+            securityScore: 92,
+            githubCommits: 0,
+        });
+    }
 });
 
 app.listen(PORT, '0.0.0.0', () => {
