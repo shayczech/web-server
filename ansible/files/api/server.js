@@ -87,7 +87,7 @@ app.get('/api/stats', async (req, res) => {
             terraformModules: terraformModules || 0,
             ansiblePlaybooks: 8, // static
             ciCdRuns: 105, // static
-            securityScore: 92, // static
+            securityScore: 94, // static fallback
             githubCommits: totalCommits || 0,
         };
 
@@ -98,7 +98,7 @@ app.get('/api/stats', async (req, res) => {
             terraformModules: 0,
             ansiblePlaybooks: 8,
             ciCdRuns: 105,
-            securityScore: 92,
+            securityScore: 94,
             githubCommits: 0,
         });
     }
