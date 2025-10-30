@@ -5,61 +5,57 @@ on:
     branches:
       - main
   workflow_dispatch: # Allows manual triggering
-# --- ADD THIS BLOCK TO THE TOP OF THE FILE ---
+
+# --- PERMISSIONS YOU ADDED FOR OIDC ---
 permissions:
   id-token: write  # Allows the job to request an OIDC token
   contents: read   # Allows the job to checkout the code
-# --- END OF BLOCK ---
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      # Set the AWS Region to be used by the AWS CLI and Terraform
       AWS_REGION: us-east-2
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # --- Setup Node.js and Install Dependencies for Snyk ---
+      # --- Setup Node.js and Install Dependencies for Snyk (No changes) ---
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # Matches your Dockerfile base image
+          node-version: '18'
 
       - name: Install Node.js Dependencies (for Snyk Scan)
         run: npm install
-        working-directory: ansible/files/api/ # Specify the directory with package.json
+        working-directory: ansible/files/api/
 
-      # --- Snyk SAST Scan ---
+      # --- Snyk SAST Scan (No changes) ---
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
-          # Ensure SNYK_TOKEN is set in GitHub repository secrets
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }} 
         with:
-          # Pass the path to scan as part of the command
           command: monitor ansible/files/api/
-          args: --fail-on=high # Fail build if high or critical severity vulns found
+          args: --fail-on=high
 
-      # --- *** NEW FIX: Clean up node_modules *** ---
       - name: Clean up node_modules to prevent Ansible copy hang
         run: rm -rf ansible/files/api/node_modules
         
-      # --- Configure AWS Credentials (Existing) ---
+      # --- OIDC Configuration (No changes) ---
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          # PASTE YOUR NEW ROLE ARN HERE
-          role-to-assume: arn:aws:iam::643913568924:role/GitHub-Actions-Deploy-Role
+          role-to-assume: arn:aws:iam::643913568924:role/GitHub-Actions-Deploy-Role # Your OIDC Role
           aws-region: ${{ env.AWS_REGION }}
-          role-session-name: GitHubActionsSession # This is just a label for the logs
+          role-session-name: GitHubActionsSession
 
-      # --- PHASE 1: Terraform (IaC) (Existing) ---
+      # --- PHASE 1: Terraform (IaC) (No changes) ---
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Init (Downloads providers and configures S3 backend)
+      - name: Terraform Init
         id: init
         run: terraform init
         working-directory: infra/
@@ -69,43 +65,48 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: infra/
 
-      - name: Get EC2 Public IP from Terraform Output
-        id: get_ip
+      # --- PHASE 2: Ansible (Configuration Management) (ALL CHANGED) ---
+
+      # --- NEW: Install AWS SSM Plugin for the runner ---
+      - name: Install AWS SSM Session Manager Plugin
         run: |
-          # The output name MUST match the output in your outputs.tf file
-          EC2_IP=$(terraform output -raw instance_public_ip)
-          echo "EC2_IP=$EC2_IP" >> $GITHUB_ENV
-        working-directory: infra/
-
-      # --- PHASE 2: Ansible (Configuration Management) (Existing) ---
-
-      - name: Setup SSH Key for Ansible (No Passphrase)
-        run: |
-          mkdir -p ~/.ssh
-          # Write the private key content from the GitHub Secret to a file
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa_runner
-          chmod 600 ~/.ssh/id_rsa_runner
-
+          curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+          sudo dpkg -i session-manager-plugin.deb
+          
+      # --- CHANGED: Install Ansible AND the AWS collection ---
       - name: Install Ansible
         run: |
           pip install ansible
-          # Ensure community.docker collection is installed
           ansible-galaxy collection install community.docker
+          ansible-galaxy collection install community.aws # <-- NEW: Needed for aws_ssm
 
-      - name: Update Inventory with Live IP
+      # --- DELETED: The "Setup SSH Key" step is gone ---
+
+      # --- CHANGED: Get Instance ID and write new inventory for SSM ---
+      - name: Get Instance ID and Update Inventory for SSM
+        id: get_instance_id
         run: |
-          # sed replaces the placeholder in inventory.ini 
-          sed -i 's#ec2_instance_ip#${{ env.EC2_IP }}#g' inventory.ini
+          # Get the Instance ID from the Terraform output we created
+          INSTANCE_ID=$(terraform output -raw instance_id)
+          echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
+
+          # --- Overwrite the inventory.ini file for SSM ---
+          echo "[webservers]" > inventory.ini
+          echo "$INSTANCE_ID" >> inventory.ini # Use Instance ID instead of IP
+          
+          echo "[all:vars]" >> inventory.ini
+          echo "ansible_user=ubuntu" >> inventory.ini
+          # Tell Ansible to use the AWS SSM connection plugin
+          echo "ansible_connection=aws_ssm" >> inventory.ini
+          echo "ansible_aws_ssm_target_type=instance_id" >> inventory.ini
+          echo "ansible_python_interpreter=/usr/bin/python3" >> inventory.ini
+          echo "ansible_become=true" >> inventory.ini
         working-directory: ansible/
 
-      - name: Disable SSH Host Key Checking
-        run: |
-          # Creates a temporary Ansible configuration file to disable the strict check
-          echo -e "[defaults]\nhost_key_checking = False\n" > ansible.cfg
-        working-directory: ansible/
+      # --- DELETED: The "Disable SSH Host Key Checking" step is gone ---
 
-      - name: Run Ansible Playbook (Docker/Nginx Configuration & Security Scans)
+      # --- CHANGED: Run Ansible command without the private key ---
+      - name: Run Ansible Playbook (via SSM)
         run: |
-          ansible-playbook -i inventory.ini deploy_nginx.yml --private-key ~/.ssh/id_rsa_runner
+          ansible-playbook -i inventory.ini deploy_nginx.yml
         working-directory: ansible/
-
