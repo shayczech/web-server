@@ -5,7 +5,11 @@ on:
     branches:
       - main
   workflow_dispatch: # Allows manual triggering
-
+# --- ADD THIS BLOCK TO THE TOP OF THE FILE ---
+permissions:
+  id-token: write  # Allows the job to request an OIDC token
+  contents: read   # Allows the job to checkout the code
+# --- END OF BLOCK ---
 jobs:
   deploy:
     runs-on: ubuntu-latest
