@@ -53,6 +53,12 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_agent_attach" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
+# --- NEW: Attach SSM Policy for keyless Ansible ---
+resource "aws_iam_role_policy_attachment" "ssm_agent_attach" {
+  role       = aws_iam_role.ec2_certbot_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
 # --- NEW 5: IAM Instance Profile (Links Role to EC2) ---
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "${var.server_name}-EC2Profile"
@@ -65,13 +71,6 @@ resource "aws_security_group" "allow_web" {
   name        = "${var.server_name}-sg"
   description = "Allow HTTP and SSH inbound traffic"
 
-  ingress {
-    description = "SSH from anywhere"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # WARNING: Open to the world. Good for testing.
-  }
   ingress {
     description = "HTTP from anywhere"
     from_port   = 80

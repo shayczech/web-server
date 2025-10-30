@@ -46,9 +46,10 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # PASTE YOUR NEW ROLE ARN HERE
+          role-to-assume: arn:aws:iam::643913568924:role/GitHub-Actions-Deploy-Role
           aws-region: ${{ env.AWS_REGION }}
+          role-session-name: GitHubActionsSession # This is just a label for the logs
 
       # --- PHASE 1: Terraform (IaC) (Existing) ---
       - name: Setup Terraform
