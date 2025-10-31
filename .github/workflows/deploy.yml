@@ -76,7 +76,7 @@ jobs:
       # --- CHANGED: Install Ansible AND the AWS collection ---
       - name: Install Ansible
         run: |
-          pip install ansible
+          pip install ansible boto3 botocore
           ansible-galaxy collection install community.docker
           ansible-galaxy collection install community.aws # <-- NEW: Needed for aws_ssm
 
@@ -98,6 +98,7 @@ jobs:
           echo "ansible_user=ubuntu" >> inventory.ini
           # Tell Ansible to use the AWS SSM connection plugin
           echo "ansible_connection=aws_ssm" >> inventory.ini
+          echo "ansible_aws_ssm_region=${AWS_REGION}" >> inventory.ini
           echo "ansible_aws_ssm_target_type=instance_id" >> inventory.ini
           echo "ansible_python_interpreter=/usr/bin/python3" >> inventory.ini
           echo "ansible_become=true" >> inventory.ini
