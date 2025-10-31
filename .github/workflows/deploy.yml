@@ -87,7 +87,7 @@ jobs:
         id: get_instance_id
         run: |
           # Get the Instance ID from the Terraform output we created
-          INSTANCE_ID=$(terraform output -raw instance_id)
+          INSTANCE_ID=$(terraform -chdir=../infra output -raw instance_id)
           echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
 
           # --- Overwrite the inventory.ini file for SSM ---
