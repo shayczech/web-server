@@ -104,8 +104,12 @@ jobs:
           echo "ansible_become=true" >> inventory.ini
         working-directory: ansible/
 
-      # --- DELETED: The "Disable SSH Host Key Checking" step is gone ---
-
+      - name: Wait for SSM Agent to be Online
+        run: |
+          echo "Waiting for instance ${INSTANCE_ID} to be online in SSM..."
+          aws ssm wait instance-information-online --instance-ids $INSTANCE_ID
+          echo "Instance ${INSTANCE_ID} is online."
+          
       # --- CHANGED: Run Ansible command without the private key ---
       - name: Run Ansible Playbook (via SSM)
         run: |
