@@ -112,11 +112,12 @@ jobs:
           ELAPSED=0
 
           while [ $ELAPSED -lt $TIMEOUT ]; do
-            # Query AWS for the instance's PingStatus in SSM
             STATUS=$(aws ssm describe-instance-information --instance-information-filter-list "key=InstanceIds,valueSet=${INSTANCE_ID}" --query "InstanceInformationList[0].PingStatus" --output text)
             
             if [ "$STATUS" == "Online" ]; then
-              echo "Instance ${INSTANCE_ID} is online."
+              echo "Instance ${INSTANCE_ID} is Online. Waiting 30 more seconds for agent to fully initialize..."
+              sleep 30 # <-- ADD THIS CRUCIAL 30-SECOND BUFFER
+              echo "Agent should be ready. Proceeding to Ansible."
               exit 0 # Success!
             fi
             
