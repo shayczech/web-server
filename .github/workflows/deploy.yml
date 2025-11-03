@@ -100,6 +100,7 @@ jobs:
           echo "ansible_connection=aws_ssm" >> inventory.ini
           echo "ansible_aws_ssm_region=${AWS_REGION}" >> inventory.ini
           echo "ansible_aws_ssm_target_type=instance_id" >> inventory.ini
+          echo "ansible_aws_ssm_platform_type=Linux" >> inventory.ini
           echo "ansible_python_interpreter=/usr/bin/python3" >> inventory.ini
           echo "ansible_become=true" >> inventory.ini
         working-directory: ansible/
