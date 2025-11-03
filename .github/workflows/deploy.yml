@@ -65,73 +65,53 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: infra/
 
-      # --- PHASE 2: Ansible (Configuration Management) (ALL CHANGED) ---
+      # --- PHASE 2: Ansible (Configuration Management) ---
 
-      # --- NEW: Install AWS SSM Plugin for the runner ---
-      - name: Install AWS SSM Session Manager Plugin
-        run: |
-          curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
-          sudo dpkg -i session-manager-plugin.deb
-          
-      # --- CHANGED: Install Ansible AND the AWS collection ---
       - name: Install Ansible
         run: |
-          pip install ansible boto3 botocore
+          pip install ansible
           ansible-galaxy collection install community.docker
-          ansible-galaxy collection install community.aws # <-- NEW: Needed for aws_ssm
 
-      # --- DELETED: The "Setup SSH Key" step is gone ---
-
-      # --- CHANGED: Get Instance ID and write new inventory for SSM ---
-      - name: Get Instance ID and Update Inventory for SSM
-        id: get_instance_id
+      - name: Get EC2 SSH Private Key from AWS Secrets Manager
+        id: get_ssh_key
         run: |
-          # Get the Instance ID from the Terraform output we created
-          INSTANCE_ID=$(terraform -chdir=../infra output -raw instance_id)
-          echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
+          aws secretsmanager get-secret-value \
+            --secret-id ec2-ssh-private-key \
+            --query SecretString \
+            --output text > /tmp/ec2-key.pem
+          chmod 600 /tmp/ec2-key.pem
 
-          # --- Overwrite the inventory.ini file for SSM ---
+      - name: Get Instance Public IP and Update Inventory
+        run: |
+          INSTANCE_IP=$(terraform -chdir=../infra output -raw instance_public_ip)
+          echo "INSTANCE_IP=$INSTANCE_IP" >> $GITHUB_ENV
+          
+          # Create inventory file with IP
           echo "[webservers]" > inventory.ini
-          echo "$INSTANCE_ID" >> inventory.ini # Use Instance ID instead of IP
+          echo "$INSTANCE_IP" >> inventory.ini
           
           echo "[all:vars]" >> inventory.ini
           echo "ansible_user=ubuntu" >> inventory.ini
-          # Tell Ansible to use the AWS SSM connection plugin
-          echo "ansible_connection=aws_ssm" >> inventory.ini
-          echo "ansible_aws_ssm_region=${AWS_REGION}" >> inventory.ini
-          echo "ansible_aws_ssm_target_type=instance_id" >> inventory.ini
-          echo "ansible_aws_ssm_platform_type=Linux" >> inventory.ini
+          echo "ansible_ssh_private_key_file=/tmp/ec2-key.pem" >> inventory.ini
           echo "ansible_python_interpreter=/usr/bin/python3" >> inventory.ini
           echo "ansible_become=true" >> inventory.ini
         working-directory: ansible/
 
-      - name: Wait for SSM Agent to be Online
+      - name: Wait for SSH to be ready
         run: |
-          echo "Waiting for instance ${INSTANCE_ID} to be online in SSM..."
-          TIMEOUT=300 # 5 minutes total
-          INTERVAL=10 # Check every 10 seconds
-          ELAPSED=0
-
-          while [ $ELAPSED -lt $TIMEOUT ]; do
-            STATUS=$(aws ssm describe-instance-information --instance-information-filter-list "key=InstanceIds,valueSet=${INSTANCE_ID}" --query "InstanceInformationList[0].PingStatus" --output text)
-            
-            if [ "$STATUS" == "Online" ]; then
-              echo "Instance ${INSTANCE_ID} is Online. Waiting 30 more seconds for agent to fully initialize..."
-              sleep 30 # <-- ADD THIS CRUCIAL 30-SECOND BUFFER
-              echo "Agent should be ready. Proceeding to Ansible."
-              exit 0 # Success!
+          echo "Waiting for SSH on ${INSTANCE_IP}..."
+          for i in {1..30}; do
+            if ssh -i /tmp/ec2-key.pem -o StrictHostKeyChecking=no -o ConnectTimeout=5 ubuntu@${INSTANCE_IP} echo "SSH Ready"; then
+              echo "SSH connection successful"
+              exit 0
             fi
-            
-            echo "Instance status: $STATUS. Waiting ${INTERVAL}s..."
-            sleep $INTERVAL
-            ELAPSED=$((ELAPSED + INTERVAL))
+            echo "Attempt $i failed, retrying..."
+            sleep 10
           done
-          
-          echo "Error: Timed out waiting for instance ${INSTANCE_ID} to be online in SSM."
+          echo "SSH connection failed after 30 attempts"
           exit 1
 
-      # --- CHANGED: Run Ansible command without the private key ---
-      - name: Run Ansible Playbook (via SSM)
+      - name: Run Ansible Playbook
         run: |
           ansible-playbook -i inventory.ini deploy_nginx.yml
         working-directory: ansible/

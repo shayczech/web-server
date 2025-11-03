@@ -1,14 +1,7 @@
 ---
 - name: Deploy Secure Portfolio Web Server (HTTPS)
   hosts: webservers
-  gather_facts: false
   tasks:
-    
-    # --- 0. GATHER MINIMAL FACTS FOR OS RELEASE ---
-    - name: Gather minimal facts for OS release
-      ansible.builtin.setup:
-        gather_subset:
-          - distribution
     
     # --- 1. INSTALLATION AND SETUP ---
 
