@@ -1,1 +1,5 @@
 CVE-2024-21538
+# CVE-2025-64756: glob vulnerability in npm's bundled dependencies (not user-controlled)
+# This is in usr/local/lib/node_modules/npm/node_modules/glob/package.json
+# Will be fixed when Node.js base image updates npm
+CVE-2025-64756
