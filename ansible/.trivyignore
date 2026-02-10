@@ -3,3 +3,7 @@ CVE-2024-21538
 # This is in usr/local/lib/node_modules/npm/node_modules/glob/package.json
 # Will be fixed when Node.js base image updates npm
 CVE-2025-64756
+# CVE-2025-15284: qs (express transitive). Override in package.json to >=6.14.1; ignore until image rebuild.
+CVE-2025-15284
+# CVE-2026-23745: tar (transitive). Override in package.json to >=7.5.3; ignore until image rebuild.
+CVE-2026-23745
