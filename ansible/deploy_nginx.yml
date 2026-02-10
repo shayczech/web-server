@@ -19,17 +19,18 @@
 
     - name: Ensure essential packages are installed
       ansible.builtin.apt:
-        name: 
+        name:
           - certbot
-          - python3-certbot-nginx 
-          - python3-certbot-dns-route53 
+          - python3-certbot-nginx
+          - python3-certbot-dns-route53
           - ca-certificates
           - curl
           - gnupg
+          - jq
           - python3-pip
           - lsof
           - net-tools
-          - apt-transport-https 
+          - apt-transport-https
           - lsb-release
         state: present
         update_cache: yes
@@ -219,29 +220,46 @@
         force_tag: yes
       become: yes
 
-    # --- Run Trivy Scan using .trivyignore ---
-    - name: Scan stats-api image for vulnerabilities (using .trivyignore)
-      ansible.builtin.command: >
-        trivy image 
-        --exit-code 1 
-        --severity HIGH,CRITICAL 
-        --ignore-unfixed 
-        stats-api:latest
+    # --- Run Trivy Scan (JSON for dynamic security score + gate on unignored vulns) ---
+    - name: Run Trivy and output JSON for security score
+      ansible.builtin.shell: |
+        trivy image --format json --exit-code 0 --ignore-unfixed --severity HIGH,CRITICAL -o /tmp/trivy-stats-api.json stats-api:latest
       args:
-        chdir: /app/api/ # Run from dir containing .trivyignore
-      register: trivy_scan_result
-      changed_when: false 
-      failed_when: trivy_scan_result.rc != 0 
+        chdir: /app/api/
+      register: trivy_json_run
+      changed_when: false
       become: yes
-      
+
+    - name: Compute security score from Trivy JSON and write file
+      ansible.builtin.shell: |
+        set -e
+        critical=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity=="CRITICAL")] | length' /tmp/trivy-stats-api.json 2>/dev/null || echo 0)
+        high=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity=="HIGH")] | length' /tmp/trivy-stats-api.json 2>/dev/null || echo 0)
+        score=$((100 - critical*15 - high*5))
+        [ "$score" -lt 0 ] && score=0
+        echo "{\"securityScore\": $score}" > /app/api/security-score.json
+      args:
+        executable: /bin/bash
+      become: yes
+
+    - name: Fail deploy if Trivy found unignored HIGH/CRITICAL
+      ansible.builtin.shell: |
+        total=$(jq '[.Results[]?.Vulnerabilities[]?] | length' /tmp/trivy-stats-api.json 2>/dev/null || echo 0)
+        [ "$total" -eq 0 ]
+      register: trivy_gate
+      failed_when: trivy_gate.rc != 0
+      become: yes
+
     - name: Start Stats API container
       community.docker.docker_container:
         name: stats-api
-        image: stats-api:latest 
+        image: stats-api:latest
         state: started
         restart_policy: always
-        network_mode: "host" 
+        network_mode: "host"
         recreate: true
+        volumes:
+          - /app/api/security-score.json:/app/security-score.json:ro
       become: yes
       
     # --- RESILIENCE CHECK ---

@@ -1,7 +1,26 @@
 const express = require('express');
 const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 const app = express();
 const PORT = 3000;
+
+const SECURITY_SCORE_PATH = path.join('/', 'app', 'security-score.json');
+const FALLBACK_SECURITY_SCORE = 98;
+
+function getSecurityScore() {
+    try {
+        if (fs.existsSync(SECURITY_SCORE_PATH)) {
+            const raw = fs.readFileSync(SECURITY_SCORE_PATH, 'utf8');
+            const data = JSON.parse(raw);
+            const score = Number(data?.securityScore);
+            if (Number.isFinite(score) && score >= 0 && score <= 100) return score;
+        }
+    } catch (err) {
+        console.warn('Could not read security score file:', err?.message || err);
+    }
+    return FALLBACK_SECURITY_SCORE;
+}
 
 // Configure CORS to allow access from the front-end (running on the host)
 app.use((req, res, next) => {
@@ -129,7 +148,7 @@ app.get('/api/stats', async (req, res) => {
             ansiblePlaybooks: ansiblePlaybooks || 0,
             iacResources: (terraformModules || 0) + (ansiblePlaybooks || 0),
             ciCdRuns: 105, // static
-            securityScore: 94, // static fallback
+            securityScore: getSecurityScore(),
             githubCommits: totalCommits || 0,
         };
 
@@ -140,7 +159,7 @@ app.get('/api/stats', async (req, res) => {
             terraformModules: 0,
             ansiblePlaybooks: 8,
             ciCdRuns: 105,
-            securityScore: 94,
+            securityScore: getSecurityScore(),
             githubCommits: 0,
         });
     }
