@@ -6,6 +6,10 @@ COPY package*.json ./
 RUN npm install --production
 RUN npm audit fix || true
 
+# Cache-bust so pipeline always gets latest server.js (security score, etc.)
+ARG BUILD_TIMESTAMP=0
+RUN echo "Build at ${BUILD_TIMESTAMP}"
+
 COPY . .
 
 # Stage 2: minimal runtime — no npm, no Alpine; only Node + your app

@@ -214,8 +214,10 @@
         tag: latest
         source: build
         build:
-          path: /app/api/ 
+          path: /app/api/
           pull: yes
+          args:
+            BUILD_TIMESTAMP: "{{ ansible_date_time.epoch }}"
         state: present
         force_tag: yes
       become: yes
