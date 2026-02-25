@@ -246,7 +246,11 @@
     - name: Fail deploy if Trivy found unignored HIGH/CRITICAL
       ansible.builtin.shell: |
         total=$(jq '[.Results[]?.Vulnerabilities[]?] | length' /tmp/trivy-stats-api.json 2>/dev/null || echo 0)
-        [ "$total" -eq 0 ]
+        if [ "$total" -ne 0 ]; then
+          echo "Trivy found $total HIGH/CRITICAL vulnerability(ies). Add to ansible/.trivyignore if accepted:"
+          jq -r '[.Results[]?.Vulnerabilities[]? | .VulnerabilityID] | unique | .[]' /tmp/trivy-stats-api.json 2>/dev/null || true
+          exit 1
+        fi
       register: trivy_gate
       failed_when: trivy_gate.rc != 0
       become: yes
