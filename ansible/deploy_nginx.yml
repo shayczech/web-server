@@ -232,12 +232,13 @@
 
     - name: Compute security score from Trivy JSON and write file
       ansible.builtin.shell: |
-        set -e
-        critical=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity=="CRITICAL")] | length' /tmp/trivy-stats-api.json 2>/dev/null || echo 0)
-        high=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity=="HIGH")] | length' /tmp/trivy-stats-api.json 2>/dev/null || echo 0)
-        score=$((100 - critical*15 - high*5))
+        critical=$(jq -r '[.Results[]?.Vulnerabilities[]? | select(.Severity=="CRITICAL")] | length' /tmp/trivy-stats-api.json 2>/dev/null || echo 0)
+        high=$(jq -r '[.Results[]?.Vulnerabilities[]? | select(.Severity=="HIGH")] | length' /tmp/trivy-stats-api.json 2>/dev/null || echo 0)
+        score=$((100 - ${critical:-0}*15 - ${high:-0}*5))
         [ "$score" -lt 0 ] && score=0
+        mkdir -p /app/api
         echo "{\"securityScore\": $score}" > /app/api/security-score.json
+        chmod 644 /app/api/security-score.json
       args:
         executable: /bin/bash
       become: yes
