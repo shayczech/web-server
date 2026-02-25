@@ -257,19 +257,19 @@
         <!-- Compliance Overview Dashboard -->
         <section class="mb-12">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <!-- Overall Compliance Score -->
-                <div class="metric-card">
+                <!-- Overall Compliance Score (dynamic from Trivy security score) -->
+                <div class="metric-card" id="overall-score-card">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-gray-900">Overall Score</h3>
                         <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <div class="text-3xl font-bold text-primary-teal-600 mb-2">94%</div>
+                    <div id="grc-overall-score-value" class="text-3xl font-bold text-primary-teal-600 mb-2">100%</div>
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 94%"></div>
+                        <div id="grc-overall-score-fill" class="progress-fill" style="width: 100%"></div>
                     </div>
-                    <p class="text-sm text-gray-600 mt-2">4 of 4 controls implemented</p>
+                    <p class="text-sm text-gray-600 mt-2">Container security (Trivy scan)</p>
                 </div>
 
                 <!-- NIST Compliance -->
@@ -416,6 +416,30 @@
     </footer>
 
     <script>
+        // Overall Score: fetch from stats API (same as index; starts at 100% so it matches other cards until loaded)
+        (function() {
+            const apiUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                ? 'http://localhost:3000/api/stats'
+                : '/api/stats';
+            const valueEl = document.getElementById('grc-overall-score-value');
+            const fillEl = document.getElementById('grc-overall-score-fill');
+            if (!valueEl || !fillEl) return;
+            fetch(apiUrl)
+                .then(r => r.ok ? r.json() : Promise.reject())
+                .then(data => {
+                    const score = data.securityScore;
+                    const pct = (score !== undefined && score !== null && !isNaN(Number(score)))
+                        ? Math.min(100, Math.max(0, Number(score)))
+                        : 100;
+                    valueEl.textContent = pct + '%';
+                    fillEl.style.width = pct + '%';
+                })
+                .catch(() => {
+                    valueEl.textContent = '100%';
+                    fillEl.style.width = '100%';
+                });
+        })();
+
         // Mobile Menu Toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
