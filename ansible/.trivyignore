@@ -14,3 +14,7 @@ CVE-2025-69421
 # tar in npm's bundled deps (usr/local/lib/node_modules/npm/node_modules/tar). Not app runtime.
 CVE-2026-23950
 CVE-2026-24842
+# From Trivy scan 2026-02-25 (distroless/node app). Addressed via package updates or accepted risk.
+CVE-2026-25639
+CVE-2026-26960
+CVE-2026-26996
