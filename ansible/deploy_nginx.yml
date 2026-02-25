@@ -208,18 +208,9 @@
 
     # --- 4. DEPLOY API CONTAINER ---
     
-    - name: Build Stats API image
-      community.docker.docker_image:
-        name: stats-api
-        tag: latest
-        source: build
-        build:
-          path: /app/api/
-          pull: yes
-          args:
-            BUILD_TIMESTAMP: "{{ ansible_date_time.epoch }}"
-        state: present
-        force_tag: yes
+    - name: Build Stats API image (no cache so security score / server.js always current)
+      ansible.builtin.shell: |
+        docker build --no-cache -t stats-api:latest --build-arg BUILD_TIMESTAMP={{ ansible_date_time.epoch }} -f /app/api/Dockerfile /app/api/
       become: yes
 
     # --- Run Trivy Scan (JSON for dynamic security score + gate on unignored vulns) ---
