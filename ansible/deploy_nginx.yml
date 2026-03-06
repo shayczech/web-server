@@ -213,6 +213,16 @@
         docker build --no-cache -t stats-api:latest --build-arg BUILD_TIMESTAMP={{ ansible_date_time.epoch }} -f /app/api/Dockerfile /app/api/
       become: yes
 
+    # --- Free disk space so Trivy can download vuln DB (avoids "no space left on device") ---
+    - name: Free disk space before Trivy (build cache, Trivy cache, apt; keep stats-api:latest)
+      ansible.builtin.shell: |
+        docker builder prune -af 2>/dev/null || true
+        docker image prune -f 2>/dev/null || true
+        trivy image --clear-cache 2>/dev/null || true
+        rm -rf /root/.cache/trivy /tmp/trivy-* 2>/dev/null || true
+        apt-get clean -y 2>/dev/null || true
+      become: yes
+
     # --- Run Trivy Scan (JSON for dynamic security score + gate on unignored vulns) ---
     - name: Run Trivy and output JSON for security score
       ansible.builtin.shell: |
