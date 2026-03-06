@@ -5,6 +5,19 @@
     
     # --- 1. INSTALLATION AND SETUP ---
 
+    # --- Free disk space first (avoids "no space left on device" for apt/Trivy/Docker) ---
+    - name: Free disk space early (apt, Docker, Trivy cache, logs)
+      ansible.builtin.shell: |
+        apt-get clean -y 2>/dev/null || true
+        apt-get autoclean -y 2>/dev/null || true
+        docker builder prune -af 2>/dev/null || true
+        docker image prune -af 2>/dev/null || true
+        docker system prune -af 2>/dev/null || true
+        trivy image --clear-cache 2>/dev/null || true
+        rm -rf /root/.cache/trivy /tmp/trivy-* 2>/dev/null || true
+        journalctl --vacuum-time=3d 2>/dev/null || true
+      become: yes
+
     # --- NEW: Aggressive Cache/Repo Cleanup Task ---
     - name: Clean up old Trivy repo files and cache
       ansible.builtin.file:
@@ -50,7 +63,7 @@
     - name: Add Trivy APT repository with signed-by parameter
       ansible.builtin.apt_repository:
         # Use signed-by parameter and Ansible fact for distro release
-        repo: "deb [signed-by=/usr/share/keyrings/trivy.asc] https://aquasecurity.github.io/trivy-repo/deb {{ ansible_distribution_release }} main"
+        repo: "deb [signed-by=/usr/share/keyrings/trivy.asc] https://aquasecurity.github.io/trivy-repo/deb {{ ansible_facts['distribution_release'] }} main"
         state: present
         filename: trivy
       become: yes
