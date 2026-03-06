@@ -112,7 +112,7 @@
       
     - name: Copy CloudWatch Agent configuration file
       ansible.builtin.copy:
-        src: amazon-cloudwatch-agent.json # Source from ansible/files/
+        src: files/amazon-cloudwatch-agent.json
         dest: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
         owner: root
         group: root
@@ -302,9 +302,40 @@
           - /app/html:/usr/share/nginx/html:ro
           - /etc/letsencrypt:/etc/letsencrypt:ro
           - /app/config/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-          - /var/log/nginx:/var/log/nginx # <-- NEW: Mount Nginx logs to host
+          - /var/log/nginx:/var/log/nginx
         network_mode: "host"
         recreate: true
+      become: yes
+
+    - name: Wait for Nginx access log to exist (so CloudWatch agent can tail it)
+      ansible.builtin.wait_for:
+        path: /var/log/nginx/access.log
+        state: present
+        timeout: 30
+      become: yes
+      ignore_errors: true
+
+    - name: Restart CloudWatch Agent so it picks up Nginx access log
+      ansible.builtin.service:
+        name: amazon-cloudwatch-agent
+        state: restarted
+      become: yes
+
+    - name: Ensure CloudWatch Agent is running after restart
+      ansible.builtin.systemd:
+        name: amazon-cloudwatch-agent
+        state: started
+        enabled: true
+        daemon_reload: true
+      become: yes
+
+    - name: Install cron job to restart CloudWatch Agent daily (resilience if it crashes)
+      ansible.builtin.cron:
+        name: "Restart CloudWatch Agent daily"
+        minute: "0"
+        hour: "3"
+        job: "/usr/bin/systemctl restart amazon-cloudwatch-agent"
+        user: root
       become: yes
 
   # --- HANDLERS ---
