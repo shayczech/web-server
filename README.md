@@ -53,9 +53,9 @@ The architecture evolved from a single static container to a **dynamic two-conta
 
 ## Terraform state locking (one-time setup)
 
-State locking uses the DynamoDB table `portfolio-tf-state-lock` so concurrent runs don’t corrupt state. **One-time:** create the table before using the backend with locking:
+State locking uses the DynamoDB table `portfolio-tf-state-lock` so concurrent runs don’t corrupt state. **Both** steps below must be done before Terraform (or GitHub Actions) can use the backend with locking.
 
-1. **Create the lock table** (once per account/region):
+1. **Create the lock table** (once per account/region; run from a shell with AWS credentials that can create DynamoDB tables):
    ```bash
    aws dynamodb create-table \
      --table-name portfolio-tf-state-lock \
@@ -64,10 +64,20 @@ State locking uses the DynamoDB table `portfolio-tf-state-lock` so concurrent ru
      --billing-mode PAY_PER_REQUEST \
      --region us-east-2
    ```
-2. **Attach the lock policy** to the role that runs Terraform (e.g. `GitHub-Actions-Deploy-Role` and your local user/role): use `infra/policies/terraform-state-lock-policy.json` (create a customer-managed policy from it and attach to the role).
+   (If the table already exists, you’ll get `ResourceInUseException` — that’s fine.)
+
+2. **Attach the lock policy to the role that runs Terraform** (e.g. `GitHub-Actions-Deploy-Role` for CI). From the **repo root** with credentials that can modify IAM roles:
+   ```bash
+   aws iam put-role-policy \
+     --role-name GitHub-Actions-Deploy-Role \
+     --policy-name TerraformStateLock \
+     --policy-document file://infra/policies/terraform-state-lock-policy.json
+   ```
+   For **local** Terraform, attach the same policy (or a copy) to the IAM user/role you use.
+
 3. **Re-initialize the backend:** `terraform init -reconfigure`.
 
-After that, `terraform plan`/`apply` will acquire and release the lock automatically.
+After that, `terraform plan`/`apply` (and GitHub Actions) will acquire and release the lock automatically.
 
 ## Future Enhancements
 
