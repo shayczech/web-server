@@ -1,11 +1,14 @@
 ---
+# ------------------------------------------------------------------------------
+# Deploy Secure Portfolio Web Server (HTTPS)
+# Single play: install packages, deploy content, run Certbot, deploy API + Nginx.
+# ------------------------------------------------------------------------------
+
 - name: Deploy Secure Portfolio Web Server (HTTPS)
   hosts: webservers
   tasks:
-    
-    # --- 1. INSTALLATION AND SETUP ---
 
-    # --- Free disk space first (avoids "no space left on device" for apt/Trivy/Docker) ---
+    # --- 1. Installation and setup ---
     - name: Free disk space early (apt, Docker, Trivy cache, logs)
       ansible.builtin.shell: |
         apt-get clean -y 2>/dev/null || true
@@ -18,16 +21,15 @@
         journalctl --vacuum-time=3d 2>/dev/null || true
       become: yes
 
-    # --- Aggressive Cache/Repo Cleanup Task ---
     - name: Clean up old Trivy repo files and cache
       ansible.builtin.file:
         path: "{{ item }}"
         state: absent
       loop:
-        - /etc/apt/sources.list.d/trivy.list # Removes the old source file
-        - /etc/apt/trusted.gpg.d/trivy.gpg   # Removes old GPG key methods
-        - /var/cache/apt/pkgcache.bin        # Cleans APT cache
-      ignore_errors: true # Ignore if the file doesn't exist
+        - /etc/apt/sources.list.d/trivy.list
+        - /etc/apt/trusted.gpg.d/trivy.gpg
+        - /var/cache/apt/pkgcache.bin
+      ignore_errors: true
       become: true
 
     - name: Ensure essential packages are installed
@@ -49,10 +51,7 @@
         update_cache: yes
       become: yes
 
-    # --- Install Trivy via APT (Modern Method) ---
-    # NOTE: We now use get_url to download the key to the modern /usr/share/keyrings/ location,
-    # and then reference that file directly in the apt_repository block using 'signed-by'.
-    - name: Download Trivy GPG Key to Keyrings location
+    - name: Download Trivy GPG key to keyrings location
       ansible.builtin.get_url:
         url: https://aquasecurity.github.io/trivy-repo/deb/public.key
         dest: /usr/share/keyrings/trivy.asc
@@ -60,9 +59,8 @@
         force: true
       become: yes
       
-    - name: Add Trivy APT repository with signed-by parameter
+    - name: Add Trivy APT repository
       ansible.builtin.apt_repository:
-        # Use signed-by parameter and Ansible fact for distro release
         repo: "deb [signed-by=/usr/share/keyrings/trivy.asc] https://aquasecurity.github.io/trivy-repo/deb {{ ansible_facts['distribution_release'] }} main"
         state: present
         filename: trivy
@@ -75,19 +73,18 @@
         update_cache: yes
       become: yes
       
-    - name: Install Docker via official Convenience Script
+    - name: Install Docker (official convenience script)
       ansible.builtin.shell: 
         cmd: curl -fsSL https://get.docker.com | sh
       become: yes
 
-    - name: Install Python Docker Module
+    - name: Install Python Docker module
       ansible.builtin.apt:
         name: python3-docker
         state: present
       become: yes
 
-    # --- 2. DEPLOY CONTENT AND PREPARE HOST DIRECTORIES ---
-
+    # --- 2. Deploy content and prepare host directories ---
     - name: Create required directories
       ansible.builtin.file:
         path: "{{ item }}"
@@ -104,7 +101,6 @@
         - /var/log/nginx
       become: yes
 
-# --- INSTALLATION AND CONFIGURATION OF CLOUDWATCH AGENT ---
     - name: Install CloudWatch Agent dependencies
       ansible.builtin.apt:
         name: unzip
@@ -139,7 +135,7 @@
         enabled: true
       become: yes
 
-    - name: Place custom index.html (File copy from repo)
+    - name: Deploy index.html
       ansible.builtin.copy:
         src: files/index.html 
         dest: /app/html/index.html
@@ -149,7 +145,7 @@
       notify: Restart Nginx Container
       become: yes
       
-    - name: Place custom resume.html (File copy from repo)
+    - name: Deploy resume.html
       ansible.builtin.copy:
         src: files/resume.html 
         dest: /app/html/resume.html
@@ -159,7 +155,7 @@
       notify: Restart Nginx Container
       become: yes
 
-    - name: Place custom grc.html (File copy from repo)
+    - name: Deploy grc.html
       ansible.builtin.copy:
         src: files/grc.html 
         dest: /app/html/grc.html
@@ -169,7 +165,7 @@
       notify: Restart Nginx Container
       become: yes
 
-    - name: Copy Node.js API files (server.js, package.json, Dockerfile)
+    - name: Copy Node.js API files to host
       ansible.builtin.copy:
         src: files/api/ 
         dest: /app/api/
@@ -178,35 +174,32 @@
         mode: '0755'
       become: yes
       
-    - name: Copy .trivyignore file to API directory
+    - name: Copy .trivyignore to API directory
       ansible.builtin.copy:
-        src: .trivyignore 
-        dest: /app/api/.trivyignore # Destination on the EC2 instance
+        src: .trivyignore
+        dest: /app/api/.trivyignore
         owner: root
         group: root
         mode: '0644'
       become: yes
 
-    # --- 3. SECURITY AND CREDENTIALS ---
-    - name: Install PyLint for Policy-as-Code Check (Simulated)
+    # --- 3. Security and credentials ---
+    - name: Install PyLint for policy-as-code check
       ansible.builtin.apt:
         name: pylint 
         state: present
       become: yes
 
-    - name: Execute simulated code policy check
+    - name: Run policy-as-code check (PyLint)
       ansible.builtin.shell: |
-        echo "Running pylint against placeholder file to demonstrate policy check..."
         pylint --disable=all --enable=W0107 /app/api/server.js || true
       args:
         chdir: /app/api/
       changed_when: false
       become: yes
 
-    # --- Improved Certbot task ---
-    - name: Check Certbot certificate validity and obtain/renew if needed
+    - name: Check certificate and obtain or renew with Certbot (Route 53 DNS)
       ansible.builtin.shell: |
-        # Check if cert exists and is valid for > 30 days
         if openssl x509 -checkend 2592000 -noout -in /etc/letsencrypt/live/shayleeczech.com/fullchain.pem > /dev/null 2>&1; then
           echo "Certificate is valid for more than 30 days. Skipping renewal."
           exit 0
@@ -218,16 +211,13 @@
       changed_when: "'Certificate is valid' not in certbot_result.stdout" 
       become: yes
 
-
-    # --- 4. DEPLOY API CONTAINER ---
-    
-    - name: Build Stats API image (no cache so security score / server.js always current)
+    # --- 4. Deploy API container ---
+    - name: Build Stats API image (no cache)
       ansible.builtin.shell: |
         docker build --no-cache -t stats-api:latest --build-arg BUILD_TIMESTAMP={{ ansible_facts['date_time']['epoch'] }} -f /app/api/Dockerfile /app/api/
       become: yes
 
-    # --- Free disk space so Trivy can download vuln DB ---
-    - name: Free disk space before Trivy (build cache, Trivy cache, apt; keep stats-api:latest)
+    - name: Free disk space before Trivy (keep stats-api:latest)
       ansible.builtin.shell: |
         docker builder prune -af 2>/dev/null || true
         docker image prune -f 2>/dev/null || true
@@ -236,8 +226,7 @@
         apt-get clean -y 2>/dev/null || true
       become: yes
 
-    # --- Run Trivy Scan (JSON for dynamic security score + gate on unignored vulns) ---
-    - name: Run Trivy and output JSON for security score
+    - name: Run Trivy scan (JSON for security score and vuln gate)
       ansible.builtin.shell: |
         trivy image --format json --exit-code 0 --ignore-unfixed --severity HIGH,CRITICAL -o /tmp/trivy-stats-api.json stats-api:latest
       args:
@@ -282,9 +271,8 @@
         volumes:
           - /app/api/security-score.json:/app/security-score.json:ro
       become: yes
-      
-    # --- RESILIENCE CHECK ---
-    - name: Verify API Port 3000 is listening
+
+    - name: Verify API is listening on port 3000
       ansible.builtin.wait_for:
         port: 3000
         host: 127.0.0.1 
@@ -294,9 +282,8 @@
       changed_when: false
       become: yes
 
-    # --- 5. DEPLOY NGINX AND CLEANUP ---
-
-    - name: Deploy Nginx SSL Configuration File
+    # --- 5. Deploy Nginx and finalize ---
+    - name: Deploy Nginx SSL config
       ansible.builtin.copy:
         src: nginx_ssl.conf
         dest: /app/config/nginx.conf
@@ -306,7 +293,7 @@
       notify: Restart Nginx Container
       become: yes
 
-    - name: Final Aggressive Port Cleanup Before Container Start
+    - name: Free ports 80/443 and restart Docker before Nginx
       ansible.builtin.shell: |
         fuser -k -n tcp 80 || true
         fuser -k -n tcp 443 || true
@@ -315,7 +302,7 @@
       become: yes
       ignore_errors: yes
 
-    - name: Start Final Nginx Container with SSL
+    - name: Start Nginx container (SSL, host network)
       community.docker.docker_container:
         name: portfolio-web
         image: nginx:latest
@@ -330,7 +317,7 @@
         recreate: true
       become: yes
 
-    - name: Wait for Nginx access log to exist (so CloudWatch agent can tail it)
+    - name: Wait for Nginx access log (for CloudWatch agent)
       ansible.builtin.wait_for:
         path: /var/log/nginx/access.log
         state: present
@@ -338,13 +325,13 @@
       become: yes
       ignore_errors: true
 
-    - name: Restart CloudWatch Agent so it picks up Nginx access log
+    - name: Restart CloudWatch Agent to pick up Nginx log
       ansible.builtin.service:
         name: amazon-cloudwatch-agent
         state: restarted
       become: yes
 
-    - name: Ensure CloudWatch Agent is running after restart
+    - name: Ensure CloudWatch Agent is started and enabled
       ansible.builtin.systemd:
         name: amazon-cloudwatch-agent
         state: started
@@ -352,7 +339,7 @@
         daemon_reload: true
       become: yes
 
-    - name: Install cron job to restart CloudWatch Agent daily (resilience if it crashes)
+    - name: Cron: restart CloudWatch Agent daily
       ansible.builtin.cron:
         name: "Restart CloudWatch Agent daily"
         minute: "0"
@@ -361,7 +348,6 @@
         user: root
       become: yes
 
-  # --- HANDLERS ---
   handlers:
     - name: Restart Nginx Container
       community.docker.docker_container:

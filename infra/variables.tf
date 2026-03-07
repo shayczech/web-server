@@ -13,3 +13,9 @@ variable "instance_type" {
   type        = string
   default     = "t2.micro"
 }
+
+variable "eip_allocation_id" {
+  description = "Optional. Reuse existing EIP (eipalloc-xxx) after a destroy. Keeps DNS pointing to the same IP."
+  type        = string
+  default     = ""
+}

@@ -9,7 +9,7 @@ provider "aws" {
 # --- IAM: Certbot (Route 53 DNS validation for SSL) ---
 resource "aws_iam_policy" "certbot_policy" {
   name        = "${var.server_name}-CertbotPolicy"
-  description = "Allows Certbot to create and delete DNS records in Route 53 for certificate validation."
+  description = "Allows Certbot to create and delete DNS records in Route 53 for validation."
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -68,31 +68,31 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 # --- Security group: SSH, HTTP, HTTPS, and port 81 ---
 resource "aws_security_group" "allow_web" {
   name        = "${var.server_name}-sg"
-  description = "Allow SSH, HTTP, HTTPS, and port 81 inbound."
+  description = "Allow HTTP and SSH inbound traffic"
 
   ingress {
-    description = "HTTP"
+    description = "HTTP from anywhere"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    description = "Port 81"
+    description = "NPM Admin Port 81"
     from_port   = 81
     to_port     = 81
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    description = "HTTPS"
+    description = "HTTPS from anywhere"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    description = "SSH"
+    description = "SSH from anywhere"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -111,15 +111,26 @@ resource "aws_security_group" "allow_web" {
 }
 
 # --- Elastic IP (static public IP) ---
+# prevent_destroy: Terraform will not release this EIP on destroy, so your DNS (A record) keeps working.
+# To do a full destroy and keep the IP: state rm the EIP and association, destroy, then apply with eip_allocation_id set.
 resource "aws_eip" "web_ip" {
+  count = var.eip_allocation_id == "" ? 1 : 0
   tags = {
     Name = "${var.server_name}-eip"
   }
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+data "aws_eip" "existing" {
+  count = var.eip_allocation_id != "" ? 1 : 0
+  id    = var.eip_allocation_id
 }
 
 resource "aws_eip_association" "web_ip_assoc" {
   instance_id   = aws_instance.app_server.id
-  allocation_id = aws_eip.web_ip.allocation_id
+  allocation_id = var.eip_allocation_id != "" ? data.aws_eip.existing[0].id : aws_eip.web_ip[0].allocation_id
 }
 
 # --- Delay after EIP association so network is stable before Ansible runs ---

@@ -27,3 +27,9 @@ variable "server_name" {
   type        = string
   default     = "terraform-server"
 }
+
+variable "eip_allocation_id" {
+  description = "Optional. Reuse an existing EIP by allocation ID (eipalloc-xxx). Set after a destroy where the EIP was removed from state so the same IP is reattached on apply."
+  type        = string
+  default     = ""
+}
