@@ -9,7 +9,7 @@ The architecture evolved from a single static container to a **dynamic two-conta
 ## Project Overview
 
 * **Infrastructure:** AWS EC2 instance with a dedicated Elastic IP.
-* **State Management:** Remote Terraform state stored in an encrypted S3 bucket with Versioning enabled.
+* **State Management:** Remote Terraform state in an encrypted S3 bucket, with DynamoDB state locking to prevent concurrent updates.
 * **Architecture:** A **two-container Docker application** using `network_mode: "host"`.
     * `portfolio-web`: An Nginx container acting as the web server and a **secure reverse proxy** (SSL termination).
     * `stats-api`: A Node.js/Express container that fetches data from the GitHub API and serves it on a local port (`3000`).
@@ -50,34 +50,6 @@ The architecture evolved from a single static container to a **dynamic two-conta
     * Ansible copies the static content (including `index.html`, `resume.html`, and `grc.html`) and the Nginx config (SSL, **rate limiting**, reverse proxy).
     * Ansible starts the `portfolio-web` (Nginx) container, which proxies API requests, applies rate limiting, and serves static content.
 8.  **Live:** The frontend loads, securely fetches dynamic stats from its own `/api/stats` endpoint, and displays real-time GitHub data.
-
-## Terraform state locking (one-time setup)
-
-State locking uses the DynamoDB table `portfolio-tf-state-lock` so concurrent runs don’t corrupt state. **Both** steps below must be done before Terraform (or GitHub Actions) can use the backend with locking.
-
-1. **Create the lock table** (once per account/region; run from a shell with AWS credentials that can create DynamoDB tables):
-   ```bash
-   aws dynamodb create-table \
-     --table-name portfolio-tf-state-lock \
-     --attribute-definitions AttributeName=LockID,AttributeType=S \
-     --key-schema AttributeName=LockID,KeyType=HASH \
-     --billing-mode PAY_PER_REQUEST \
-     --region us-east-2
-   ```
-   (If the table already exists, you’ll get `ResourceInUseException` — that’s fine.)
-
-2. **Attach the lock policy to the role that runs Terraform** (e.g. `GitHub-Actions-Deploy-Role` for CI). From the **repo root** with credentials that can modify IAM roles:
-   ```bash
-   aws iam put-role-policy \
-     --role-name GitHub-Actions-Deploy-Role \
-     --policy-name TerraformStateLock \
-     --policy-document file://infra/policies/terraform-state-lock-policy.json
-   ```
-   For **local** Terraform, attach the same policy (or a copy) to the IAM user/role you use.
-
-3. **Re-initialize the backend:** `terraform init -reconfigure`.
-
-After that, `terraform plan`/`apply` (and GitHub Actions) will acquire and release the lock automatically.
 
 ## Future Enhancements
 

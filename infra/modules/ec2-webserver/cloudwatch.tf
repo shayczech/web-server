@@ -1,5 +1,8 @@
-# CloudWatch log group for Nginx access logs (used by CloudWatch agent on EC2).
-# Must exist before the agent runs; name must match ansible/files/amazon-cloudwatch-agent.json.
+# ------------------------------------------------------------------------------
+# CloudWatch: log group and dashboard for Nginx access logs
+# Log group name must match the agent config (ansible/files/amazon-cloudwatch-agent.json).
+# ------------------------------------------------------------------------------
+
 resource "aws_cloudwatch_log_group" "web_server_access" {
   name              = "web-server-access-logs"
   retention_in_days = 30
@@ -8,7 +11,6 @@ resource "aws_cloudwatch_log_group" "web_server_access" {
   }
 }
 
-# Dashboard to visualize Nginx access logs (request count over time + recent logs table).
 resource "aws_cloudwatch_dashboard" "web_server" {
   dashboard_name = "${var.server_name}-nginx-logs"
 

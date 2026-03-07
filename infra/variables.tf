@@ -1,14 +1,15 @@
-# This file defines the "questions" our Terraform code will ask.
-# We provide defaults so we don't have to enter them every time.
+# ------------------------------------------------------------------------------
+# Root module variables (defaults used when not overridden)
+# ------------------------------------------------------------------------------
 
 variable "ami_id" {
-  description = "The AMI ID for the server (Ubuntu 22.04 in us-east-2)"
+  description = "AMI ID for the EC2 instance (Ubuntu 22.04 in us-east-2)."
   type        = string
   default     = "ami-0cfde0ea8edd312d4"
 }
 
 variable "instance_type" {
-  description = "The instance type to use"
+  description = "EC2 instance type."
   type        = string
   default     = "t2.micro"
 }
