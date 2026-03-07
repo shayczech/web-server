@@ -18,7 +18,7 @@
         journalctl --vacuum-time=3d 2>/dev/null || true
       become: yes
 
-    # --- NEW: Aggressive Cache/Repo Cleanup Task ---
+    # --- Aggressive Cache/Repo Cleanup Task ---
     - name: Clean up old Trivy repo files and cache
       ansible.builtin.file:
         path: "{{ item }}"
@@ -101,10 +101,10 @@
         - /app/api
         - /etc/letsencrypt/
         - /root/.aws
-        - /var/log/nginx # <-- NEW: Directory for Nginx logs on the host
+        - /var/log/nginx
       become: yes
 
-# --- NEW: INSTALLATION AND CONFIGURATION OF CLOUDWATCH AGENT ---
+# --- INSTALLATION AND CONFIGURATION OF CLOUDWATCH AGENT ---
     - name: Install CloudWatch Agent dependencies
       ansible.builtin.apt:
         name: unzip
@@ -180,7 +180,7 @@
       
     - name: Copy .trivyignore file to API directory
       ansible.builtin.copy:
-        src: .trivyignore # Source is relative to playbook directory (ansible/)
+        src: .trivyignore 
         dest: /app/api/.trivyignore # Destination on the EC2 instance
         owner: root
         group: root
@@ -203,7 +203,7 @@
       changed_when: false
       become: yes
 
-    # --- MODIFIED: Improved Certbot task ---
+    # --- Improved Certbot task ---
     - name: Check Certbot certificate validity and obtain/renew if needed
       ansible.builtin.shell: |
         # Check if cert exists and is valid for > 30 days
@@ -226,7 +226,7 @@
         docker build --no-cache -t stats-api:latest --build-arg BUILD_TIMESTAMP={{ ansible_date_time.epoch }} -f /app/api/Dockerfile /app/api/
       become: yes
 
-    # --- Free disk space so Trivy can download vuln DB (avoids "no space left on device") ---
+    # --- Free disk space so Trivy can download vuln DB ---
     - name: Free disk space before Trivy (build cache, Trivy cache, apt; keep stats-api:latest)
       ansible.builtin.shell: |
         docker builder prune -af 2>/dev/null || true
@@ -373,7 +373,7 @@
           - /app/html:/usr/share/nginx/html:ro
           - /etc/letsencrypt:/etc/letsencrypt:ro
           - /app/config/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-          - /var/log/nginx:/var/log/nginx # <-- NEW: Mount Nginx logs to host
+          - /var/log/nginx:/var/log/nginx
         network_mode: "host"
         recreate: true
       become: yes
