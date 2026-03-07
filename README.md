@@ -14,8 +14,8 @@ The architecture evolved from a single static container to a **dynamic two-conta
     * `portfolio-web`: An Nginx container acting as the web server and a **secure reverse proxy** (SSL termination).
     * `stats-api`: A Node.js/Express container that fetches data from the GitHub API and serves it on a local port (`3000`).
 * **Functionality:** The frontend (`index.html`) makes a secure, relative API call to `/api/stats`. Nginx proxies this request internally to the Node.js container, which returns dynamic data. The site also includes a new **GRC Compliance Dashboard** for compliance mapping.
-* **Security:** Implements Principle of Least Privilege (PoLP) via an IAM Instance Profile explicitly scope-limited for DNS updates (Certbot/Route 53). The CI/CD pipeline includes **Snyk** (SAST) and **Trivy** (Container Scanning) to shift-left vulnerability management, and enforces policy-as-code checks. Uses Certbot for automated SSL certificate acquisition.
-* **Monitoring & Logging:** **CloudWatch Agent** automatically collects and forwards Nginx access logs to AWS CloudWatch for centralized monitoring, security analysis, and compliance reporting.
+* **Security:** Implements Principle of Least Privilege (PoLP) via an IAM Instance Profile explicitly scope-limited for DNS updates (Certbot/Route 53). The CI/CD pipeline includes **Snyk** (SAST) and **Trivy** (Container Scanning) to shift-left vulnerability management, and enforces policy-as-code checks. **Nginx rate limiting** (5 req/s per IP, 429 Too Many Requests when exceeded) protects the site from abuse. Uses Certbot for automated SSL certificate acquisition.
+* **Monitoring & Logging:** **CloudWatch Agent** collects and forwards Nginx access logs to a **CloudWatch Log Group**; a **CloudWatch Dashboard** provides request counts and recent log views for centralized monitoring and compliance reporting.
 
 ## Technical Stack
 
@@ -27,7 +27,7 @@ The architecture evolved from a single static container to a **dynamic two-conta
 | Cloud Platform | AWS (EC2, EIP, S3, **IAM Instance Profiles**, Route 53, **CloudWatch**) |
 | Containers | **NGINX (Web/Proxy) & Node.js/Express (API)** |
 | Operating System | Ubuntu 24.04 LTS |
-| Security | Certbot (SSL), **Snyk (SAST)**, **Trivy (Container Scanning)**, UFW (Host Firewall), AWS IAM, GitHub Secrets, **Policy-as-Code (PaC)** |
+| Security | Certbot (SSL), **Snyk (SAST)**, **Trivy (Container Scanning)**, **Nginx rate limiting (429)**, UFW (Host Firewall), AWS IAM, GitHub Secrets, **Policy-as-Code (PaC)** |
 
 ## Deployment Workflow
 
@@ -42,19 +42,36 @@ The architecture evolved from a single static container to a **dynamic two-conta
 6.  **API Deployment (Backend):**
     * Ansible copies the Node.js API source code and dependencies (including vulnerability patches in the Dockerfile).
     * Ansible builds the `stats-api:latest` Docker image.
-    * **Trivy scans the image, using a `.trivyignore` file, and fails the deployment if un-ignored High/Critical vulnerabilities are found.**
+    * **Trivy scans the image, using a `.trivyignore` file, and fails the deployment if un-ignored High/Critical vulnerabilities are found.** Trivy JSON is used to compute a **dynamic security score** served by the API and displayed on the GRC Compliance Dashboard.
     * Ansible starts the `stats-api` container, exposing it on `localhost:3000`.
     * An Ansible task actively verifies the API is responsive on `localhost:3000` before proceeding.
 7.  **Web Deployment (Frontend):**
     * Certbot runs using the attached IAM Role (PoLP) to renew/acquire the SSL certificate via Route 53 DNS validation.
-    * Ansible copies the static content (including `index.html`, `resume.html`, and `grc.html`).
-    * Ansible starts the `portfolio-web` (Nginx) container, which proxies API requests and serves static content.
+    * Ansible copies the static content (including `index.html`, `resume.html`, and `grc.html`) and the Nginx config (SSL, **rate limiting**, reverse proxy).
+    * Ansible starts the `portfolio-web` (Nginx) container, which proxies API requests, applies rate limiting, and serves static content.
 8.  **Live:** The frontend loads, securely fetches dynamic stats from its own `/api/stats` endpoint, and displays real-time GitHub data.
+
+## Terraform state locking (one-time setup)
+
+State locking uses the DynamoDB table `portfolio-tf-state-lock` so concurrent runs don’t corrupt state. **One-time:** create the table before using the backend with locking:
+
+1. **Create the lock table** (once per account/region):
+   ```bash
+   aws dynamodb create-table \
+     --table-name portfolio-tf-state-lock \
+     --attribute-definitions AttributeName=LockID,AttributeType=S \
+     --key-schema AttributeName=LockID,KeyType=HASH \
+     --billing-mode PAY_PER_REQUEST \
+     --region us-east-2
+   ```
+2. **Attach the lock policy** to the role that runs Terraform (e.g. `GitHub-Actions-Deploy-Role` and your local user/role): use `infra/policies/terraform-state-lock-policy.json` (create a customer-managed policy from it and attach to the role).
+3. **Re-initialize the backend:** `terraform init -reconfigure`.
+
+After that, `terraform plan`/`apply` will acquire and release the lock automatically.
 
 ## Future Enhancements
 
-* **State Locking:** Integrate a DynamoDB table for Terraform state locking to prevent concurrent updates.
-* **Enhanced Monitoring:** Expand CloudWatch monitoring to include custom metrics, alarms, and dashboards for comprehensive observability.
+* **Enhanced Monitoring:** Expand CloudWatch with custom metrics and alarms (e.g., rate-limit 429 spikes, API latency) for comprehensive observability.
 * **Expansion:** Transition the application deployment to a Docker Compose manifest managed entirely by Ansible.
 
 ## Author

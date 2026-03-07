@@ -1,12 +1,13 @@
 terraform {
   required_version = ">= 1.0"
 
-  # 1. CONFIGURE S3 BACKEND FOR REMOTE STATE
+  # 1. CONFIGURE S3 BACKEND FOR REMOTE STATE (with DynamoDB locking)
   backend "s3" {
-    bucket         = "shaylee-portfolio-tf-state-2025" # Your Bucket Name
-    key            = "portfolio/terraform.tfstate"     # State file path inside the bucket
-    region         = "us-east-2"                       # <--- CHANGE TO YOUR AWS REGION
-    encrypt        = true                              # Enables server-side encryption
+    bucket         = "shaylee-portfolio-tf-state-2025"
+    key            = "portfolio/terraform.tfstate"
+    region         = "us-east-2"
+    encrypt        = true
+    dynamodb_table = "portfolio-tf-state-lock" # Locks state during apply/plan
   }
 
   # 2. KEEP ONLY THE AWS PROVIDER
