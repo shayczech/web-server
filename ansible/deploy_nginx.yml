@@ -339,7 +339,7 @@
         daemon_reload: true
       become: yes
 
-    - name: Cron: restart CloudWatch Agent daily
+    - name: "Cron: restart CloudWatch Agent daily"
       ansible.builtin.cron:
         name: "Restart CloudWatch Agent daily"
         minute: "0"
