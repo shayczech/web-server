@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shay's Kitchen</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%236b7c5e'/%3E%3Cpath d='M30 50 L30 55 Q50 78 70 55 L70 50 Q50 56 30 50' fill='%23faf7f2'/%3E%3Cpath d='M52 58 L76 24' stroke='%23faf7f2' stroke-width='4.5' stroke-linecap='round' fill='none'/%3E%3Cellipse cx='76' cy='22' rx='5' ry='6' fill='%23faf7f2'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231a1410'/%3E%3Ctext x='32' y='46' font-family='Georgia,serif' font-size='38' font-style='italic' fill='%23f5f0e8' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -312,6 +312,42 @@
 
   .pantry-category-group:last-child { margin-bottom: 0; }
 
+  .pantry-category-group.collapsed .pantry-category-body { display: none; }
+
+  .pantry-subcategory-group {
+    margin-bottom: 16px;
+  }
+
+  .pantry-subcategory-group:last-child { margin-bottom: 0; }
+
+  .pantry-subcategory-group.collapsed .pantry-grid { display: none; }
+
+  .pantry-subcategory-title {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed var(--border);
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-left: 18px;
+    transition: color 0.15s;
+  }
+
+  .pantry-subcategory-title:hover { color: var(--brown); }
+
+  .pantry-subcategory-chevron {
+    font-size: 9px;
+    transition: transform 0.2s;
+  }
+
+  .pantry-subcategory-group.collapsed .pantry-subcategory-chevron { transform: rotate(-90deg); }
+
   .pantry-category-title {
     font-size: 10px;
     letter-spacing: 0.14em;
@@ -320,7 +356,47 @@
     margin-bottom: 10px;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.15s;
   }
+
+  .pantry-category-title:hover { color: var(--brown); }
+
+  .pantry-category-chevron {
+    font-size: 10px;
+    transition: transform 0.2s;
+  }
+
+  .pantry-category-group.collapsed .pantry-category-chevron { transform: rotate(-90deg); }
+
+  .pantry-categories-panel {
+    display: none;
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    align-items: center;
+  }
+
+  .pantry-categories-panel.open { display: flex; }
+
+  .pantry-categories-panel label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .pantry-categories-panel input[type="checkbox"] { cursor: pointer; }
 
   .pantry-grid {
     display: flex;
@@ -1222,7 +1298,9 @@
           <option value="low">Low Stock</option>
           <option value="out">Out of Stock</option>
         </select>
+        <button type="button" class="btn-sm btn-ghost" onclick="toggleCategoriesPanel()">Show/hide categories</button>
       </div>
+      <div class="pantry-categories-panel" id="pantry-categories-panel"></div>
       <div class="pantry-grid" id="pantry-grid"></div>
     </div>
 
@@ -1364,20 +1442,28 @@
       <div class="form-group">
         <label>Category</label>
         <select id="new-item-category">
+          <option value="Dried Goods">Dried Goods</option>
+          <option value="Produce & Fresh">Produce & Fresh</option>
+          <option value="Frozen">Frozen</option>
+          <option value="Condiments & Sauces">Condiments & Sauces</option>
+          <option value="Spices & Herbs">Spices & Herbs</option>
           <option value="Baking">Baking</option>
           <option value="Produce">Produce</option>
           <option value="Dairy & Eggs">Dairy & Eggs</option>
           <option value="Meat & Seafood">Meat & Seafood</option>
           <option value="Grains & Pasta">Grains & Pasta</option>
-          <option value="Spices & Herbs">Spices & Herbs</option>
-          <option value="Condiments & Sauces">Condiments & Sauces</option>
           <option value="Canned & Jarred">Canned & Jarred</option>
-          <option value="Frozen">Frozen</option>
           <option value="Beverages">Beverages</option>
           <option value="Snacks">Snacks</option>
           <option value="Other">Other</option>
         </select>
       </div>
+      <div class="form-group">
+        <label>Subcategory <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+        <input type="text" id="new-item-subcategory" placeholder="e.g. Sweeteners, Flours">
+      </div>
+    </div>
+    <div class="form-row">
       <div class="form-group">
         <label>Unit</label>
         <input type="text" id="new-item-unit" placeholder="lbs, oz, cups, count…">
@@ -1600,6 +1686,108 @@ function toast(msg) {
 }
 
 // ── PANTRY ──
+const HIDDEN_CATEGORIES_KEY = 'kitchen_hidden_categories';
+const COLLAPSED_CATEGORIES_KEY = 'kitchen_collapsed_categories';
+const COLLAPSED_SUBCATEGORIES_KEY = 'kitchen_collapsed_subcategories';
+
+function getHiddenCategories() {
+  try {
+    const raw = localStorage.getItem(HIDDEN_CATEGORIES_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+function setHiddenCategories(arr) {
+  localStorage.setItem(HIDDEN_CATEGORIES_KEY, JSON.stringify(arr));
+}
+
+function getCollapsedCategories() {
+  try {
+    const raw = localStorage.getItem(COLLAPSED_CATEGORIES_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+function setCollapsedCategories(arr) {
+  localStorage.setItem(COLLAPSED_CATEGORIES_KEY, JSON.stringify(arr));
+}
+
+function getCollapsedSubcategories() {
+  try {
+    const raw = localStorage.getItem(COLLAPSED_SUBCATEGORIES_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+function setCollapsedSubcategories(arr) {
+  localStorage.setItem(COLLAPSED_SUBCATEGORIES_KEY, JSON.stringify(arr));
+}
+
+function subcatKey(cat, subcat) { return cat + '|' + (subcat || ''); }
+
+function toggleSubcategoryCollapsed(cat, subcat) {
+  const key = subcatKey(cat, subcat);
+  const collapsed = getCollapsedSubcategories();
+  const i = collapsed.indexOf(key);
+  if (i >= 0) collapsed.splice(i, 1);
+  else collapsed.push(key);
+  setCollapsedSubcategories(collapsed);
+  renderPantry();
+}
+
+function toggleSubcategoryByKey(key) {
+  const idx = key.indexOf('|');
+  const cat = idx >= 0 ? key.slice(0, idx) : key;
+  const subcat = idx >= 0 ? key.slice(idx + 1) : null;
+  toggleSubcategoryCollapsed(cat, subcat || null);
+}
+
+function toggleCategoryVisible(cat) {
+  const hidden = getHiddenCategories();
+  const i = hidden.indexOf(cat);
+  if (i >= 0) hidden.splice(i, 1);
+  else hidden.push(cat);
+  setHiddenCategories(hidden);
+  renderPantry();
+  renderCategoriesPanel();
+}
+
+function toggleCategoryCollapsed(cat) {
+  const collapsed = getCollapsedCategories();
+  const i = collapsed.indexOf(cat);
+  if (i >= 0) collapsed.splice(i, 1);
+  else collapsed.push(cat);
+  setCollapsedCategories(collapsed);
+  renderPantry();
+}
+
+function toggleCategoriesPanel() {
+  const panel = document.getElementById('pantry-categories-panel');
+  if (!panel) return;
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) renderCategoriesPanel();
+}
+
+function renderCategoriesPanel() {
+  const panel = document.getElementById('pantry-categories-panel');
+  if (!panel) return;
+  const data = getData();
+  const allCats = [...new Set(data.pantry.map(i => (i.category || 'Other').trim()).filter(Boolean))].sort();
+  const hidden = getHiddenCategories();
+  panel.innerHTML = '';
+  allCats.forEach(cat => {
+    const label = document.createElement('label');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = !hidden.includes(cat);
+    cb.dataset.category = cat;
+    cb.onchange = () => { toggleCategoryVisible(cat); };
+    label.appendChild(cb);
+    label.appendChild(document.createTextNode(' ' + cat));
+    panel.appendChild(label);
+  });
+}
+
 function getStockStatus(item) {
   if (item.qty <= 0) return 'out';
   if (item.qty <= (item.threshold || 1)) return 'low';
@@ -1641,12 +1829,14 @@ function renderPantry(items) {
     if (!byCategory[cat]) byCategory[cat] = [];
     byCategory[cat].push(item);
   });
-  const sortedCats = Object.keys(byCategory).sort();
-  grid.innerHTML = sortedCats.map(cat => {
-    const categoryItems = byCategory[cat];
-    const itemsHtml = categoryItems.map(item => {
-      const status = getStockStatus(item);
-      return `<div class="pantry-item ${status === 'low' ? 'low-stock' : ''} ${status === 'out' ? 'out-of-stock' : ''}" draggable="true">
+  const hidden = getHiddenCategories();
+  const collapsed = getCollapsedCategories();
+  const collapsedSub = getCollapsedSubcategories();
+  const sortedCats = Object.keys(byCategory).sort().filter(cat => !hidden.includes(cat));
+
+  function chipHtml(item) {
+    const status = getStockStatus(item);
+    return `<div class="pantry-item ${status === 'low' ? 'low-stock' : ''} ${status === 'out' ? 'out-of-stock' : ''}" draggable="true">
   <span class="item-emoji">${item.emoji || '📦'}</span>
   <span class="item-name">${item.name}</span>
   <div class="chip-sep"></div>
@@ -1657,10 +1847,43 @@ function renderPantry(items) {
   </div>
   <button class="btn-danger" onclick="removePantryItem(${item.id})">×</button>
 </div>`;
+  }
+
+  grid.innerHTML = sortedCats.map(cat => {
+    const categoryItems = byCategory[cat];
+    const bySubcat = {};
+    categoryItems.forEach(item => {
+      const sub = (item.subcategory || '').trim() || '—';
+      if (!bySubcat[sub]) bySubcat[sub] = [];
+      bySubcat[sub].push(item);
+    });
+    const sortedSubcats = Object.keys(bySubcat).sort((a, b) => (a === '—' ? 1 : b === '—' ? -1 : a.localeCompare(b)));
+    const isCatCollapsed = collapsed.includes(cat);
+    const catEscaped = escapeHtml(cat);
+    const catAttr = catEscaped.replace(/"/g, '&quot;');
+
+    const subcategoryBlocks = sortedSubcats.map(subcat => {
+      const subItems = bySubcat[subcat];
+      const key = subcatKey(cat, subcat);
+      const isSubCollapsed = collapsedSub.includes(key);
+      const subEscaped = escapeHtml(subcat);
+      const subAttr = escapeHtml(key).replace(/"/g, '&quot;');
+      const chipsHtml = subItems.map(chipHtml).join('');
+      return `<div class="pantry-subcategory-group ${isSubCollapsed ? 'collapsed' : ''}" data-subcat-key="${subAttr}">
+        <div class="pantry-subcategory-title" role="button" tabindex="0" aria-expanded="${!isSubCollapsed}" data-subcat-key="${subAttr}" onclick="toggleSubcategoryByKey(this.getAttribute('data-subcat-key'))">
+          <span class="pantry-subcategory-chevron" aria-hidden="true">▼</span>
+          <span>${subEscaped}</span>
+        </div>
+        <div class="pantry-grid">${chipsHtml}</div>
+      </div>`;
     }).join('');
-    return `<div class="pantry-category-group">
-      <div class="pantry-category-title">${escapeHtml(cat)}</div>
-      <div class="pantry-grid">${itemsHtml}</div>
+
+    return `<div class="pantry-category-group ${isCatCollapsed ? 'collapsed' : ''}" data-category="${catAttr}">
+      <div class="pantry-category-title" role="button" tabindex="0" aria-expanded="${!isCatCollapsed}" data-category="${catAttr}" onclick="toggleCategoryCollapsed(this.getAttribute('data-category'))">
+        <span class="pantry-category-chevron" aria-hidden="true">▼</span>
+        <span>${catEscaped}</span>
+      </div>
+      <div class="pantry-category-body">${subcategoryBlocks}</div>
     </div>`;
   }).join('');
 }
@@ -1681,11 +1904,13 @@ function addPantryItem() {
   const name = document.getElementById('new-item-name').value.trim();
   if (!name) { toast('Please enter an item name'); return; }
   const data = getData();
+  const subcategoryEl = document.getElementById('new-item-subcategory');
   const item = {
     id: Date.now(),
     name,
     emoji: document.getElementById('new-item-emoji').value || '📦',
     category: document.getElementById('new-item-category').value,
+    subcategory: subcategoryEl ? subcategoryEl.value.trim() : '',
     unit: document.getElementById('new-item-unit').value.trim(),
     qty: parseFloat(document.getElementById('new-item-qty').value) || 0,
     threshold: parseFloat(document.getElementById('new-item-threshold').value) || 1,
@@ -1695,6 +1920,7 @@ function addPantryItem() {
   closeModal('add-pantry-modal');
   document.getElementById('new-item-name').value = '';
   document.getElementById('new-item-emoji').value = '';
+  if (subcategoryEl) subcategoryEl.value = '';
   document.getElementById('new-item-unit').value = '';
   document.getElementById('new-item-qty').value = '1';
   renderPantry();
