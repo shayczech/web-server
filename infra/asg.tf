@@ -75,11 +75,13 @@ resource "aws_launch_template" "web" {
 }
 
 # --- Auto Scaling Group ---
+# desired_capacity = 1 keeps cost low; only ASG "web-server-asg" is managed here.
 resource "aws_autoscaling_group" "web" {
   name                = "${var.server_name}-asg"
-  desired_capacity    = 2
+  desired_capacity    = 1
   min_size            = 1
   max_size            = 4
+  force_delete        = true
   vpc_zone_identifier = [aws_subnet.private_a.id, aws_subnet.private_b.id]
   target_group_arns   = [aws_lb_target_group.web.arn]
 

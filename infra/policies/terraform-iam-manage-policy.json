@@ -10,6 +10,7 @@
         "iam:CreateRole",
         "iam:DeleteRole",
         "iam:GetRole",
+        "iam:GetRolePolicy",
         "iam:PassRole",
         "iam:PutRolePolicy",
         "iam:DeleteRolePolicy",
@@ -27,6 +28,8 @@
         "iam:ListAttachedRolePolicies"
       ],
       "Resource": [
+        "arn:aws:iam::643913568924:role/web-server-ec2-role",
+        "arn:aws:iam::643913568924:instance-profile/web-server-ec2-profile",
         "arn:aws:iam::643913568924:role/web-server-EC2CertbotRole",
         "arn:aws:iam::643913568924:instance-profile/web-server-EC2Profile",
         "arn:aws:iam::643913568924:policy/web-server-CertbotPolicy"
