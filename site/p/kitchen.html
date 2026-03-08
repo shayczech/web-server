@@ -323,93 +323,105 @@
   }
 
   .pantry-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
+  /* ── PANTRY CHIP ── */
   .pantry-item {
     background: var(--warm-white);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 14px;
-    display: flex;
-    flex-wrap: nowrap;
+    border-radius: 4px;
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    box-shadow: 0 1px 3px var(--shadow);
+    gap: 8px;
+    padding: 0 4px 0 10px;
+    height: 36px;
+    cursor: grab;
+    transition: all 0.15s;
+    user-select: none;
+    position: relative;
   }
 
   .pantry-item:hover {
     border-color: var(--brown);
-    box-shadow: 0 2px 8px var(--shadow);
+    box-shadow: 0 1px 6px rgba(26,20,16,0.1);
   }
 
-  .pantry-item.low-stock { border-left: 3px solid var(--gold); }
-  .pantry-item.out-of-stock { border-left: 3px solid var(--rust); opacity: 0.6; }
+  .pantry-item:active { cursor: grabbing; }
 
-  .item-emoji { font-size: 20px; flex-shrink: 0; }
-
-  .item-info {
-    flex: 1 1 auto;
-    min-width: 0;
-    overflow-wrap: break-word;
-    writing-mode: horizontal-tb;
+  .pantry-item.low-stock {
+    background: #fdf7ec;
+    border-color: var(--gold);
   }
+
+  .pantry-item.out-of-stock {
+    background: #f9f0ec;
+    border-color: var(--rust);
+    opacity: 0.6;
+  }
+
+  .item-emoji { font-size: 15px; flex-shrink: 0; }
 
   .item-name {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
-    white-space: normal;
-    line-height: 1.35;
-    overflow-wrap: break-word;
-    word-break: normal;
+    white-space: nowrap;
   }
 
-  .item-meta {
-    font-size: 10px;
+  .chip-sep {
+    width: 1px;
+    height: 16px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .chip-qty {
+    font-size: 11px;
     color: var(--muted);
-    margin-top: 2px;
-    letter-spacing: 0.04em;
+    white-space: nowrap;
   }
 
   .item-qty {
     display: flex;
     align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
+    gap: 0;
   }
 
   .qty-btn {
     width: 22px;
-    height: 22px;
+    height: 28px;
     background: none;
-    border: 1px solid var(--border);
+    border: none;
     font-size: 14px;
-    line-height: 1;
     cursor: pointer;
+    color: var(--muted);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--ink);
-    transition: all 0.2s;
+    transition: color 0.15s;
+    line-height: 1;
   }
 
-  .qty-btn:hover { border-color: var(--brown); color: var(--brown); }
+  .qty-btn:hover { color: var(--brown); }
 
-  .qty-value {
-    font-size: 13px;
-    font-weight: 500;
-    min-width: 24px;
-    text-align: center;
+  .pantry-item .btn-danger {
+    background: none;
+    color: var(--rust);
+    border: 1px solid transparent;
+    padding: 2px 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1;
+    height: 22px;
+    display: flex;
+    align-items: center;
   }
 
-  .qty-unit {
-    font-size: 10px;
-    color: var(--muted);
-    min-width: 30px;
-  }
+  .pantry-item .btn-danger:hover { border-color: var(--rust); }
 
   /* ── ADD ITEM MODAL ── */
   .modal-overlay {
@@ -1634,20 +1646,17 @@ function renderPantry(items) {
     const categoryItems = byCategory[cat];
     const itemsHtml = categoryItems.map(item => {
       const status = getStockStatus(item);
-      return `<div class="pantry-item ${status === 'low' ? 'low-stock' : ''} ${status === 'out' ? 'out-of-stock' : ''}">
-        <span class="item-emoji">${item.emoji || '📦'}</span>
-        <div class="item-info">
-          <div class="item-name">${item.name}</div>
-          <div class="item-meta">${item.unit ? `${item.qty} ${item.unit}` : ''}</div>
-        </div>
-        <div class="item-qty">
-          <button class="qty-btn" onclick="adjustQty(${item.id}, -1)">−</button>
-          <span class="qty-value">${item.qty}</span>
-          <span class="qty-unit">${item.unit || ''}</span>
-          <button class="qty-btn" onclick="adjustQty(${item.id}, 1)">+</button>
-          <button class="btn-danger" onclick="removePantryItem(${item.id})">×</button>
-        </div>
-      </div>`;
+      return `<div class="pantry-item ${status === 'low' ? 'low-stock' : ''} ${status === 'out' ? 'out-of-stock' : ''}" draggable="true">
+  <span class="item-emoji">${item.emoji || '📦'}</span>
+  <span class="item-name">${item.name}</span>
+  <div class="chip-sep"></div>
+  <span class="chip-qty"><span class="qty-value">${item.qty}</span>${item.unit ? ' ' + item.unit : ''}</span>
+  <div class="item-qty">
+    <button class="qty-btn" onclick="adjustQty(${item.id}, -1)">−</button>
+    <button class="qty-btn" onclick="adjustQty(${item.id}, 1)">+</button>
+  </div>
+  <button class="btn-danger" onclick="removePantryItem(${item.id})">×</button>
+</div>`;
     }).join('');
     return `<div class="pantry-category-group">
       <div class="pantry-category-title">${escapeHtml(cat)}</div>
