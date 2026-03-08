@@ -68,9 +68,12 @@ for i in $(seq 1 12); do
 done
 
 # --- Copy static files ---
-cp /opt/web-server/site/index.html  /app/html/
-cp /opt/web-server/site/resume.html /app/html/
-cp /opt/web-server/site/grc.html    /app/html/
+cp /opt/web-server/site/index.html       /app/html/
+cp /opt/web-server/site/resume.html     /app/html/
+cp /opt/web-server/site/grc.html        /app/html/
+cp /opt/web-server/site/architecture.html /app/html/
+mkdir -p /app/html/assets
+cp -r /opt/web-server/site/assets/*     /app/html/assets/
 
 # --- Nginx config (HTTP only — ALB handles SSL) ---
 cat > /app/config/nginx.conf << 'NGINXCONF'

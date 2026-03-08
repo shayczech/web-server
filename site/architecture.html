@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infrastructure Architecture | Shaylee Czech</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230D9488%22></rect><text x=%2250%22 y=%2270%22 font-family=%22Arial, sans-serif%22 font-size=%2255%22 font-weight=%22bold%22 text-anchor=%22middle%22 fill=%22%23FFFFFF%22>SC</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        'primary-teal': {
+                            DEFAULT: '#0D9488', '50': '#F0FDFA', '100': '#CCFBF1', '200': '#99F6E4',
+                            '300': '#5EEAD4', '400': '#2DD4BF', '500': '#14B8A6', '600': '#0D9488',
+                            '700': '#0F766E', '800': '#115E59', '900': '#134E4A', '950': '#042f2e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Full-page dark theme; diagram matches */
+        #diagram-container { background: #0a0f1a; }
+        #diagram-container .node-card { fill: rgba(15,23,42,0.95); stroke: rgba(51,65,85,0.6); stroke-width: 1.5; rx: 10; transition: stroke 0.2s, filter 0.2s; }
+        #diagram-container .node-group:hover .node-card { stroke: rgba(94,234,212,0.5); stroke-width: 2; }
+        #diagram-container .node-group.selected .node-card { fill: rgba(13,148,136,0.15); stroke: #0d9488; stroke-width: 2; filter: url(#glow); }
+        #diagram-container .node-group.dim .node-card { opacity: 0.4; }
+        #diagram-container .edge-line { stroke: rgba(100,116,139,0.25); stroke-width: 1.5; fill: none; transition: stroke 0.2s; }
+        #diagram-container .edge-line.highlight { stroke: rgba(13,148,136,0.7); stroke-width: 2; }
+        #diagram-container .edge-label { fill: #94e5d4; font-size: 10px; font-family: Inter, sans-serif; opacity: 0; transition: opacity 0.2s; }
+        #diagram-container .edge-label.show { opacity: 1; }
+        #diagram-container .node-group text { fill: #e2e8f0; }
+        #diagram-container .node-group text + text { fill: #94a3b8; }
+        #diagram-container .node-group:hover text { fill: #f0fdfa; }
+        #diagram-container .node-group:hover text + text { fill: #99f6e4; }
+        #diagram-container .node-group.selected text { fill: #f0fdfa; }
+        #diagram-container .node-group.selected text + text { fill: #5eead4; }
+        .health-dot { animation: pulse 2s ease-in-out infinite; }
+        .health-dot.standby { animation: none; opacity: 0.5; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        #sim-narration { display: none; }
+        #sim-narration.active { display: block; }
+    </style>
+</head>
+<body class="bg-[#0f172a] antialiased font-sans text-gray-100">
+    <header class="bg-[#0f172a] border-b border-gray-700/80 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a href="/index.html" class="group flex items-center space-x-3 hover:scale-[1.02] transform transition-all duration-300">
+                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-primary-teal-500 to-primary-teal-700 rounded-lg flex items-center justify-center shadow-lg">
+                    <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-2xl font-black text-primary-teal-300">Shaylee Czech</span>
+                    <span class="text-sm font-bold text-gray-400 tracking-wide -mt-1" style="font-variant: small-caps;">Senior Security Engineer | CISSP</span>
+                </div>
+            </a>
+            <nav class="hidden md:flex items-center space-x-2">
+                <a href="/index.html#about" class="group px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-primary-teal-300 hover:bg-gray-700/50 transition-all duration-300 flex items-center space-x-2">
+                    <span>About</span></a>
+                <a href="/resume.html" class="group px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-primary-teal-300 hover:bg-gray-700/50 transition-all duration-300 flex items-center space-x-2">
+                    <span>Experience</span></a>
+                <a href="/grc.html" class="group px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-primary-teal-300 hover:bg-gray-700/50 transition-all duration-300 flex items-center space-x-2">
+                    <span>GRC Dashboard</span></a>
+                <a href="/architecture.html" class="group px-4 py-2 rounded-lg font-semibold text-white bg-primary-teal-600 rounded-lg flex items-center space-x-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    <span>Architecture</span></a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="group px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-primary-teal-300 hover:bg-gray-700/50 transition-all duration-300 flex items-center space-x-2">
+                    <span>LinkedIn</span></a>
+            </nav>
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="text-gray-300 hover:text-primary-teal-400 focus:outline-none">
+                    <svg id="menu-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+                    <svg id="close-icon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-[#0f172a] border-b border-gray-700 absolute top-full left-0 right-0 z-40">
+            <nav class="flex flex-col space-y-1 px-4 py-4">
+                <a href="/index.html#about" class="mobile-nav-link block px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-primary-teal-300 hover:bg-gray-700/50">About</a>
+                <a href="/resume.html" class="mobile-nav-link block px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-primary-teal-300 hover:bg-gray-700/50">Experience</a>
+                <a href="/grc.html" class="mobile-nav-link block px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-primary-teal-300 hover:bg-gray-700/50">GRC Dashboard</a>
+                <a href="/architecture.html" class="mobile-nav-link block px-4 py-2 rounded-lg font-semibold text-white bg-primary-teal-600">Architecture</a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="mobile-nav-link block px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-primary-teal-300 hover:bg-gray-700/50">LinkedIn</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="bg-gradient-to-r from-primary-teal-800 to-primary-teal-900 border-b border-primary-teal-700/50 py-8">
+            <div class="max-w-7xl mx-auto px-4 text-center">
+                <h1 class="text-4xl font-black text-white mb-2">Infrastructure Architecture</h1>
+                <p class="text-lg text-primary-teal-200">Interactive visualization of the AWS infrastructure powering this site</p>
+            </div>
+        </section>
+
+        <div id="sim-narration" class="bg-primary-teal-900/90 text-primary-teal-100 border-b border-primary-teal-700/50 px-4 py-2 text-center font-medium text-sm">
+            <span id="sim-step-num"></span> — <span id="sim-step-text"></span>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-6">
+            <div class="flex-1 min-h-[680px] rounded-xl overflow-hidden border border-gray-700/60 shadow-xl" id="diagram-container">
+                <svg id="diagram-svg" width="100%" height="100%" viewBox="0 0 800 680" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="3" result="blur"/>
+                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                        <symbol id="icon-user" viewBox="0 0 24 24" fill="#94a3b8" stroke="none"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="#94a3b8"/></symbol>
+                        <symbol id="icon-github-actions" viewBox="0 0 128 128"><path fill="#2088ff" d="M26.666 0C11.97 0 0 11.97 0 26.666c0 12.87 9.181 23.651 21.334 26.13v37.87c0 11.77 9.68 21.334 21.332 21.334h.195c1.302 9.023 9.1 16 18.473 16C71.612 128 80 119.612 80 109.334s-8.388-18.668-18.666-18.668c-9.372 0-17.17 6.977-18.473 16h-.195c-8.737 0-16-7.152-16-16V63.779a18.514 18.514 0 0 0 13.24 5.555h2.955c1.303 9.023 9.1 16 18.473 16 9.372 0 17.169-6.977 18.47-16h11.057c1.303 9.023 9.1 16 18.473 16 10.278 0 18.666-8.39 18.666-18.668C128 56.388 119.612 48 109.334 48c-9.373 0-17.171 6.977-18.473 16H79.805c-1.301-9.023-9.098-16-18.471-16s-17.171 6.977-18.473 16h-2.955c-6.433 0-11.793-4.589-12.988-10.672 14.58-.136 26.416-12.05 26.416-26.662C53.334 11.97 41.362 0 26.666 0zm0 5.334A21.292 21.292 0 0 1 48 26.666 21.294 21.294 0 0 1 26.666 48 21.292 21.292 0 0 1 5.334 26.666 21.29 21.29 0 0 1 26.666 5.334zm-5.215 7.541C18.67 12.889 16 15.123 16 18.166v17.043c0 4.043 4.709 6.663 8.145 4.533l13.634-8.455c3.257-2.02 3.274-7.002.032-9.045l-13.635-8.59a5.024 5.024 0 0 0-2.725-.777zm-.117 5.291 13.635 8.588-13.635 8.455V18.166zm40 35.168a13.29 13.29 0 0 1 13.332 13.332A13.293 13.293 0 0 1 61.334 80 13.294 13.294 0 0 1 48 66.666a13.293 13.293 0 0 1 13.334-13.332zm48 0a13.29 13.29 0 0 1 13.332 13.332A13.293 13.293 0 0 1 109.334 80 13.294 13.294 0 0 1 96 66.666a13.293 13.293 0 0 1 13.334-13.332zm-42.568 6.951a2.667 2.667 0 0 0-1.887.78l-6.3 6.294-2.093-2.084a2.667 2.667 0 0 0-3.771.006 2.667 2.667 0 0 0 .008 3.772l3.974 3.96a2.667 2.667 0 0 0 3.766-.001l8.185-8.174a2.667 2.667 0 0 0 .002-3.772 2.667 2.667 0 0 0-1.884-.78zm48 0a2.667 2.667 0 0 0-1.887.78l-6.3 6.294-2.093-2.084a2.667 2.667 0 0 0-3.771.006 2.667 2.667 0 0 0 .008 3.772l3.974 3.96a2.667 2.667 0 0 0 3.766-.001l8.185-8.174a2.667 2.667 0 0 0 .002-3.772 2.667 2.667 0 0 0-1.884-.78zM61.334 96a13.293 13.293 0 0 1 13.332 13.334 13.29 13.29 0 0 1-13.332 13.332A13.293 13.293 0 0 1 48 109.334 13.294 13.294 0 0 1 61.334 96zM56 105.334c-2.193 0-4 1.807-4 4 0 2.195 1.808 4 4 4s4-1.805 4-4c0-2.193-1.807-4-4-4zm10.666 0c-2.193 0-4 1.807-4 4 0 2.195 1.808 4 4 4s4-1.805 4-4c0-2.193-1.807-4-4-4zM56 108c.75 0 1.334.585 1.334 1.334 0 .753-.583 1.332-1.334 1.332-.75 0-1.334-.58-1.334-1.332 0-.75.585-1.334 1.334-1.334zm10.666 0c.75 0 1.334.585 1.334 1.334 0 .753-.583 1.332-1.334 1.332-.75 0-1.332-.58-1.332-1.332 0-.75.583-1.334 1.332-1.334z"/><path fill="#79b8ff" d="M109.334 90.666c-9.383 0-17.188 6.993-18.477 16.031a2.667 2.667 0 0 0-.265-.011l-2.7.09a2.667 2.667 0 0 0-2.578 2.751 2.667 2.667 0 0 0 2.752 2.578l2.7-.087a2.667 2.667 0 0 0 .097-.006C92.17 121.029 99.965 128 109.334 128c10.278 0 18.666-8.388 18.666-18.666s-8.388-18.668-18.666-18.668zm0 5.334a13.293 13.293 0 0 1 13.332 13.334 13.29 13.29 0 0 1-13.332 13.332A13.293 13.293 0 0 1 96 109.334 13.294 13.294 0 0 1 109.334 96z"/></symbol>
+                    </defs>
+                    <!-- VPC boundary (taller to fit diagram with margin) -->
+                    <rect x="40" y="60" width="720" height="580" fill="rgba(13,148,136,0.04)" stroke="rgba(13,148,136,0.35)" stroke-width="1.5" stroke-dasharray="6 4"/>
+                    <text x="60" y="85" fill="rgba(148,163,184,0.9)" font-size="11" font-family="Inter" font-weight="600">VPC 10.0.0.0/16</text>
+                    <!-- AZ boxes: EC2 in upper part; region labels in strip below EC2 cards (564–598) so not covered -->
+                    <rect x="120" y="438" width="240" height="160" fill="rgba(13,148,136,0.06)" stroke="rgba(13,148,136,0.25)" stroke-width="1" stroke-dasharray="4 2"/>
+                    <text x="130" y="582" fill="rgba(148,163,184,0.8)" font-size="10" font-weight="500">us-east-2a</text>
+                    <rect x="440" y="438" width="240" height="160" fill="rgba(13,148,136,0.06)" stroke="rgba(13,148,136,0.25)" stroke-width="1" stroke-dasharray="4 2"/>
+                    <text x="450" y="582" fill="rgba(148,163,184,0.8)" font-size="10" font-weight="500">us-east-2b</text>
+                    <!-- Edges: node centers (user 42, r53 138, igw 234, alb 330, asg 426, ec2 522; 24px gap ASG–EC2; sides 234/330) -->
+                    <line id="edge-user-r53" class="edge-line" x1="400" y1="42" x2="400" y2="138"/>
+                    <line id="edge-r53-igw" class="edge-line" x1="400" y1="138" x2="400" y2="234"/>
+                    <line id="edge-igw-alb" class="edge-line" x1="400" y1="234" x2="400" y2="330"/>
+                    <line id="edge-alb-ec2a" class="edge-line" x1="400" y1="330" x2="240" y2="522"/>
+                    <line id="edge-alb-ec2b" class="edge-line" x1="400" y1="330" x2="560" y2="522" stroke-dasharray="6 4"/>
+                    <line id="edge-asg-ec2a" class="edge-line" x1="400" y1="426" x2="240" y2="522"/>
+                    <line id="edge-asg-ec2b" class="edge-line" x1="400" y1="426" x2="560" y2="522" stroke-dasharray="6 4"/>
+                    <line id="edge-ec2a-cw" class="edge-line" x1="240" y1="522" x2="704" y2="234"/>
+                    <line id="edge-gh-asg" class="edge-line" x1="96" y1="234" x2="400" y2="426"/>
+                    <line id="edge-acm-alb" class="edge-line" x1="96" y1="330" x2="400" y2="330"/>
+                    <line id="edge-s3-asg" class="edge-line" x1="704" y1="330" x2="400" y2="426"/>
+                    <!-- Edge labels (shown on hover) -->
+                    <text id="label-user-r53" class="edge-label" x="400" y="90">DNS lookup</text>
+                    <text id="label-r53-igw" class="edge-label" x="400" y="186">→ ALB IP</text>
+                    <text id="label-igw-alb" class="edge-label" x="400" y="282">Ingress</text>
+                    <text id="label-alb-ec2a" class="edge-label" x="300" y="420">Port 80</text>
+                    <text id="label-alb-ec2b" class="edge-label" x="460" y="420">Port 80</text>
+                    <text id="label-asg-ec2a" class="edge-label" x="300" y="472">Manages</text>
+                    <text id="label-asg-ec2b" class="edge-label" x="500" y="472">Manages</text>
+                    <text id="label-ec2a-cw" class="edge-label" x="460" y="382">Logs/Metrics</text>
+                    <text id="label-gh-asg" class="edge-label" x="230" y="334">Instance Refresh</text>
+                    <text id="label-acm-alb" class="edge-label" x="230" y="328">TLS Cert</text>
+                    <text id="label-s3-asg" class="edge-label" x="570" y="382">State + Artifacts</text>
+                    <!-- Animated flow packets (solid edges only); visibility toggled by Flow button -->
+                    <g id="flow-packets" visibility="hidden">
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;400" dur="2.5s" begin="0s" repeatCount="indefinite"/><animate attributeName="cy" values="42;138" dur="2.5s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="0s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;400" dur="2.5s" begin="0.7s" repeatCount="indefinite"/><animate attributeName="cy" values="138;234" dur="2.5s" begin="0.7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="0.7s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;400" dur="2.5s" begin="1.4s" repeatCount="indefinite"/><animate attributeName="cy" values="234;330" dur="2.5s" begin="1.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="1.4s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;240" dur="2.5s" begin="2.1s" repeatCount="indefinite"/><animate attributeName="cy" values="330;522" dur="2.5s" begin="2.1s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="2.1s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;240" dur="2.5s" begin="2.8s" repeatCount="indefinite"/><animate attributeName="cy" values="426;522" dur="2.5s" begin="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="2.8s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="240;704" dur="2.5s" begin="3.5s" repeatCount="indefinite"/><animate attributeName="cy" values="522;234" dur="2.5s" begin="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="3.5s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="96;400" dur="2.5s" begin="4.2s" repeatCount="indefinite"/><animate attributeName="cy" values="234;426" dur="2.5s" begin="4.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="4.2s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="96;400" dur="2.5s" begin="4.9s" repeatCount="indefinite"/><animate attributeName="cy" values="330;330" dur="2.5s" begin="4.9s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="4.9s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="704;400" dur="2.5s" begin="5.6s" repeatCount="indefinite"/><animate attributeName="cy" values="330;426" dur="2.5s" begin="5.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="5.6s" repeatCount="indefinite"/></circle>
+                    </g>
+                    <!-- Node cards: icon above text -->
+                    <g id="node-user" class="node-group" data-id="user">
+                        <rect class="node-card" x="300" y="6" width="200" height="72" rx="10"/>
+                        <rect x="300" y="6" width="200" height="4" rx="2" fill="#64748b"/>
+                        <use href="#icon-user" x="384" y="12" width="32" height="32"/>
+                        <text x="400" y="56" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">User</text>
+                        <text x="400" y="68" text-anchor="middle" fill="#94a3b8" font-size="10">HTTPS Request</text>
+                    </g>
+                    <g id="node-r53" class="node-group" data-id="r53">
+                        <rect class="node-card" x="300" y="102" width="200" height="72" rx="10"/>
+                        <rect x="300" y="102" width="200" height="4" rx="2" fill="#8B5CF6"/>
+                        <image href="assets/aws-icons/Arch_Amazon-Route-53_48.svg" x="384" y="108" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
+                        <text x="400" y="156" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">Route 53</text>
+                        <text x="400" y="168" text-anchor="middle" fill="#94a3b8" font-size="10">DNS Resolution</text>
+                    </g>
+                    <g id="node-igw" class="node-group" data-id="igw">
+                        <rect class="node-card" x="300" y="198" width="200" height="72" rx="10"/>
+                        <rect x="300" y="198" width="200" height="4" rx="2" fill="#0D9488"/>
+                        <image href="assets/aws-icons/Res_Amazon-VPC_Internet-Gateway_48.svg" x="384" y="204" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
+                        <text x="400" y="252" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">Internet Gateway</text>
+                        <text x="400" y="264" text-anchor="middle" fill="#94a3b8" font-size="10">VPC Entry Point</text>
+                    </g>
+                    <g id="node-alb" class="node-group" data-id="alb">
+                        <rect class="node-card" x="270" y="294" width="260" height="72" rx="10"/>
+                        <rect x="270" y="294" width="260" height="4" rx="2" fill="#F59E0B"/>
+                        <image href="assets/aws-icons/Arch_Elastic-Load-Balancing_48.svg" x="384" y="300" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
+                        <circle class="health-dot" cx="514" cy="304" r="4" fill="#22c55e"/>
+                        <text x="400" y="350" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">Application Load Balancer</text>
+                        <text x="400" y="362" text-anchor="middle" fill="#94a3b8" font-size="9">SSL Termination + Health Checks</text>
+                    </g>
+                    <g id="node-asg" class="node-group" data-id="asg">
+                        <rect class="node-card" x="300" y="390" width="200" height="72" rx="10"/>
+                        <rect x="300" y="390" width="200" height="4" rx="2" fill="#EF4444"/>
+                        <image href="assets/aws-icons/Arch_AWS-Auto-Scaling_48.svg" x="384" y="396" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
+                        <text x="400" y="444" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">Auto Scaling Group</text>
+                        <text x="400" y="456" text-anchor="middle" fill="#94a3b8" font-size="10">Min: 1  Max: 2  Desired: 1</text>
+                    </g>
+                    <g id="node-ec2a" class="node-group" data-id="ec2a">
+                        <rect class="node-card" x="140" y="480" width="200" height="84" rx="10"/>
+                        <rect x="140" y="480" width="200" height="4" rx="2" fill="#0D9488"/>
+                        <image href="assets/aws-icons/Arch_Amazon-EC2_48.svg" x="224" y="486" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
+                        <circle class="health-dot" cx="322" cy="492" r="4" fill="#22c55e"/>
+                        <text x="240" y="536" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">EC2 (AZ-a)</text>
+                        <text x="240" y="550" text-anchor="middle" fill="#94a3b8" font-size="10">Docker: Nginx + Node.js API</text>
+                    </g>
+                    <g id="node-ec2b" class="node-group" data-id="ec2b">
+                        <rect class="node-card" x="460" y="480" width="200" height="84" rx="10"/>
+                        <rect x="460" y="480" width="200" height="4" rx="2" fill="#0D9488"/>
+                        <image href="assets/aws-icons/Arch_Amazon-EC2_48.svg" x="544" y="486" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
+                        <circle class="health-dot standby" cx="642" cy="492" r="4" fill="#64748b"/>
+                        <text x="560" y="536" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">EC2 (AZ-b)</text>
+                        <text x="560" y="550" text-anchor="middle" fill="#94a3b8" font-size="10">Standby / Auto-Replace</text>
+                    </g>
+                    <g id="node-cw" class="node-group" data-id="cw">
+                        <rect class="node-card" x="614" y="198" width="180" height="72" rx="10"/>
+                        <rect x="614" y="198" width="180" height="4" rx="2" fill="#3B82F6"/>
+                        <image href="assets/aws-icons/Arch_Amazon-CloudWatch_48.svg" x="684" y="204" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
+                        <text x="704" y="252" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">CloudWatch</text>
+                        <text x="704" y="264" text-anchor="middle" fill="#94a3b8" font-size="10">Metrics + Logs + Alarms</text>
+                    </g>
+                    <g id="node-s3" class="node-group" data-id="s3">
+                        <rect class="node-card" x="614" y="296" width="180" height="72" rx="10"/>
+                        <rect x="614" y="296" width="180" height="4" rx="2" fill="#10B981"/>
+                        <image href="assets/aws-icons/Res_Amazon-Simple-Storage-Service_S3-Standard_48.svg" x="684" y="302" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
+                        <text x="704" y="350" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">S3 Bucket</text>
+                        <text x="704" y="362" text-anchor="middle" fill="#94a3b8" font-size="10">Terraform State + Artifacts</text>
+                    </g>
+                    <g id="node-acm" class="node-group" data-id="acm">
+                        <rect class="node-card" x="12" y="296" width="168" height="72" rx="10"/>
+                        <rect x="12" y="296" width="168" height="4" rx="2" fill="#EC4899"/>
+                        <image href="assets/aws-icons/Arch_AWS-Certificate-Manager_48.svg" x="82" y="302" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
+                        <text x="96" y="350" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">ACM</text>
+                        <text x="96" y="362" text-anchor="middle" fill="#94a3b8" font-size="10">SSL Certificate</text>
+                    </g>
+                    <g id="node-gh" class="node-group" data-id="gh">
+                        <rect class="node-card" x="12" y="198" width="168" height="72" rx="10"/>
+                        <rect x="12" y="198" width="168" height="4" rx="2" fill="#6366F1"/>
+                        <use href="#icon-github-actions" x="72" y="204" width="32" height="32"/>
+                        <text x="96" y="252" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">GitHub Actions</text>
+                        <text x="96" y="264" text-anchor="middle" fill="#94a3b8" font-size="10">CI/CD Pipeline</text>
+                    </g>
+                </svg>
+            </div>
+            <aside id="detail-panel" class="w-full lg:w-96 rounded-xl bg-gray-800/90 text-gray-100 p-6 shadow-xl border border-gray-600/60 min-h-[320px]">
+                <div id="detail-default">
+                    <h3 class="text-lg font-bold text-primary-teal-300 mb-2">Click a node</h3>
+                    <p class="text-sm text-gray-400">Select any component in the diagram to see its description, technologies, and connections.</p>
+                </div>
+                <div id="detail-content" class="hidden">
+                    <div id="detail-accent" class="h-1 rounded mb-3 w-16"></div>
+                    <h3 id="detail-title" class="text-xl font-bold text-white mb-1"></h3>
+                    <p id="detail-subtitle" class="text-sm text-gray-400 mb-4"></p>
+                    <p id="detail-desc" class="text-sm text-gray-300 mb-4 leading-relaxed"></p>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Technologies</p>
+                    <div id="detail-tech" class="flex flex-wrap gap-2 mb-4"></div>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Connections</p>
+                    <ul id="detail-connections" class="text-sm text-gray-400 space-y-1"></ul>
+                </div>
+            </aside>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap gap-4 items-center border-t border-gray-700/60 bg-[#0f172a] rounded-t-xl">
+            <button id="btn-flow" class="px-4 py-2 rounded-lg font-medium border border-primary-teal-500 text-primary-teal-300 hover:bg-primary-teal-500/20 transition">Flow: Paused</button>
+            <button id="btn-simulate" class="px-4 py-2 rounded-lg font-medium bg-primary-teal-600 text-white hover:bg-primary-teal-500 transition">Simulate Request</button>
+        </div>
+    </main>
+
+    <footer class="bg-[#0f172a] border-t border-gray-700/60 text-gray-300 mt-8">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <div class="mt-2 space-x-4">
+                <a href="mailto:shayleeczech@gmail.com" class="text-gray-400 hover:text-white">Email</a>
+                <span class="text-gray-500">|</span>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-400 hover:text-white">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+(function() {
+        const NODES = {
+            user: { label: 'User', subtitle: 'HTTPS Request', accent: '#64748b', tech: [], desc: 'Visitors access shayleeczech.com over HTTPS. The ALB terminates SSL so the user always gets a secure connection with an ACM-managed certificate.', connections: ['Route 53 (DNS lookup)'] },
+            r53: { label: 'Route 53', subtitle: 'DNS Resolution', accent: '#8B5CF6', tech: ['DNS', 'Alias Record', 'Health Checks'], desc: 'Routes shayleeczech.com to the ALB via an alias A record. Supports automatic failover and latency-based routing.', connections: ['User', 'Internet Gateway (→ ALB IP)'] },
+            igw: { label: 'Internet Gateway', subtitle: 'VPC Entry Point', accent: '#0D9488', tech: ['VPC', 'Public Access'], desc: 'Attached to the custom VPC (10.0.0.0/16). Routes internet traffic to public subnets where the ALB lives. Free tier — no hourly cost.', connections: ['Route 53', 'ALB (Ingress)'] },
+            alb: { label: 'Application Load Balancer', subtitle: 'SSL Termination + Health Checks', accent: '#F59E0B', tech: ['HTTPS/443', 'HTTP→HTTPS Redirect', 'Target Groups', 'Health Checks'], desc: 'Internet-facing ALB in 2 public subnets (us-east-2a, us-east-2b). Terminates SSL with ACM certificate, redirects HTTP to HTTPS, and forwards to healthy targets on port 80.', connections: ['Internet Gateway', 'EC2 (AZ-a)', 'EC2 (AZ-b)', 'ACM (TLS Cert)'] },
+            asg: { label: 'Auto Scaling Group', subtitle: 'Min: 1  Max: 2  Desired: 1', accent: '#EF4444', tech: ['Launch Template', 'Instance Refresh', 'Health Check: ELB'], desc: 'Maintains desired capacity across AZs. On deployment, GitHub Actions triggers an instance refresh — the ASG launches a new instance from the latest Launch Template, waits for it to pass ALB health checks, then terminates the old one.', connections: ['EC2 (AZ-a)', 'EC2 (AZ-b)', 'GitHub Actions', 'S3 (State + Artifacts)'] },
+            ec2a: { label: 'EC2 (AZ-a)', subtitle: 'Docker: Nginx + Node.js API', accent: '#0D9488', tech: ['t3.micro', 'Docker', 'Nginx', 'Node.js API', 'CloudWatch Agent'], desc: 'Runs the two-container architecture: Nginx reverse proxy (port 80) serves static content and proxies /api/stats to the Node.js container (port 3000). CloudWatch Agent forwards access logs.', connections: ['ALB', 'ASG', 'CloudWatch'] },
+            ec2b: { label: 'EC2 (AZ-b)', subtitle: 'Standby / Auto-Replace', accent: '#0D9488', tech: ['t3.micro', 'Auto-Replace', 'Multi-AZ'], desc: 'Standby capacity in a second AZ. The ASG can launch instances here if AZ-a has issues, or during instance refresh for zero-downtime deployments. Demonstrates multi-AZ resilience.', connections: ['ALB', 'ASG'] },
+            cw: { label: 'CloudWatch', subtitle: 'Metrics + Logs + Alarms', accent: '#3B82F6', tech: ['Dashboards', 'Alarms', 'SNS Alerts', 'Log Groups'], desc: 'Centralized monitoring: Nginx access logs, ALB metrics (RequestCount, 5xx rate, TargetResponseTime), instance health. Alarms trigger SNS email alerts when thresholds are breached.', connections: ['EC2 (AZ-a)'] },
+            s3: { label: 'S3 Bucket', subtitle: 'Terraform State + Artifacts', accent: '#10B981', tech: ['Terraform State', 'DynamoDB Lock', 'Encrypted', 'Versioned'], desc: 'Stores Terraform remote state with server-side encryption and versioning. DynamoDB table provides state locking to prevent concurrent modifications. Also hosts deployment artifacts.', connections: ['ASG (state)'] },
+            acm: { label: 'ACM', subtitle: 'SSL Certificate', accent: '#EC4899', tech: ['DNS Validation', 'Auto-Renewal', 'Free with ALB'], desc: 'Manages the SSL/TLS certificate for shayleeczech.com. Validated via Route 53 DNS records (automated by Terraform). Auto-renews — no more Certbot.', connections: ['ALB (TLS Cert)'] },
+            gh: { label: 'GitHub Actions', subtitle: 'CI/CD Pipeline', accent: '#6366F1', tech: ['Snyk SAST', 'Terraform Apply', 'ASG Refresh', 'Trivy Scan'], desc: 'A single git push triggers: (1) Snyk dependency scan, (2) Terraform apply for infrastructure, (3) Upload artifacts to S3, (4) Trigger ASG instance refresh for zero-downtime deployment.', connections: ['ASG (Instance Refresh)'] }
+        };
+        const EDGES = [
+            { from: 'user', to: 'r53', labelId: 'label-user-r53', lineId: 'edge-user-r53' },
+            { from: 'r53', to: 'igw', labelId: 'label-r53-igw', lineId: 'edge-r53-igw' },
+            { from: 'igw', to: 'alb', labelId: 'label-igw-alb', lineId: 'edge-igw-alb' },
+            { from: 'alb', to: 'ec2a', labelId: 'label-alb-ec2a', lineId: 'edge-alb-ec2a' },
+            { from: 'alb', to: 'ec2b', labelId: 'label-alb-ec2b', lineId: 'edge-alb-ec2b' },
+            { from: 'asg', to: 'ec2a', labelId: 'label-asg-ec2a', lineId: 'edge-asg-ec2a' },
+            { from: 'asg', to: 'ec2b', labelId: 'label-asg-ec2b', lineId: 'edge-asg-ec2b' },
+            { from: 'ec2a', to: 'cw', labelId: 'label-ec2a-cw', lineId: 'edge-ec2a-cw' },
+            { from: 'gh', to: 'asg', labelId: 'label-gh-asg', lineId: 'edge-gh-asg' },
+            { from: 'acm', to: 'alb', labelId: 'label-acm-alb', lineId: 'edge-acm-alb' },
+            { from: 's3', to: 'asg', labelId: 'label-s3-asg', lineId: 'edge-s3-asg' }
+        ];
+        const SIM_STEPS = [
+            { id: 'user', text: 'User sends HTTPS request to shayleeczech.com' },
+            { id: 'r53', text: 'Route 53 resolves domain → ALB IP address' },
+            { id: 'igw', text: 'Request enters VPC through Internet Gateway' },
+            { id: 'alb', text: 'ALB terminates SSL, checks health, routes to target' },
+            { id: 'ec2a', text: 'Nginx serves page, proxies /api/stats to Node.js' },
+            { id: 'cw', text: 'CloudWatch receives access logs and metrics' }
+        ];
+
+        let selectedId = null;
+        let flowActive = false;
+        let simRunning = false;
+
+        function getConnectedEdgeIds(nodeId) {
+            return EDGES.filter(e => e.from === nodeId || e.to === nodeId).map(e => e.lineId);
+        }
+        function getConnectedNodeIds(nodeId) {
+            const ids = new Set();
+            EDGES.forEach(e => { if (e.from === nodeId) ids.add(e.to); if (e.to === nodeId) ids.add(e.from); });
+            return Array.from(ids);
+        }
+
+        function showDetail(id) {
+            selectedId = id;
+            document.getElementById('detail-default').classList.add('hidden');
+            document.getElementById('detail-content').classList.remove('hidden');
+            const n = NODES[id];
+            if (!n) return;
+            document.getElementById('detail-accent').style.background = n.accent;
+            document.getElementById('detail-title').textContent = n.label;
+            document.getElementById('detail-subtitle').textContent = n.subtitle;
+            document.getElementById('detail-desc').textContent = n.desc;
+            const techEl = document.getElementById('detail-tech');
+            techEl.innerHTML = n.tech.map(t => '<span class="px-2 py-0.5 rounded bg-gray-700 text-gray-300 text-xs">' + t + '</span>').join('');
+            document.getElementById('detail-connections').innerHTML = n.connections.map(c => '<li>' + c + '</li>').join('');
+
+            document.querySelectorAll('.node-group').forEach(g => g.classList.remove('selected', 'dim'));
+            document.querySelectorAll('.edge-line').forEach(l => l.classList.remove('highlight'));
+            document.querySelectorAll('.edge-label').forEach(l => l.classList.remove('show'));
+            const card = document.getElementById('node-' + id);
+            if (card) card.classList.add('selected');
+            getConnectedEdgeIds(id).forEach(lineId => {
+                const line = document.getElementById(lineId);
+                if (line) line.classList.add('highlight');
+            });
+            getConnectedNodeIds(id).forEach(oid => {
+                const o = document.getElementById('node-' + oid);
+                if (o) o.classList.add('dim');
+            });
+            EDGES.filter(e => e.from === id || e.to === id).forEach(e => {
+                const label = document.getElementById(e.labelId);
+                if (label) label.classList.add('show');
+            });
+        }
+
+        function clearSelection() {
+            selectedId = null;
+            document.getElementById('detail-default').classList.remove('hidden');
+            document.getElementById('detail-content').classList.add('hidden');
+            document.querySelectorAll('.node-group').forEach(g => g.classList.remove('selected', 'dim'));
+            document.querySelectorAll('.edge-line').forEach(l => l.classList.remove('highlight'));
+            document.querySelectorAll('.edge-label').forEach(l => l.classList.remove('show'));
+        }
+
+        document.querySelectorAll('.node-group').forEach(g => {
+            g.style.cursor = 'pointer';
+            g.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const id = this.getAttribute('data-id');
+                if (simRunning) return;
+                if (selectedId === id) clearSelection();
+                else showDetail(id);
+            });
+            g.addEventListener('mouseenter', function() {
+                if (simRunning) return;
+                const id = this.getAttribute('data-id');
+                getConnectedEdgeIds(id).forEach(lineId => { const l = document.getElementById(lineId); if (l) l.classList.add('highlight'); });
+                getConnectedNodeIds(id).forEach(oid => { const o = document.getElementById('node-' + oid); if (o) o.classList.add('dim'); });
+                EDGES.filter(e => e.from === id || e.to === id).forEach(e => { const label = document.getElementById(e.labelId); if (label) label.classList.add('show'); });
+            });
+            g.addEventListener('mouseleave', function() {
+                if (selectedId) return;
+                const id = this.getAttribute('data-id');
+                getConnectedEdgeIds(id).forEach(lineId => { const l = document.getElementById(lineId); if (l) l.classList.remove('highlight'); });
+                getConnectedNodeIds(id).forEach(oid => { const o = document.getElementById('node-' + oid); if (o) o.classList.remove('dim'); });
+                document.querySelectorAll('.edge-label').forEach(l => l.classList.remove('show'));
+            });
+        });
+
+        document.getElementById('diagram-container').addEventListener('click', function(e) {
+            if (e.target.closest('.node-group')) return;
+            clearSelection();
+        });
+
+        document.getElementById('btn-simulate').addEventListener('click', function() {
+            if (simRunning) return;
+            simRunning = true;
+            updateFlowPacketsVisibility();
+            document.getElementById('sim-narration').classList.add('active');
+            let step = 0;
+            function next() {
+                if (step >= SIM_STEPS.length) {
+                    simRunning = false;
+                    updateFlowPacketsVisibility();
+                    document.getElementById('sim-narration').classList.remove('active');
+                    return;
+                }
+                const s = SIM_STEPS[step];
+                document.getElementById('sim-step-num').textContent = 'Step ' + (step + 1) + ' of ' + SIM_STEPS.length;
+                document.getElementById('sim-step-text').textContent = s.text;
+                document.querySelectorAll('.node-group').forEach(g => g.classList.remove('selected', 'dim'));
+                const card = document.getElementById('node-' + s.id);
+                if (card) card.classList.add('selected');
+                showDetail(s.id);
+                step++;
+                setTimeout(next, 1800);
+            }
+            next();
+        });
+
+        document.getElementById('btn-flow').addEventListener('click', function() {
+            flowActive = !flowActive;
+            this.textContent = flowActive ? 'Flow: Active' : 'Flow: Paused';
+            const packets = document.getElementById('flow-packets');
+            if (packets) packets.setAttribute('visibility', flowActive && !simRunning ? 'visible' : 'hidden');
+        });
+        const flowPacketsEl = document.getElementById('flow-packets');
+        function updateFlowPacketsVisibility() {
+            if (flowPacketsEl) flowPacketsEl.setAttribute('visibility', flowActive && !simRunning ? 'visible' : 'hidden');
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+            document.getElementById('menu-icon').classList.toggle('hidden');
+            document.getElementById('close-icon').classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-nav-link').forEach(l => {
+            l.addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.add('hidden');
+                document.getElementById('menu-icon').classList.remove('hidden');
+                document.getElementById('close-icon').classList.add('hidden');
+            });
+        });
+})();
+    </script>
+</body>
+</html>

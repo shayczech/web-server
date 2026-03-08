@@ -100,6 +100,16 @@
         "ssm:PutParameter"
       ],
       "Resource": "arn:aws:ssm:*:*:parameter/web-server/iac-resource-count"
+    },
+    {
+      "Sid": "TerraformEC2RoleInlinePolicy",
+      "Effect": "Allow",
+      "Action": [
+        "iam:PutRolePolicy",
+        "iam:GetRolePolicy",
+        "iam:DeleteRolePolicy"
+      ],
+      "Resource": "arn:aws:iam::643913568924:role/web-server-ec2-role"
     }
   ]
 }
