@@ -1836,17 +1836,21 @@ function renderPantry(items) {
 
   function chipHtml(item) {
     const status = getStockStatus(item);
-    return `<div class="pantry-item ${status === 'low' ? 'low-stock' : ''} ${status === 'out' ? 'out-of-stock' : ''}" draggable="true">
-  <span class="item-emoji">${item.emoji || '📦'}</span>
-  <span class="item-name">${item.name}</span>
-  <div class="chip-sep"></div>
-  <span class="chip-qty"><span class="qty-value">${item.qty}</span>${item.unit ? ' ' + item.unit : ''}</span>
-  <div class="item-qty">
-    <button class="qty-btn" onclick="adjustQty(${item.id}, -1)">−</button>
-    <button class="qty-btn" onclick="adjustQty(${item.id}, 1)">+</button>
-  </div>
-  <button class="btn-danger" onclick="removePantryItem(${item.id})">×</button>
-</div>`;
+    const stapleClass = item.isStaple ? 'is-staple' : '';
+
+    return `<div class="pantry-item ${status === 'low' ? 'low-stock' : ''} ${status === 'out' ? 'out-of-stock' : ''} ${stapleClass}" draggable="true">
+    <span class="item-emoji">${item.emoji || '📦'}</span>
+    <span class="item-name" onclick="toggleStaple(${item.id})" style="cursor:pointer" title="Click to toggle Staple status">
+      ${item.isStaple ? '<span style="color:var(--gold); font-size:10px;">★</span> ' : ''}${item.name}
+    </span>
+    <div class="chip-sep"></div>
+    <span class="chip-qty"><span class="qty-value">${item.qty}</span>${item.unit ? ' ' + item.unit : ''}</span>
+    <div class="item-qty">
+      <button class="qty-btn" onclick="adjustQty(${item.id}, -1)">−</button>
+      <button class="qty-btn" onclick="adjustQty(${item.id}, 1)">+</button>
+    </div>
+    <button class="btn-danger" onclick="removePantryItem(${item.id})">×</button>
+  </div>`;
   }
 
   grid.innerHTML = sortedCats.map(cat => {
@@ -1931,9 +1935,44 @@ function adjustQty(id, delta) {
   const data = getData();
   const item = data.pantry.find(i => i.id === id);
   if (!item) return;
+
   item.qty = Math.max(0, (item.qty || 0) + delta);
   saveData('pantry', data.pantry);
+
+  // If a staple hits 0 (or goes below threshold), add to grocery
+  if (item.isStaple && item.qty === 0) {
+    addStapleToGrocery(item);
+  }
+
   filterPantry();
+}
+
+function addStapleToGrocery(item) {
+  const data = getData();
+  const alreadyListed = data.grocery.some(g => g.name.toLowerCase() === item.name.toLowerCase() && !g.checked);
+
+  if (!alreadyListed) {
+    data.grocery.push({
+      id: Date.now() + Math.random(),
+      name: item.name,
+      qty: 'Refill (Staple)',
+      category: item.category || 'Staples',
+      checked: false
+    });
+    saveData('grocery', data.grocery);
+    toast(`🛒 ${item.name} added to Grocery List`);
+  }
+}
+
+function toggleStaple(id) {
+  const data = getData();
+  const item = data.pantry.find(i => i.id === id);
+  if (item) {
+    item.isStaple = !item.isStaple;
+    saveData('pantry', data.pantry);
+    renderPantry();
+    toast(`${item.name} is now ${item.isStaple ? 'a staple' : 'not a staple'}`);
+  }
 }
 
 function removePantryItem(id) {
