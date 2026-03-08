@@ -6,7 +6,7 @@ The architecture is **ALB + Auto Scaling Group across two AZs**: custom VPC, pri
 
 ## Project Overview
 
-* **Site content:** Live pages and stats API live in **`site/`** (HTML in `site/`, Node.js API in `site/api/`). The `ansible/` directory is kept for historical playbooks and config only; the pipeline and instance userdata use `site/`.
+* **Site content:** Live pages and stats API live in **`site/`** (HTML in `site/`, Node.js API in `site/api/`). The pipeline and instance userdata use `site/`.
 * **Infrastructure:** AWS custom VPC (public subnets for ALB, private subnets for EC2), Application Load Balancer, Auto Scaling Group (2 AZs), ACM certificate, Route 53 ALIAS records.
 * **State Management:** Remote Terraform state in an encrypted S3 bucket with DynamoDB state locking.
 * **Architecture:**

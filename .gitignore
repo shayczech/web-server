@@ -18,4 +18,3 @@ pycache/
 *.pyc
 .env
 .DS_Store
-ansible.cfg
