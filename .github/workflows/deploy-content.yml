@@ -30,6 +30,9 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: GitHubActionsContentDeploy
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
       - name: Get ASG name (Terraform output)
         id: asg
         run: |
