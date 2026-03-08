@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # Allows manual triggering
+    paths-ignore:
+      - 'site/**'
+      - '**.md'
+      - 'README*'
+  workflow_dispatch: # Allows manual triggering (full pipeline)
 
 # --- PERMISSIONS YOU ADDED FOR OIDC ---
 permissions:

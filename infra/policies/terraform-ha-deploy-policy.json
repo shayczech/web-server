@@ -102,6 +102,15 @@
       "Resource": "arn:aws:ssm:*:*:parameter/web-server/iac-resource-count"
     },
     {
+      "Sid": "ContentDeploySSMSendCommand",
+      "Effect": "Allow",
+      "Action": [
+        "ssm:SendCommand",
+        "ssm:GetCommandInvocation"
+      ],
+      "Resource": "*"
+    },
+    {
       "Sid": "TerraformEC2RoleInlinePolicy",
       "Effect": "Allow",
       "Action": [

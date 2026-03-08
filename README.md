@@ -28,11 +28,19 @@ The architecture is **ALB + Auto Scaling Group across two AZs**: custom VPC, pri
 
 ## Deployment Workflow
 
-1. **Push** to `main` triggers the workflow.
+### Full pipeline (infra or non-site changes)
+
+1. **Push** to `main` (when `site/` is not the only change) or **workflow_dispatch** triggers the full workflow.
 2. **Snyk** scans dependencies; build fails on high/critical vulnerabilities.
 3. **Terraform** init, validate, apply (provisions/updates VPC, ALB, ASG, etc.).
 4. **ASG instance refresh** starts a rolling replacement so new instances boot with the latest userdata and content.
 5. **Live:** Site is served via ALB; instances in private subnets register with the target group and receive traffic.
+
+### Content-only (fast path)
+
+- **Trigger:** Push to `main` when only files under **`site/**`** change, or run **“Deploy site content only”** manually from the Actions tab.
+- **Behavior:** Skips Snyk, Terraform apply, and ASG refresh. Uses **SSM Send Command** to run on each live instance: `git pull` in `/opt/web-server`, copy `site/*.html` and `site/assets/*` to `/app/html/`, restart Nginx container. Typically finishes in under a couple of minutes.
+- **IAM:** The GitHub Actions deploy role needs `ssm:SendCommand` and `ssm:GetCommandInvocation` (added in `infra/policies/terraform-ha-deploy-policy.json`). Run the full pipeline or `terraform apply` once after adding this so the role has the new permissions.
 
 ## Future Enhancements
 

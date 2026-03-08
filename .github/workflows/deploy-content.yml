@@ -1,0 +1,78 @@
+# Fast path: update site content on existing instances via SSM (no Terraform apply, no ASG refresh).
+# Run when only site/ changes, or trigger manually.
+name: Deploy site content only
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-content:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: us-east-2
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::643913568924:role/GitHub-Actions-Deploy-Role
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: GitHubActionsContentDeploy
+
+      - name: Get ASG name (Terraform output)
+        id: asg
+        run: |
+          cd infra
+          terraform init -input=false -reconfigure
+          ASG_NAME=$(terraform output -raw asg_name 2>/dev/null || echo "")
+          if [ -z "$ASG_NAME" ]; then
+            echo "Could not get asg_name from Terraform. Falling back to web-server-asg."
+            ASG_NAME="web-server-asg"
+          fi
+          echo "name=${ASG_NAME}" >> $GITHUB_OUTPUT
+
+      - name: Get instance IDs from ASG
+        id: instances
+        run: |
+          INSTANCES=$(aws autoscaling describe-auto-scaling-groups \
+            --auto-scaling-group-names "${{ steps.asg.outputs.name }}" \
+            --query 'AutoScalingGroups[0].Instances[?LifecycleState==`InService`].InstanceId' \
+            --output text)
+          if [ -z "$INSTANCES" ] || [ "$INSTANCES" = "None" ]; then
+            echo "No InService instances found in ASG."
+            exit 1
+          fi
+          echo "ids=${INSTANCES}" >> $GITHUB_OUTPUT
+
+      - name: Update site content on instances (SSM)
+        run: |
+          INSTANCES="${{ steps.instances.outputs.ids }}"
+          for iid in $INSTANCES; do
+            echo "Updating instance $iid..."
+            cmd_id=$(aws ssm send-command \
+              --instance-ids "$iid" \
+              --document-name "AWS-RunShellScript" \
+              --parameters 'commands=["set -e","cd /opt/web-server","git fetch origin main","git reset --hard origin/main","cp site/index.html site/resume.html site/grc.html site/architecture.html /app/html/","mkdir -p /app/html/assets","cp -r site/assets/* /app/html/assets/ 2>/dev/null || true","docker restart portfolio-web","echo Done"]' \
+              --region ${{ env.AWS_REGION }} \
+              --output text --query "Command.CommandId")
+            echo "Waiting for command $cmd_id..."
+            for _ in $(seq 1 36); do
+              status=$(aws ssm get-command-invocation --command-id "$cmd_id" --instance-id "$iid" --query 'Status' --output text 2>/dev/null || echo "Pending")
+              [ "$status" = "Success" ] && break
+              [ "$status" = "Failed" ] || [ "$status" = "Cancelled" ] && { aws ssm get-command-invocation --command-id "$cmd_id" --instance-id "$iid"; exit 1; }
+              sleep 5
+            done
+            echo "Instance $iid updated."
+          done
+          echo "Content deploy complete."
