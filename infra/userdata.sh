@@ -74,6 +74,8 @@ cp /opt/web-server/site/grc.html        /app/html/
 cp /opt/web-server/site/architecture.html /app/html/
 mkdir -p /app/html/assets
 cp -r /opt/web-server/site/assets/*     /app/html/assets/
+mkdir -p /app/html/p
+cp -r /opt/web-server/site/p/*         /app/html/p/ 2>/dev/null || true
 
 # --- Nginx config (HTTP only — ALB handles SSL) ---
 cat > /app/config/nginx.conf << 'NGINXCONF'
@@ -95,6 +97,11 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
         proxy_redirect off;
+    }
+
+    location /p/ {
+        try_files $uri $uri/ =404;
+        add_header X-Robots-Tag "noindex, nofollow" always;
     }
 
     location / {
