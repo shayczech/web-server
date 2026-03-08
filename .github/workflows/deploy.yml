@@ -92,7 +92,8 @@ jobs:
 
       - name: Wait for instance refresh to complete
         run: |
-          for i in $(seq 1 30); do
+          # Allow up to 35 min (70 * 30s) for launch, warmup (300s), and ALB health checks
+          for i in $(seq 1 70); do
             STATUS=$(aws autoscaling describe-instance-refreshes \
               --auto-scaling-group-name "${{ steps.asg.outputs.name }}" \
               --query 'InstanceRefreshes[0].Status' --output text)
