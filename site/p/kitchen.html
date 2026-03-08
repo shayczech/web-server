@@ -1380,6 +1380,15 @@ function enterApp() {
   renderPantry();
   renderRecipes();
   renderGrocery();
+  // Load pantry from JSON file (same approach as recipes) and overwrite localStorage
+  fetch('pantry.json?v=' + Date.now())
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(data => {
+      const pantry = Array.isArray(data) ? data : (data && data.pantry) || [];
+      localStorage.setItem('kitchen_pantry', JSON.stringify(pantry));
+      renderPantry();
+    })
+    .catch(() => {});
 }
 
 async function doSetup() {

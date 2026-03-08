@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shay's Kitchen</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%236b7c5e'/%3E%3Cpath d='M32 10 C32 10 44 22 44 34 C44 44 38 52 32 54 C26 52 20 44 20 34 C20 22 32 10 32 10Z' fill='%23f5f0e8'/%3E%3Cpath d='M32 26 C32 26 38 33 38 39 C38 44 35.5 48 32 49 C28.5 48 26 44 26 39 C26 33 32 26 32 26Z' fill='%23c9913d'/%3E%3Cpath d='M32 36 C32 36 35 39 35 42 C35 44.5 33.7 46 32 46.5 C30.3 46 29 44.5 29 42 C29 39 32 36 32 36Z' fill='%231a1410'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #fafafa;
+    --border: #e8e4dd;
+    --ink: #2c2420;
+    --muted: #8a8078;
+    --sage: #6b7c5e;
+    --gold: #c9913d;
+    --brown: #6b4c35;
+    --cream: #f5f0e8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lora', serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 18px;
+    line-height: 1.65;
+  }
+
+  .site-header {
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 32px 24px;
+    text-align: center;
+  }
+
+  .site-title {
+    font-family: 'Lora', serif;
+    font-size: 42px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+    margin-bottom: 4px;
+  }
+
+  .site-tagline {
+    font-size: 16px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  .controls {
+    max-width: 900px;
+    margin: 28px auto 0;
+    padding: 0 24px 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-box {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 18px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: 'Lora', serif;
+    font-size: 17px;
+    color: var(--ink);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-box:focus { border-color: var(--sage); }
+  .search-box::placeholder { color: var(--muted); }
+
+  .filter-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .pill {
+    padding: 8px 18px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-family: 'Lora', serif;
+    font-size: 15px;
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .pill:hover { border-color: var(--sage); color: var(--sage); }
+  .pill.active { background: var(--sage); border-color: var(--sage); color: white; }
+
+  .recipe-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .recipe-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .recipe-card:hover {
+    border-color: var(--sage);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+  }
+
+  .card-photo {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+  }
+
+  .card-photo-placeholder {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 44px;
+  }
+
+  .card-body { padding: 18px 20px 20px; }
+
+  .card-category {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sage);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .card-title {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .card-desc {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+  }
+
+  .detail-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(44,36,32,0.55);
+    z-index: 100;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px 16px;
+    overflow-y: auto;
+  }
+
+  .detail-overlay.open { display: flex; }
+
+  .detail-modal {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 680px;
+    overflow: hidden;
+    margin: auto;
+    position: relative;
+  }
+
+  .detail-photo {
+    width: 100%;
+    max-height: 280px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .detail-photo-placeholder {
+    width: 100%;
+    height: 140px;
+    background: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 52px;
+  }
+
+  .detail-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
+    transition: background 0.15s;
+    z-index: 2;
+  }
+
+  .detail-close:hover { background: white; }
+
+  .detail-body { padding: 28px 32px 36px; }
+
+  .detail-category {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sage);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .detail-title {
+    font-family: 'Lora', serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .detail-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .detail-desc {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+
+  .detail-columns {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 32px;
+  }
+
+  .section-label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ingredient-list { list-style: none; }
+
+  .ingredient-list li {
+    font-size: 16px;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0ece5;
+    line-height: 1.5;
+  }
+
+  .step-list { list-style: none; counter-reset: step; }
+
+  .step-list li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .step-list li::before {
+    content: counter(step);
+    font-family: 'Lora', serif;
+    font-size: 24px;
+    color: var(--brown);
+    flex-shrink: 0;
+    line-height: 1.3;
+    width: 24px;
+    text-align: right;
+  }
+
+  .detail-notes {
+    margin-top: 24px;
+    padding: 16px 18px;
+    background: var(--cream);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 6px 6px 0;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .detail-notes strong {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .detail-actions {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-print {
+    padding: 12px 24px;
+    background: var(--ink);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-print:hover { background: var(--brown); }
+
+  .empty-state {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 64px 32px;
+    color: var(--muted);
+  }
+
+  .empty-state-icon { font-size: 48px; margin-bottom: 16px; }
+
+  .empty-state-title {
+    font-family: 'Lora', serif;
+    font-size: 24px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 80px 32px;
+    color: var(--muted);
+    font-size: 17px;
+    grid-column: 1/-1;
+  }
+
+  @media print {
+    .site-header, .controls, .recipe-grid, .detail-close, .detail-actions { display: none !important; }
+    .detail-overlay { position: static; background: none; padding: 0; display: block !important; }
+    .detail-modal { border-radius: 0; box-shadow: none; max-width: 100%; }
+    .detail-columns { grid-template-columns: 180px 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .site-title { font-size: 32px; }
+    .detail-columns { grid-template-columns: 1fr; }
+    .detail-body { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-title">Shay's Kitchen</div>
+  <div class="site-tagline">Recipes from Shay</div>
+</header>
+
+<div class="controls">
+  <input class="search-box" type="text" placeholder="Search recipes..." oninput="filterRecipes()">
+  <div class="filter-pills" id="filter-pills">
+    <button class="pill active" onclick="setFilter('')" data-cat="">All</button>
+  </div>
+</div>
+
+<div class="recipe-grid" id="recipe-grid">
+  <div class="loading">Loading recipes…</div>
+</div>
+
+<div class="detail-overlay" id="detail-overlay" onclick="handleOverlayClick(event)">
+  <div class="detail-modal" id="detail-modal">
+    <button class="detail-close" onclick="closeDetail()">×</button>
+    <div id="detail-content"></div>
+  </div>
+</div>
+
+<script>
+let allRecipes = [];
+let activeFilter = '';
+
+const CATEGORY_EMOJI = {
+  'Breakfast': '🍳', 'Lunch': '🥗', 'Dinner': '🍽️',
+  'Dessert': '🍰', 'Snack': '🥨', 'Baked Good': '🧁',
+  'Appetizer': '🫙', 'Drinks': '🍵', 'Other': '📖'
+};
+
+async function loadRecipes() {
+  try {
+    const res = await fetch('recipes.json?v=' + Date.now());
+    allRecipes = await res.json();
+    buildFilters();
+    renderGrid();
+  } catch (e) {
+    document.getElementById('recipe-grid').innerHTML =
+      '<div class="empty-state"><div class="empty-state-icon">📖</div><div class="empty-state-title">No recipes yet</div><p style="font-size:16px;margin-top:6px">Check back soon!</p></div>';
+  }
+}
+
+function buildFilters() {
+  const categories = [...new Set(allRecipes.map(r => r.category).filter(Boolean))].sort();
+  const pills = document.getElementById('filter-pills');
+  pills.innerHTML = '<button class="pill active" onclick="setFilter(\'\')" data-cat="">All</button>' +
+    categories.map(c => `<button class="pill" onclick="setFilter('${c}')" data-cat="${c}">${c}</button>`).join('');
+}
+
+function setFilter(cat) {
+  activeFilter = cat;
+  document.querySelectorAll('.pill').forEach(p => p.classList.toggle('active', p.dataset.cat === cat));
+  renderGrid();
+}
+
+function filterRecipes() { renderGrid(); }
+
+function getFiltered() {
+  const q = document.querySelector('.search-box').value.toLowerCase();
+  return allRecipes.filter(r => {
+    const matchCat = !activeFilter || r.category === activeFilter;
+    const matchQ = !q || r.title.toLowerCase().includes(q) || (r.description||'').toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+}
+
+function renderGrid() {
+  const items = getFiltered();
+  const grid = document.getElementById('recipe-grid');
+  if (!items.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><div class="empty-state-title">No recipes found</div></div>';
+    return;
+  }
+  grid.innerHTML = items.map(r => {
+    const emoji = CATEGORY_EMOJI[r.category] || '📖';
+    const photo = r.photo
+      ? `<img class="card-photo" src="${r.photo}" alt="${r.title}" loading="lazy">`
+      : `<div class="card-photo-placeholder">${emoji}</div>`;
+    return `<div class="recipe-card" onclick="openDetail(${r.id})">
+      ${photo}
+      <div class="card-body">
+        <div class="card-category">${r.category || 'Recipe'}</div>
+        <div class="card-title">${r.title}</div>
+        ${r.description ? `<div class="card-desc">${r.description}</div>` : ''}
+        <div class="card-meta">
+          ${r.prepTime ? `<span>⏱ Prep: ${r.prepTime}</span>` : ''}
+          ${r.cookTime ? `<span>🔥 Cook: ${r.cookTime}</span>` : ''}
+          ${r.servings ? `<span>👤 Serves ${r.servings}</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openDetail(id) {
+  const r = allRecipes.find(r => r.id === id);
+  if (!r) return;
+  const emoji = CATEGORY_EMOJI[r.category] || '📖';
+  const photo = r.photo
+    ? `<img class="detail-photo" src="${r.photo}" alt="${r.title}">`
+    : `<div class="detail-photo-placeholder">${emoji}</div>`;
+
+  document.getElementById('detail-content').innerHTML = `
+    ${photo}
+    <div class="detail-body">
+      <div class="detail-category">${r.category || ''}</div>
+      <div class="detail-title">${r.title}</div>
+      <div class="detail-meta">
+        ${r.prepTime ? `<span>⏱ Prep: ${r.prepTime}</span>` : ''}
+        ${r.cookTime ? `<span>🔥 Cook: ${r.cookTime}</span>` : ''}
+        ${r.servings ? `<span>👤 Serves ${r.servings}</span>` : ''}
+      </div>
+      ${r.description ? `<div class="detail-desc">${r.description}</div>` : ''}
+      <div class="detail-columns">
+        <div>
+          <div class="section-label">Ingredients</div>
+          <ul class="ingredient-list">
+            ${(r.ingredients||[]).map(i => `<li>${typeof i === 'string' ? i : i.name}</li>`).join('')}
+          </ul>
+        </div>
+        <div>
+          <div class="section-label">Instructions</div>
+          <ol class="step-list">
+            ${(r.steps||[]).map(s => `<li><span>${s}</span></li>`).join('')}
+          </ol>
+          ${r.notes ? `<div class="detail-notes"><strong>Notes</strong>${r.notes}</div>` : ''}
+        </div>
+      </div>
+      <div class="detail-actions">
+        <button class="btn-print" onclick="window.print()">🖨 Print Recipe</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('detail-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail() {
+  document.getElementById('detail-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('detail-overlay')) closeDetail();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+loadRecipes();
+</script>
+</body>
+</html>

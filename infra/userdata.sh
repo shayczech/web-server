@@ -72,6 +72,8 @@ cp /opt/web-server/site/index.html       /app/html/
 cp /opt/web-server/site/resume.html     /app/html/
 cp /opt/web-server/site/grc.html        /app/html/
 cp /opt/web-server/site/architecture.html /app/html/
+cp /opt/web-server/site/kitchen.html      /app/html/
+cp /opt/web-server/site/recipes.json      /app/html/
 mkdir -p /app/html/assets
 cp -r /opt/web-server/site/assets/*     /app/html/assets/
 mkdir -p /app/html/p

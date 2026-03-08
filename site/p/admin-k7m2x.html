@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kitchen Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --warm-white: #faf7f2;
+    --parchment: #ede5d4;
+    --ink: #1a1410;
+    --brown: #6b4c35;
+    --rust: #c4622d;
+    --sage: #6b7c5e;
+    --gold: #c9913d;
+    --muted: #8a7968;
+    --border: #d4c9b5;
+    --shadow: rgba(26,20,16,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 13px;
+    min-height: 100vh;
+  }
+
+  /* ── LOGIN ── */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+  }
+
+  .login-card {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    padding: 48px 52px;
+    width: 400px;
+    text-align: center;
+  }
+
+  .login-card .wordmark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 300;
+    margin-bottom: 4px;
+  }
+
+  .login-card .tagline {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 36px;
+  }
+
+  .login-field { margin-bottom: 14px; text-align: left; }
+
+  .login-field label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .login-field input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    background: var(--cream);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--ink);
+    outline: none;
+  }
+
+  .login-field input:focus { border-color: var(--brown); }
+
+  .btn-login {
+    width: 100%;
+    padding: 12px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+  }
+
+  .btn-login:hover { background: var(--brown); }
+  .login-error { color: var(--rust); font-size: 11px; margin-top: 12px; min-height: 16px; }
+
+  /* ── APP ── */
+  #app { display: none; }
+
+  .app-header {
+    background: var(--ink);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 52px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .app-wordmark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--cream);
+    letter-spacing: 0.04em;
+  }
+
+  .app-wordmark span {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+
+  .header-actions { display: flex; gap: 8px; }
+
+  .btn-sm {
+    padding: 6px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid;
+    transition: all 0.2s;
+  }
+
+  .btn-ghost { background: none; border-color: rgba(255,255,255,0.2); color: var(--muted); }
+  .btn-ghost:hover { border-color: var(--cream); color: var(--cream); }
+
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* ── RECIPE LIST ── */
+  .panel {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+  }
+
+  .panel-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .panel-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+  }
+
+  .recipe-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    transition: background 0.15s;
+  }
+
+  .recipe-row:last-child { border-bottom: none; }
+  .recipe-row:hover { background: var(--cream); }
+
+  .recipe-row-info { flex: 1; min-width: 0; }
+
+  .recipe-row-title {
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .recipe-row-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  .recipe-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+  .btn-edit {
+    padding: 4px 10px;
+    background: none;
+    border: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    cursor: pointer;
+    color: var(--ink);
+    transition: all 0.15s;
+  }
+
+  .btn-edit:hover { border-color: var(--brown); color: var(--brown); }
+
+  .btn-del {
+    padding: 4px 10px;
+    background: none;
+    border: 1px solid transparent;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    cursor: pointer;
+    color: var(--rust);
+    transition: all 0.15s;
+  }
+
+  .btn-del:hover { border-color: var(--rust); }
+
+  .empty-list {
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  /* ── FORM ── */
+  .form-panel { position: sticky; top: 84px; }
+
+  .form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+  }
+
+  .form-group { margin-bottom: 14px; }
+
+  .form-group label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    background: var(--cream);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--brown); }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-primary {
+    padding: 9px 18px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-primary:hover { background: var(--brown); }
+
+  .btn-secondary {
+    padding: 9px 18px;
+    background: none;
+    color: var(--ink);
+    border: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: var(--brown); color: var(--brown); }
+
+  /* ── JSON OUTPUT MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,20,16,0.7);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    padding: 32px;
+    width: 720px;
+    max-width: 95vw;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 300;
+    margin-bottom: 8px;
+  }
+
+  .modal-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .json-output {
+    flex: 1;
+    background: var(--ink);
+    color: #c9913d;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 16px;
+    overflow-y: auto;
+    white-space: pre;
+    border: none;
+    outline: none;
+    resize: none;
+    min-height: 300px;
+    max-height: 50vh;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    justify-content: flex-end;
+  }
+
+  .btn-copy {
+    padding: 9px 18px;
+    background: var(--sage);
+    color: white;
+    border: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-copy:hover { background: var(--brown); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 12px 20px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    z-index: 500;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  .hint {
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="wordmark">Kitchen Admin</div>
+    <div class="tagline">Recipe Manager</div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="Enter password" autocomplete="current-password">
+    </div>
+    <button class="btn-login" onclick="doLogin()">Enter →</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header class="app-header">
+    <div class="app-wordmark">Kitchen Admin <span>Recipe Manager</span></div>
+    <div class="header-actions">
+      <button class="btn-sm btn-ghost" onclick="showJSON()">Export JSON</button>
+      <button class="btn-sm btn-ghost" onclick="doChangePassword()">Change Password</button>
+    </div>
+  </header>
+
+  <div class="main">
+
+    <!-- LEFT: recipe list -->
+    <div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Recipes</div>
+          <div id="recipe-count" style="font-size:11px;color:var(--muted)"></div>
+        </div>
+        <div id="recipe-list"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: add/edit form -->
+    <div class="form-panel panel" id="form-panel">
+      <div class="panel-header">
+        <div class="panel-title" id="form-title">New Recipe</div>
+      </div>
+      <div style="padding: 20px 24px 24px">
+        <input type="hidden" id="edit-id">
+
+        <div class="form-group">
+          <label>Title *</label>
+          <input type="text" id="f-title" placeholder="e.g. Brown Butter Cookies">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="f-category">
+              <option>Breakfast</option>
+              <option>Lunch</option>
+              <option selected>Dinner</option>
+              <option>Dessert</option>
+              <option>Snack</option>
+              <option>Baked Good</option>
+              <option>Appetizer</option>
+              <option>Drinks</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Servings</label>
+            <input type="number" id="f-servings" placeholder="4" min="1" value="4">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Prep Time</label>
+            <input type="text" id="f-prep" placeholder="20 min">
+          </div>
+          <div class="form-group">
+            <label>Cook Time</label>
+            <input type="text" id="f-cook" placeholder="30 min">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="f-desc" rows="2" placeholder="Brief description…"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Photo URL <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(optional)</span></label>
+          <input type="text" id="f-photo" placeholder="https://... or leave blank">
+          <div class="hint">Link to a hosted image. Upload to your repo's /images folder and use a relative path like images/cookies.jpg</div>
+        </div>
+
+        <div class="form-group">
+          <label>Ingredients <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(one per line)</span></label>
+          <textarea id="f-ingredients" rows="7" placeholder="2 cups all-purpose flour&#10;1 tsp salt&#10;2 eggs"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Instructions <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(one step per line)</span></label>
+          <textarea id="f-steps" rows="7" placeholder="Preheat oven to 375°F.&#10;Mix dry ingredients.&#10;Bake for 12 minutes."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Notes / Tips <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(optional)</span></label>
+          <textarea id="f-notes" rows="2" placeholder="Storage tips, substitutions…"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-primary" onclick="saveRecipe()">Save Recipe</button>
+          <button class="btn-secondary" onclick="clearForm()">Clear</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- JSON MODAL -->
+<div class="modal-overlay" id="json-modal">
+  <div class="modal">
+    <div class="modal-title">recipes.json</div>
+    <div class="modal-sub">
+      Copy everything below and paste it into <code style="background:var(--parchment);padding:1px 5px">site/recipes.json</code> in your repo, then commit and push. The public kitchen page will update on next deploy.
+    </div>
+    <textarea class="json-output" id="json-output" readonly></textarea>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">Close</button>
+      <button class="btn-copy" onclick="copyJSON()">Copy to Clipboard</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── AUTH ──
+const PASS_KEY = 'kitchen_admin_pw_hash';
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function doLogin() {
+  const pw = document.getElementById('login-password').value;
+  const err = document.getElementById('login-error');
+  const stored = localStorage.getItem(PASS_KEY);
+
+  if (!stored) {
+    // First run — set the password
+    if (pw.length < 6) { err.textContent = 'Choose a password (min 6 characters).'; return; }
+    const hash = await sha256(pw);
+    localStorage.setItem(PASS_KEY, hash);
+    enterApp();
+    return;
+  }
+
+  const hash = await sha256(pw);
+  if (hash !== stored) { err.textContent = 'Incorrect password.'; return; }
+  enterApp();
+}
+
+function enterApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadFromStorage();
+  renderList();
+}
+
+async function doChangePassword() {
+  const current = prompt('Current password:');
+  if (!current) return;
+  const stored = localStorage.getItem(PASS_KEY);
+  if (await sha256(current) !== stored) { toast('Incorrect current password'); return; }
+  const newPw = prompt('New password (min 6 chars):');
+  if (!newPw || newPw.length < 6) { toast('Password too short'); return; }
+  const confirm = prompt('Confirm new password:');
+  if (newPw !== confirm) { toast('Passwords do not match'); return; }
+  localStorage.setItem(PASS_KEY, await sha256(newPw));
+  toast('Password updated');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') doLogin();
+});
+
+// Show setup hint if first run
+(function() {
+  const stored = localStorage.getItem(PASS_KEY);
+  if (!stored) {
+    document.querySelector('.login-card .tagline').textContent = 'First run — choose a password';
+  }
+})();
+
+// ── DATA ──
+let recipes = [];
+
+function loadFromStorage() {
+  recipes = JSON.parse(localStorage.getItem('admin_recipes') || '[]');
+}
+
+function saveToStorage() {
+  localStorage.setItem('admin_recipes', JSON.stringify(recipes));
+}
+
+// ── RECIPE LIST ──
+function renderList() {
+  const list = document.getElementById('recipe-list');
+  const count = document.getElementById('recipe-count');
+  count.textContent = recipes.length + ' recipe' + (recipes.length !== 1 ? 's' : '');
+
+  if (!recipes.length) {
+    list.innerHTML = '<div class="empty-list">No recipes yet. Add your first one →</div>';
+    return;
+  }
+
+  list.innerHTML = recipes.map(r => `
+    <div class="recipe-row">
+      <div class="recipe-row-info">
+        <div class="recipe-row-title">${r.title}</div>
+        <div class="recipe-row-meta">${r.category || ''}${r.prepTime ? ' · Prep ' + r.prepTime : ''}${r.cookTime ? ' · Cook ' + r.cookTime : ''}</div>
+      </div>
+      <div class="recipe-row-actions">
+        <button class="btn-edit" onclick="editRecipe(${r.id})">Edit</button>
+        <button class="btn-del" onclick="deleteRecipe(${r.id})">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── FORM ──
+function clearForm() {
+  document.getElementById('edit-id').value = '';
+  document.getElementById('form-title').textContent = 'New Recipe';
+  ['title','desc','prep','cook','photo','ingredients','steps','notes'].forEach(f => {
+    document.getElementById('f-' + f).value = '';
+  });
+  document.getElementById('f-servings').value = '4';
+  document.getElementById('f-category').value = 'Dinner';
+}
+
+function editRecipe(id) {
+  const r = recipes.find(r => r.id === id);
+  if (!r) return;
+  document.getElementById('edit-id').value = id;
+  document.getElementById('form-title').textContent = 'Edit Recipe';
+  document.getElementById('f-title').value = r.title || '';
+  document.getElementById('f-category').value = r.category || 'Dinner';
+  document.getElementById('f-servings').value = r.servings || 4;
+  document.getElementById('f-prep').value = r.prepTime || '';
+  document.getElementById('f-cook').value = r.cookTime || '';
+  document.getElementById('f-desc').value = r.description || '';
+  document.getElementById('f-photo').value = r.photo || '';
+  document.getElementById('f-ingredients').value = (r.ingredients || []).join('\n');
+  document.getElementById('f-steps').value = (r.steps || []).join('\n');
+  document.getElementById('f-notes').value = r.notes || '';
+  document.getElementById('form-panel').scrollIntoView({ behavior: 'smooth' });
+}
+
+function saveRecipe() {
+  const title = document.getElementById('f-title').value.trim();
+  if (!title) { toast('Title is required'); return; }
+
+  const editId = parseInt(document.getElementById('edit-id').value);
+  const recipe = {
+    id: editId || Date.now(),
+    title,
+    category: document.getElementById('f-category').value,
+    servings: parseInt(document.getElementById('f-servings').value) || 4,
+    prepTime: document.getElementById('f-prep').value.trim(),
+    cookTime: document.getElementById('f-cook').value.trim(),
+    description: document.getElementById('f-desc').value.trim(),
+    photo: document.getElementById('f-photo').value.trim(),
+    ingredients: document.getElementById('f-ingredients').value.trim().split('\n').filter(Boolean),
+    steps: document.getElementById('f-steps').value.trim().split('\n').filter(Boolean),
+    notes: document.getElementById('f-notes').value.trim(),
+    createdAt: editId
+      ? (recipes.find(r => r.id === editId)?.createdAt || new Date().toISOString().slice(0,10))
+      : new Date().toISOString().slice(0,10),
+  };
+
+  if (editId) {
+    const idx = recipes.findIndex(r => r.id === editId);
+    if (idx !== -1) recipes[idx] = recipe;
+  } else {
+    recipes.push(recipe);
+  }
+
+  saveToStorage();
+  renderList();
+  clearForm();
+  toast(editId ? `"${recipe.title}" updated` : `"${recipe.title}" added`);
+}
+
+function deleteRecipe(id) {
+  const r = recipes.find(r => r.id === id);
+  if (!confirm(`Delete "${r?.title}"?`)) return;
+  recipes = recipes.filter(r => r.id !== id);
+  saveToStorage();
+  renderList();
+  clearForm();
+  toast('Recipe deleted');
+}
+
+// ── JSON EXPORT ──
+function showJSON() {
+  const output = JSON.stringify(recipes, null, 2);
+  document.getElementById('json-output').value = output;
+  document.getElementById('json-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('json-modal').classList.remove('open');
+}
+
+async function copyJSON() {
+  const text = document.getElementById('json-output').value;
+  try {
+    await navigator.clipboard.writeText(text);
+    toast('Copied to clipboard!');
+  } catch {
+    document.getElementById('json-output').select();
+    document.execCommand('copy');
+    toast('Copied!');
+  }
+}
+
+document.getElementById('json-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('json-modal')) closeModal();
+});
+
+// ── TOAST ──
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>

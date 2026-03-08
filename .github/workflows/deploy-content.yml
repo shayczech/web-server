@@ -66,7 +66,7 @@ jobs:
             cmd_id=$(aws ssm send-command \
               --instance-ids "$iid" \
               --document-name "AWS-RunShellScript" \
-              --parameters 'commands=["set -e","cd /opt/web-server","git fetch origin main","git reset --hard origin/main","cp site/index.html site/resume.html site/grc.html site/architecture.html /app/html/","mkdir -p /app/html/assets","cp -r site/assets/* /app/html/assets/ 2>/dev/null || true","mkdir -p /app/html/p","cp -r site/p/* /app/html/p/ 2>/dev/null || true","docker restart portfolio-web","echo Done"]' \
+              --parameters 'commands=["set -e","cd /opt/web-server","git fetch origin main","git reset --hard origin/main","cp site/index.html site/resume.html site/grc.html site/architecture.html site/kitchen.html site/recipes.json /app/html/","mkdir -p /app/html/assets","cp -r site/assets/* /app/html/assets/ 2>/dev/null || true","mkdir -p /app/html/p","cp -r site/p/* /app/html/p/ 2>/dev/null || true","docker restart portfolio-web","echo Done"]' \
               --region ${{ env.AWS_REGION }} \
               --output text --query "Command.CommandId")
             echo "Waiting for command $cmd_id..."
