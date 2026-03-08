@@ -7,6 +7,7 @@ const app = express();
 const PORT = 3000;
 
 const IAC_COUNT_PARAM = '/web-server/iac-resource-count';
+const GITHUB_TOKEN_PARAM = '/web-server/github-token';
 
 const SECURITY_SCORE_PATH = path.join('/', 'app', 'security-score.json');
 const FALLBACK_SECURITY_SCORE = 98;
@@ -47,19 +48,21 @@ const REPOSITORIES = [
     'terraform-aws-secure-vpc',
 ];
 
-const axiosOpts = {
-    timeout: 3000,
-    headers: process.env.GITHUB_TOKEN
-        ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` }
-        : undefined,
-};
+function getAxiosOpts() {
+    return {
+        timeout: 3000,
+        headers: process.env.GITHUB_TOKEN
+            ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` }
+            : undefined,
+    };
+}
 
 // Fetch commit count for a single repo
 async function getRepoCommitCount(repoName) {
     try {
         const response = await axios.get(
             `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${repoName}/commits?per_page=1`,
-            axiosOpts,
+            getAxiosOpts(),
         );
         const linkHeader = response.headers.link;
         if (linkHeader) {
@@ -87,7 +90,7 @@ async function getRepoTerraformFileCount(repoName) {
         // Use the repo tree API to list all files at HEAD
         const response = await axios.get(
             `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${repoName}/git/trees/HEAD?recursive=1`,
-            axiosOpts,
+            getAxiosOpts(),
         );
         const tree = response.data && Array.isArray(response.data.tree) ? response.data.tree : [];
         const tfCount = tree.filter((node) => node.type === 'blob' && /\.tf$/i.test(node.path)).length;
@@ -123,7 +126,7 @@ async function getRepoAnsiblePlaybookCount(repoName) {
     try {
         const response = await axios.get(
             `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${repoName}/git/trees/HEAD?recursive=1`,
-            axiosOpts,
+            getAxiosOpts(),
         );
         const tree = response.data && Array.isArray(response.data.tree) ? response.data.tree : [];
         const count = tree.filter((node) => node.type === 'blob' && isLikelyPlaybookPath(node.path)).length;
@@ -137,6 +140,25 @@ async function getRepoAnsiblePlaybookCount(repoName) {
 async function getTotalAnsiblePlaybooks() {
     const results = await Promise.all(REPOSITORIES.map(getRepoAnsiblePlaybookCount));
     return results.reduce((sum, n) => sum + (Number.isFinite(n) ? n : 0), 0);
+}
+
+// Load GitHub token from SSM at startup (avoids 60/hr unauthenticated rate limit)
+async function loadGitHubTokenFromSSM() {
+    if (process.env.GITHUB_TOKEN) return;
+    try {
+        const client = new SSMClient({ region: process.env.AWS_REGION || 'us-east-2' });
+        const out = await client.send(new GetParameterCommand({
+            Name: GITHUB_TOKEN_PARAM,
+            WithDecryption: true,
+        }));
+        const value = out.Parameter?.Value;
+        if (value && typeof value === 'string') {
+            process.env.GITHUB_TOKEN = value;
+            console.log('GitHub token loaded from SSM');
+        }
+    } catch (err) {
+        console.warn('SSM GitHub token not set or unavailable:', err?.message || err);
+    }
 }
 
 // Live IaC resource count from SSM (written by pipeline after terraform apply)
@@ -163,7 +185,7 @@ async function getActionsRunCount() {
     try {
         const response = await axios.get(
             `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${CICD_REPO}/actions/runs?per_page=1`,
-            axiosOpts,
+            getAxiosOpts(),
         );
         const total = response.data?.total_count;
         return Number.isFinite(total) && total >= 0 ? total : 0;
@@ -208,6 +230,12 @@ app.get('/api/stats', async (req, res) => {
     }
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Stats API listening on port ${PORT}`);
-});
+(async () => {
+    await loadGitHubTokenFromSSM();
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Stats API listening on port ${PORT}`);
+        if (!process.env.GITHUB_TOKEN) {
+            console.warn('GITHUB_TOKEN not set; GitHub API calls are unauthenticated (60 req/hr). Set SSM /web-server/github-token for 5000/hr.');
+        }
+    });
+})();

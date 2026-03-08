@@ -40,6 +40,20 @@ resource "aws_iam_role_policy" "ec2_ssm_iac_count" {
   })
 }
 
+# Allow userdata/stats API to read GitHub token from SSM (avoids unauthenticated rate limit)
+resource "aws_iam_role_policy" "ec2_ssm_github_token" {
+  name   = "${var.server_name}-ec2-ssm-github-token"
+  role   = aws_iam_role.ec2_role.id
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = "ssm:GetParameter"
+      Resource = "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/web-server/github-token"
+    }]
+  })
+}
+
 data "aws_caller_identity" "current" {}
 
 resource "aws_iam_instance_profile" "ec2_profile" {
