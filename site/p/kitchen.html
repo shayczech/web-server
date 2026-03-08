@@ -649,6 +649,30 @@
   .badge-can-make { background: #e8f0e4; color: var(--sage); }
   .badge-missing { background: #fdf0e8; color: var(--gold); }
 
+  .recipe-missing-ingredients {
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: #fdf7f0;
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+  }
+
+  .recipe-missing-title {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .recipe-missing-list {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 12px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
   /* ── AI GENERATOR ── */
   .ai-panel {
     background: var(--warm-white);
@@ -1993,6 +2017,18 @@ function canMakeRecipe(recipe) {
   });
 }
 
+function getMissingIngredients(recipe) {
+  const pantry = getData().pantry.filter(p => p.qty > 0);
+  const missing = [];
+  (recipe.ingredients || []).forEach(ing => {
+    const text = typeof ing === 'string' ? ing : `${ing.qty || ''} ${ing.unit || ''} ${ing.name}`.trim();
+    const name = (typeof ing === 'string' ? ing : ing.name || '').toLowerCase();
+    const hasIt = name && pantry.some(p => p.name.toLowerCase().includes(name.split(' ').pop()));
+    if (name && !hasIt) missing.push(text);
+  });
+  return missing;
+}
+
 function renderRecipes(items) {
   const data = getData();
   const all = items || data.recipes;
@@ -2091,6 +2127,15 @@ function showRecipeDetail(id) {
   const detail = document.getElementById('recipe-detail-view');
   detail.classList.add('active');
   const canMake = canMakeRecipe(recipe);
+  const missingIngredients = getMissingIngredients(recipe);
+  const missingSection = !canMake && missingIngredients.length ? `
+    <div class="recipe-missing-ingredients">
+      <div class="recipe-missing-title">Missing from pantry</div>
+      <ul class="recipe-missing-list">
+        ${missingIngredients.map(ing => `<li>${escapeHtml(ing)}</li>`).join('')}
+      </ul>
+    </div>
+  ` : '';
   detail.querySelector('#recipe-detail-content').innerHTML = `
     <div class="recipe-detail-header">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px">
@@ -2103,6 +2148,7 @@ function showRecipeDetail(id) {
             ${recipe.servings ? `<span>Serves: ${recipe.servings}</span>` : ''}
             <span class="recipe-pantry-badge ${canMake ? 'badge-can-make' : 'badge-missing'}" style="margin:0">${canMake ? '✓ Can make now' : '○ Missing ingredients'}</span>
           </div>
+          ${missingSection}
           ${recipe.description ? `<p style="margin-top:12px;font-size:13px;color:var(--muted);line-height:1.7">${recipe.description}</p>` : ''}
         </div>
       </div>
