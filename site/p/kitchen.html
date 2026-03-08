@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shay's Kitchen</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%236b7c5e'/%3E%3Cpath d='M30 50 L30 55 Q50 78 70 55 L70 50 Q50 56 30 50' fill='%23faf7f2'/%3E%3Cpath d='M52 58 L76 24' stroke='%23faf7f2' stroke-width='4.5' stroke-linecap='round' fill='none'/%3E%3Cellipse cx='76' cy='22' rx='5' ry='6' fill='%23faf7f2'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -298,37 +299,66 @@
     outline: none;
   }
 
+  /* Pantry: vertical list with category headers */
+  #pantry-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .pantry-category-group {
+    margin-bottom: 28px;
+  }
+
+  .pantry-category-group:last-child { margin-bottom: 0; }
+
+  .pantry-category-title {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
   .pantry-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
   }
 
   .pantry-item {
     background: var(--warm-white);
     border: 1px solid var(--border);
-    padding: 16px 18px;
+    border-radius: 10px;
+    padding: 12px 14px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    transition: border-color 0.2s;
+    gap: 10px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 3px var(--shadow);
   }
 
-  .pantry-item:hover { border-color: var(--brown); }
+  .pantry-item:hover {
+    border-color: var(--brown);
+    box-shadow: 0 2px 8px var(--shadow);
+  }
 
   .pantry-item.low-stock { border-left: 3px solid var(--gold); }
   .pantry-item.out-of-stock { border-left: 3px solid var(--rust); opacity: 0.6; }
 
-  .item-emoji { font-size: 22px; flex-shrink: 0; }
+  .item-emoji { font-size: 20px; flex-shrink: 0; }
 
   .item-info { flex: 1; min-width: 0; }
 
   .item-name {
     font-size: 13px;
     font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    line-height: 1.35;
   }
 
   .item-meta {
@@ -1167,18 +1197,6 @@
         <input class="search-input" type="text" placeholder="Search pantry..." oninput="filterPantry(this.value)">
         <select class="filter-select" id="pantry-category-filter" onchange="filterPantry()">
           <option value="">All Categories</option>
-          <option value="Produce">Produce</option>
-          <option value="Dairy & Eggs">Dairy & Eggs</option>
-          <option value="Meat & Seafood">Meat & Seafood</option>
-          <option value="Grains & Pasta">Grains & Pasta</option>
-          <option value="Baking">Baking</option>
-          <option value="Spices & Herbs">Spices & Herbs</option>
-          <option value="Condiments & Sauces">Condiments & Sauces</option>
-          <option value="Canned & Jarred">Canned & Jarred</option>
-          <option value="Frozen">Frozen</option>
-          <option value="Beverages">Beverages</option>
-          <option value="Snacks">Snacks</option>
-          <option value="Other">Other</option>
         </select>
         <select class="filter-select" id="pantry-stock-filter" onchange="filterPantry()">
           <option value="">All Stock</option>
@@ -1570,7 +1588,24 @@ function getStockStatus(item) {
   return 'ok';
 }
 
+function refreshPantryCategoryFilter() {
+  const data = getData();
+  const sel = document.getElementById('pantry-category-filter');
+  if (!sel) return;
+  const prev = sel.value;
+  const categories = [...new Set(data.pantry.map(i => (i.category || 'Other').trim()).filter(Boolean))].sort();
+  sel.innerHTML = '<option value="">All Categories</option>' + categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+  if (prev && categories.includes(prev)) sel.value = prev;
+}
+
+function escapeHtml(s) {
+  const div = document.createElement('div');
+  div.textContent = s;
+  return div.innerHTML;
+}
+
 function renderPantry(items) {
+  refreshPantryCategoryFilter();
   const data = getData();
   const all = items || data.pantry;
   const grid = document.getElementById('pantry-grid');
@@ -1582,21 +1617,35 @@ function renderPantry(items) {
     </div>`;
     return;
   }
-  grid.innerHTML = all.map((item, i) => {
-    const status = getStockStatus(item);
-    return `<div class="pantry-item ${status === 'low' ? 'low-stock' : ''} ${status === 'out' ? 'out-of-stock' : ''}">
-      <span class="item-emoji">${item.emoji || '📦'}</span>
-      <div class="item-info">
-        <div class="item-name">${item.name}</div>
-        <div class="item-meta">${item.category}</div>
-      </div>
-      <div class="item-qty">
-        <button class="qty-btn" onclick="adjustQty(${item.id}, -1)">−</button>
-        <span class="qty-value">${item.qty}</span>
-        <span class="qty-unit">${item.unit || ''}</span>
-        <button class="qty-btn" onclick="adjustQty(${item.id}, 1)">+</button>
-        <button class="btn-danger" onclick="removePantryItem(${item.id})">×</button>
-      </div>
+  const byCategory = {};
+  all.forEach(item => {
+    const cat = (item.category || 'Other').trim() || 'Other';
+    if (!byCategory[cat]) byCategory[cat] = [];
+    byCategory[cat].push(item);
+  });
+  const sortedCats = Object.keys(byCategory).sort();
+  grid.innerHTML = sortedCats.map(cat => {
+    const categoryItems = byCategory[cat];
+    const itemsHtml = categoryItems.map(item => {
+      const status = getStockStatus(item);
+      return `<div class="pantry-item ${status === 'low' ? 'low-stock' : ''} ${status === 'out' ? 'out-of-stock' : ''}">
+        <span class="item-emoji">${item.emoji || '📦'}</span>
+        <div class="item-info">
+          <div class="item-name">${item.name}</div>
+          <div class="item-meta">${item.unit ? `${item.qty} ${item.unit}` : ''}</div>
+        </div>
+        <div class="item-qty">
+          <button class="qty-btn" onclick="adjustQty(${item.id}, -1)">−</button>
+          <span class="qty-value">${item.qty}</span>
+          <span class="qty-unit">${item.unit || ''}</span>
+          <button class="qty-btn" onclick="adjustQty(${item.id}, 1)">+</button>
+          <button class="btn-danger" onclick="removePantryItem(${item.id})">×</button>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="pantry-category-group">
+      <div class="pantry-category-title">${escapeHtml(cat)}</div>
+      <div class="pantry-grid">${itemsHtml}</div>
     </div>`;
   }).join('');
 }
