@@ -1,18 +1,8 @@
 # ------------------------------------------------------------------------------
-# Provider and root module
+# Provider configuration
+# File structure per ha-migration-plan.md: vpc.tf, security_groups.tf, alb.tf, asg.tf.
 # ------------------------------------------------------------------------------
 
 provider "aws" {
-  region = "us-east-2"
-}
-
-module "web_server" {
-  source = "./modules/ec2-webserver"
-
-  ami_id            = var.ami_id
-  instance_type     = var.instance_type
-  key_name          = "new-secure-key"
-  index_html_path   = "${path.root}/index.html"
-  server_name       = "web-server"
-  eip_allocation_id = var.eip_allocation_id
+  region = var.aws_region
 }
