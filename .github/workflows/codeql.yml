@@ -42,8 +42,8 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies (API)
-        if: ${{ hashFiles('ansible/files/api/package.json') != '' }}
-        working-directory: ansible/files/api
+        if: ${{ hashFiles('site/api/package.json') != '' }}
+        working-directory: site/api
         run: |
           npm ci --ignore-scripts --no-audit --no-fund || npm install --ignore-scripts --no-audit --no-fund
 

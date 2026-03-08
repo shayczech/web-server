@@ -26,6 +26,22 @@ resource "aws_iam_role_policy_attachment" "ssm_core" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
+# Allow stats API to read IaC resource count (written by pipeline)
+resource "aws_iam_role_policy" "ec2_ssm_iac_count" {
+  name   = "${var.server_name}-ec2-ssm-iac-count"
+  role   = aws_iam_role.ec2_role.id
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = "ssm:GetParameter"
+      Resource = "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/web-server/iac-resource-count"
+    }]
+  })
+}
+
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "${var.server_name}-ec2-profile"
   role = aws_iam_role.ec2_role.name

@@ -29,7 +29,7 @@ jobs:
 
       - name: Install Node.js Dependencies (for Snyk Scan)
         run: npm install
-        working-directory: ansible/files/api/
+        working-directory: site/api/
 
       # --- Snyk SAST Scan (No changes) ---
       - name: Run Snyk to check for vulnerabilities
@@ -37,11 +37,11 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }} 
         with:
-          command: monitor ansible/files/api/
+          command: monitor site/api/
           args: --fail-on=high
 
       - name: Clean up node_modules to prevent Ansible copy hang
-        run: rm -rf ansible/files/api/node_modules
+        run: rm -rf site/api/node_modules
         
       # --- OIDC Configuration (No changes) ---
       - name: Configure AWS Credentials
@@ -64,6 +64,13 @@ jobs:
         id: apply
         run: terraform apply -auto-approve
         working-directory: infra/
+
+      # --- Write IaC resource count to SSM (for live stats on site) ---
+      - name: Update IaC resource count in SSM
+        working-directory: infra
+        run: |
+          COUNT=$(terraform state list 2>/dev/null | wc -l | tr -d ' ')
+          aws ssm put-parameter --name "/web-server/iac-resource-count" --value "$COUNT" --type String --overwrite
 
       # --- ASG instance refresh (deploys new userdata to all instances) ---
       - name: Get ASG name

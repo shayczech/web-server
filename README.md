@@ -1,62 +1,46 @@
-# Terraform-Deployed Secure DevSecOps CI/CD Pipeline
+# Secure DevSecOps Portfolio — HA CI/CD Pipeline
 
-This project demonstrates a secure, multi-container web application deployment, automated end-to-end with a DevSecOps CI/CD pipeline.
+This project demonstrates a secure, highly available web application deployment with a DevSecOps CI/CD pipeline. It highlights Infrastructure-as-Code (IaC), shift-left security, and continuous deployment orchestrated by GitHub Actions.
 
-It highlights practical skills in Infrastructure-as-Code (IaC), Configuration Management, and Continuous Deployment, all orchestrated by GitHub Actions.
-
-The architecture evolved from a single static container to a **dynamic two-container application** (a Node.js API and an Nginx reverse proxy), which fetches and displays real-time statistics from the GitHub API.
+The architecture is **ALB + Auto Scaling Group across two AZs**: custom VPC, private subnets for EC2, ACM for SSL, and rolling instance refresh for zero-downtime deploys.
 
 ## Project Overview
 
-* **Infrastructure:** AWS EC2 instance with a dedicated Elastic IP.
-* **State Management:** Remote Terraform state in an encrypted S3 bucket, with DynamoDB state locking to prevent concurrent updates.
-* **Architecture:** A **two-container Docker application** using `network_mode: "host"`.
-    * `portfolio-web`: An Nginx container acting as the web server and a **secure reverse proxy** (SSL termination).
-    * `stats-api`: A Node.js/Express container that fetches data from the GitHub API and serves it on a local port (`3000`).
-* **Functionality:** The frontend (`index.html`) makes a secure, relative API call to `/api/stats`. Nginx proxies this request internally to the Node.js container, which returns dynamic data. The site also includes a new **GRC Compliance Dashboard** for compliance mapping.
-* **Security:** Implements Principle of Least Privilege (PoLP) via an IAM Instance Profile explicitly scope-limited for DNS updates (Certbot/Route 53). The CI/CD pipeline includes **Snyk** (SAST) and **Trivy** (Container Scanning) to shift-left vulnerability management, and enforces policy-as-code checks. **Nginx rate limiting** (5 req/s per IP, 429 Too Many Requests when exceeded) protects the site from abuse. Uses Certbot for automated SSL certificate acquisition.
-* **Monitoring & Logging:** **CloudWatch Agent** collects and forwards Nginx access logs to a **CloudWatch Log Group**; a **CloudWatch Dashboard** provides request counts and recent log views for centralized monitoring and compliance reporting.
+* **Site content:** Live pages and stats API live in **`site/`** (HTML in `site/`, Node.js API in `site/api/`). The `ansible/` directory is kept for historical playbooks and config only; the pipeline and instance userdata use `site/`.
+* **Infrastructure:** AWS custom VPC (public subnets for ALB, private subnets for EC2), Application Load Balancer, Auto Scaling Group (2 AZs), ACM certificate, Route 53 ALIAS records.
+* **State Management:** Remote Terraform state in an encrypted S3 bucket with DynamoDB state locking.
+* **Architecture:**
+  * **ALB** terminates HTTPS (ACM), redirects HTTP→HTTPS, forwards to a target group.
+  * **EC2 instances** (ASG, private subnets) run Docker: Nginx (HTTP only, rate-limited) and a Node.js stats API. No public IPs; traffic only from the ALB.
+* **Deployment:** Push to `main` → Snyk scan → Terraform apply → ASG instance refresh. New instances boot via Launch Template userdata (Docker, CloudWatch Agent, clone repo, build and run containers).
+* **Security:** IAM instance profiles (CloudWatch, SSM only); no SSH to instances (SSM Session Manager). Snyk (SAST) in pipeline; Nginx rate limiting (5 req/s, 429). ACM for certificate lifecycle.
+* **Monitoring:** CloudWatch Agent on each instance; Nginx access logs to CloudWatch. GRC Compliance Dashboard on the site maps controls to NIST, CIS, HIPAA.
 
 ## Technical Stack
 
 | **Area** | **Tools** |
 | :--- | :--- |
-| Infrastructure as Code | Terraform (IaC, Remote State, IAM Roles) |
-| Configuration Management | Ansible (Playbooks, Handlers) |
-| CI/CD Orchestration | GitHub Actions (End-to-End Automation, Secrets) |
-| Cloud Platform | AWS (EC2, EIP, S3, **IAM Instance Profiles**, Route 53, **CloudWatch**) |
-| Containers | **NGINX (Web/Proxy) & Node.js/Express (API)** |
-| Operating System | Ubuntu 24.04 LTS |
-| Security | Certbot (SSL), **Snyk (SAST)**, **Trivy (Container Scanning)**, **Nginx rate limiting (429)**, UFW (Host Firewall), AWS IAM, GitHub Secrets, **Policy-as-Code (PaC)** |
+| Infrastructure as Code | Terraform (VPC, ALB, ASG, ACM, Route 53, security groups) |
+| CI/CD | GitHub Actions (Snyk, Terraform apply, ASG instance refresh) |
+| Cloud Platform | AWS (VPC, ALB, ASG, EC2, ACM, Route 53, IAM, CloudWatch) |
+| Containers | Nginx (web/proxy), Node.js/Express (stats API) |
+| Security | ACM (SSL), Snyk (SAST), Nginx rate limiting, IAM, GitHub OIDC |
 
 ## Deployment Workflow
 
-1.  **Authentication:** GitHub Actions securely retrieves IAM and SSH Private Keys from repository secrets.
-2.  **Security Scan (SAST):** **Snyk runs against Node.js dependencies, failing the build on High/Critical vulnerabilities.**
-3.  **Terraform Apply (IaC):** Terraform validates infrastructure, ensuring the EC2 is provisioned with the correct IAM Instance Profile attached for PoLP.
-4.  **Ansible Execution:** Ansible connects via SSH to the live EC2 instance.
-5.  **Host Hardening & PaC:**
-    * **Ansible installs all OS patches and sets up a secure baseline (e.g., UFW).**
-    * **A simulated PyLint task enforces Policy-as-Code checks before deployment.**
-    * **CloudWatch Agent is installed and configured to collect Nginx access logs for centralized monitoring.**
-6.  **API Deployment (Backend):**
-    * Ansible copies the Node.js API source code and dependencies (including vulnerability patches in the Dockerfile).
-    * Ansible builds the `stats-api:latest` Docker image.
-    * **Trivy scans the image, using a `.trivyignore` file, and fails the deployment if un-ignored High/Critical vulnerabilities are found.** Trivy JSON is used to compute a **dynamic security score** served by the API and displayed on the GRC Compliance Dashboard.
-    * Ansible starts the `stats-api` container, exposing it on `localhost:3000`.
-    * An Ansible task actively verifies the API is responsive on `localhost:3000` before proceeding.
-7.  **Web Deployment (Frontend):**
-    * Certbot runs using the attached IAM Role (PoLP) to renew/acquire the SSL certificate via Route 53 DNS validation.
-    * Ansible copies the static content (including `index.html`, `resume.html`, and `grc.html`) and the Nginx config (SSL, **rate limiting**, reverse proxy).
-    * Ansible starts the `portfolio-web` (Nginx) container, which proxies API requests, applies rate limiting, and serves static content.
-8.  **Live:** The frontend loads, securely fetches dynamic stats from its own `/api/stats` endpoint, and displays real-time GitHub data.
+1. **Push** to `main` triggers the workflow.
+2. **Snyk** scans dependencies; build fails on high/critical vulnerabilities.
+3. **Terraform** init, validate, apply (provisions/updates VPC, ALB, ASG, etc.).
+4. **ASG instance refresh** starts a rolling replacement so new instances boot with the latest userdata and content.
+5. **Live:** Site is served via ALB; instances in private subnets register with the target group and receive traffic.
 
 ## Future Enhancements
 
-* **Enhanced Monitoring:** Expand CloudWatch with custom metrics and alarms (e.g., rate-limit 429 spikes, API latency) for comprehensive observability.
-* **Expansion:** Transition the application deployment to a Docker Compose manifest managed entirely by Ansible.
+* **Observability:** CloudWatch custom metrics and alarms (e.g., 429 rate, API latency).
+* **Scope-down IAM:** Replace broad Terraform-runner permissions with least-privilege policies.
 
 ## Author
 
-**Shaylee Czech** Cloud and Security Engineering Professional | CISSP Candidate
+**Shaylee Czech** — Senior Infrastructure / Platform Engineer | CISSP  
+Building automated, secure, observable cloud infrastructure. Drawn to mission-driven work (quantum, space, AI/ML, clean energy, healthcare).  
 [LinkedIn](https://www.linkedin.com/in/shayleeczech) | [GitHub](https://github.com/shayczech)

@@ -46,7 +46,7 @@ apt-get install -y git
 git clone https://github.com/shayczech/web-server.git /opt/web-server
 
 # --- Build and run stats-api ---
-cd /opt/web-server/ansible/files/api
+cd /opt/web-server/site/api
 
 docker build -t stats-api:latest \
   --build-arg BUILD_TIMESTAMP=$(date +%s) \
@@ -68,9 +68,9 @@ for i in $(seq 1 12); do
 done
 
 # --- Copy static files ---
-cp /opt/web-server/ansible/files/index.html  /app/html/
-cp /opt/web-server/ansible/files/resume.html /app/html/
-cp /opt/web-server/ansible/files/grc.html    /app/html/
+cp /opt/web-server/site/index.html  /app/html/
+cp /opt/web-server/site/resume.html /app/html/
+cp /opt/web-server/site/grc.html    /app/html/
 
 # --- Nginx config (HTTP only — ALB handles SSL) ---
 cat > /app/config/nginx.conf << 'NGINXCONF'

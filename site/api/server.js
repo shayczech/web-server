@@ -2,8 +2,11 @@ const express = require('express');
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const { SSMClient, GetParameterCommand } = require('@aws-sdk/client-ssm');
 const app = express();
 const PORT = 3000;
+
+const IAC_COUNT_PARAM = '/web-server/iac-resource-count';
 
 const SECURITY_SCORE_PATH = path.join('/', 'app', 'security-score.json');
 const FALLBACK_SECURITY_SCORE = 98;
@@ -46,7 +49,9 @@ const REPOSITORIES = [
 
 const axiosOpts = {
     timeout: 3000,
-    // headers: process.env.GITHUB_TOKEN ? { Authorization: `token ${process.env.GITHUB_TOKEN}` } : undefined,
+    headers: process.env.GITHUB_TOKEN
+        ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` }
+        : undefined,
 };
 
 // Fetch commit count for a single repo
@@ -134,20 +139,57 @@ async function getTotalAnsiblePlaybooks() {
     return results.reduce((sum, n) => sum + (Number.isFinite(n) ? n : 0), 0);
 }
 
+// Live IaC resource count from SSM (written by pipeline after terraform apply)
+async function getIacResourceCountFromSSM() {
+    try {
+        const client = new SSMClient({ region: process.env.AWS_REGION || 'us-east-2' });
+        const out = await client.send(new GetParameterCommand({
+            Name: IAC_COUNT_PARAM,
+            WithDecryption: false,
+        }));
+        const value = out.Parameter?.Value;
+        if (value == null) return null;
+        const n = parseInt(value, 10);
+        return Number.isFinite(n) && n >= 0 ? n : null;
+    } catch (err) {
+        console.warn('SSM IaC count fetch failed:', err?.message || err);
+        return null;
+    }
+}
+
+// GitHub Actions workflow run count (primary repo: web-server)
+const CICD_REPO = 'web-server';
+async function getActionsRunCount() {
+    try {
+        const response = await axios.get(
+            `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${CICD_REPO}/actions/runs?per_page=1`,
+            axiosOpts,
+        );
+        const total = response.data?.total_count;
+        return Number.isFinite(total) && total >= 0 ? total : 0;
+    } catch (error) {
+        console.warn(`GitHub Actions runs fetch failed: ${error.message}`);
+        return 0;
+    }
+}
+
 // Primary Stats Endpoint
 app.get('/api/stats', async (req, res) => {
     try {
-        const [totalCommits, terraformModules, ansiblePlaybooks] = await Promise.all([
+        const [totalCommits, terraformModules, ansiblePlaybooks, ciCdRuns, iacFromSSM] = await Promise.all([
             getTotalCommitCount(),
             getTerraformModuleCount(),
             getTotalAnsiblePlaybooks(),
+            getActionsRunCount(),
+            getIacResourceCountFromSSM(),
         ]);
 
+        const fileCountFallback = (terraformModules || 0) + (ansiblePlaybooks || 0);
         const data = {
             terraformModules: terraformModules || 0,
             ansiblePlaybooks: ansiblePlaybooks || 0,
-            iacResources: (terraformModules || 0) + (ansiblePlaybooks || 0),
-            ciCdRuns: 105, // static
+            iacResources: iacFromSSM != null ? iacFromSSM : fileCountFallback,
+            ciCdRuns: ciCdRuns ?? 0,
             securityScore: getSecurityScore(),
             githubCommits: totalCommits || 0,
         };
@@ -158,7 +200,8 @@ app.get('/api/stats', async (req, res) => {
         res.json({
             terraformModules: 0,
             ansiblePlaybooks: 8,
-            ciCdRuns: 105,
+            iacResources: 0,
+            ciCdRuns: 0,
             securityScore: getSecurityScore(),
             githubCommits: 0,
         });
