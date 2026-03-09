@@ -117,16 +117,15 @@
     },
     {
       "id": 104,
-      "title":"Purple Potato & Lentil Cottage Pie",
+      "title":"Beef & Lentil Cottage Pie",
       "category":"Dinner",
       "servings":4,
       "prepTime":"20 min",
       "cookTime":"40 min",
-      "description":"Ground beef and lentil filling topped with a marbled Japanese sweet potato and purple potato mash.",
+      "description":"Ground beef and lentil filling topped with a creamy potato mash.",
       "photo":"photos/cottage-pie.jpg",
       "ingredients":[
-          "10 oz Purple Potatoes, cubed",
-          "1 lb Japanese Sweet Potatoes, cubed",
+          "1 lb Potatoes, peeled and cubed (any variety)",
           "1/4 cup Heavy Cream or Milk",
           "2 tbsp Butter",
           "1/2 cup Shredded Cheddar Cheese",
@@ -139,7 +138,7 @@
           "1 tbsp Fresh Thyme, leaves stripped"
       ],
       "steps":[
-          "Prepare the Mash: Boil cubed potatoes in salted water for 15–20 minutes. Drain. Add cream and butter. For a marbled look, mash coarsely so chunks of each color remain distinct.",
+          "Prepare the Mash: Boil cubed potatoes in salted water for 15–20 minutes. Drain. Add cream and butter, then mash until smooth and creamy.",
           "Cook Filling: In an oven-safe skillet, brown the beef. Drain all but 1 tbsp fat. Add diced carrots and celery. Sauté for 5 minutes.",
           "Simmer: Stir in lentils, rosemary, and thyme. Pour in 2 cups broth. Bring to a boil, then simmer covered for 20–25 minutes until lentils are soft and gravy is thick.",
           "Assemble: Spread potato mash over the beef/lentil mixture. Use a fork to create ridges for crispy edges. Sprinkle with cheddar.",
@@ -306,7 +305,7 @@
       "prepTime": "30 min",
       "cookTime": "45-55 min",
       "servings": 16,
-      "photo": "",
+      "photo": "photos/chocolate-berry-cake.jpg",
       "ingredients": [
         "1 cup coconut cream",
         "1 cup cane sugar",
