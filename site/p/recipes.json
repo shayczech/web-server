@@ -7,6 +7,7 @@
       "prepTime":"20 min",
       "cookTime":"18–22 min",
       "description":"Earthy rye scones flavored with fresh orange zest and grated ginger, finished with a professional turbinado sugar crust.",
+      "photo":"photos/cran-orange-scones.jpg",
       "ingredients":[
           "2 cups AP Flour",
           "1/2 cup Rye Flour",
@@ -47,6 +48,7 @@
       "prepTime":"15 min",
       "cookTime":"20–22 min",
       "description":"A sophisticated, bakery-style evolution of the classic breakfast bar using Rye Flour and Sour Cream for moisture.",
+      "photo":"photos/banana-oat-muffins.jpg",
       "ingredients":[
           "3 Ripe Bananas, thoroughly mashed",
           "2 Large Eggs",
@@ -87,6 +89,7 @@
       "prepTime":"15 min",
       "cookTime":"25 min",
       "description":"Chicken cutlets flavored with garden herbs and a brown butter lemon sauce, served over creamy Parmesan polenta.",
+      "photo":"photos/herb-chicken.jpg",
       "ingredients":[
           "2 Chicken Cutlets",
           "Fresh Herbs: 4-5 Sage leaves, 1 sprig Rosemary, 2 sprigs Thyme, 1 sprig Oregano",
@@ -120,6 +123,7 @@
       "prepTime":"20 min",
       "cookTime":"40 min",
       "description":"Ground beef and lentil filling topped with a marbled Japanese sweet potato and purple potato mash.",
+      "photo":"photos/cottage-pie.jpg",
       "ingredients":[
           "10 oz Purple Potatoes, cubed",
           "1 lb Japanese Sweet Potatoes, cubed",
@@ -154,6 +158,7 @@
       "prepTime":"15 min",
       "cookTime":"15 min",
       "description":"Crispy cornstarch-coated tofu glazed in a rich miso-ginger sauce with charred vegetables over jasmine rice.",
+      "photo":"photos/miso-tofu.jpg",
       "ingredients":[
           "1 block Tofu, pressed and cubed",
           "3 tbsp Cornstarch",
@@ -190,6 +195,7 @@
       "prepTime":"15 min",
       "cookTime":"30 min",
       "description":"Hearty, nutrient-dense breakfast bars packed with oats, nuts, and fruit.",
+      "photo":"photos/banana-breakfast-bars.jpg",
       "ingredients":[
           "1.5 Cups Oats",
           "1 Cup Flour",
@@ -230,6 +236,7 @@
       "prepTime":"10 min",
       "cookTime":"1 hour",
       "description":"An insanely moist banana bread using oil as the primary fat and extra-ripe bananas.",
+      "photo":"",
       "ingredients":[
           "1 1/3 cups AP Flour",
           "1 tsp Baking Soda",
@@ -263,6 +270,7 @@
       "prepTime":"3 hours 20 min",
       "cookTime":"32 min",
       "description":"Soft and buttery with a chewy/crisp crust, this fresh loaf of bread is a kitchen staple.",
+      "photo":"photos/sandwich-bread.jpg",
       "ingredients":[
           "1 cup (240ml) Water, warmed to 110°F",
           "1/4 cup (60ml) Whole Milk, warmed to 110°F",
@@ -285,5 +293,46 @@
       "notes":"Freezing: Shape the loaf and freeze in the pan for up to 3 months; thaw and rise for 5 hours before baking. Bread flour is recommended for a chewier texture.",
       "createdAt":"3/8/2026",
       "aiGenerated":false
+    },
+    {
+      "id": 101,
+      "title": "Dark Chocolate Coconut Cream Berry Cake",
+      "category": "Dessert",
+      "description": "A moist, rich chocolate cake utilizing coconut cream as the primary fat source, loaded with frozen berries and topped with a decadent cocoa cream cheese frosting.",
+      "prepTime": "30 min",
+      "cookTime": "45-55 min",
+      "servings": 16,
+      "photo": "",
+      "ingredients": [
+        "1 cup coconut cream",
+        "1 cup cane sugar",
+        "1 egg",
+        "1 tsp vanilla extract",
+        "1 1/2 cups all-purpose flour (plus 1 tbsp for berries)",
+        "1/2 cup dutch-process cocoa powder",
+        "1 tsp baking soda",
+        "1/2 tsp salt",
+        "1 cup frozen cherries and blueberries",
+        "1/2 cup semi-sweet chocolate chips",
+        "6 oz cream cheese (half of 12oz batch)",
+        "6 tbsp unsalted butter (half of 12tbsp batch)",
+        "1 3/4 cups confectioners' sugar",
+        "1/3 cup cocoa powder",
+        "1/2 tsp vanilla extract",
+        "1 tbsp heavy cream"
+      ],
+      "steps": [
+        "Preheat oven to 350°F and grease an 8x8 inch pan (metal is preferred for even browning).",
+        "Whisk coconut cream, sugar, egg, and vanilla until well combined.",
+        "Stir in flour, cocoa powder, baking soda, and salt until just mixed.",
+        "Toss frozen berries in 1 tbsp of flour (this prevents them from sinking and creating a soggy center), then fold them and the chips into the batter.",
+        "Bake for 45–55 minutes. Because of the frozen fruit, the center takes longer to set. Test with a skewer in the very center; it should come out with just a few moist crumbs.",
+        "Cool completely in the pan to allow the structure to finish setting.",
+        "For the frosting: Beat cream cheese and butter until smooth.",
+        "Add sugar and cocoa, mixing until fluffy. Adjust consistency with cream.",
+        "Apply half of the frosting batch to the cake (save the rest in the freezer)."
+      ],
+      "notes": "Using frozen fruit increases bake time significantly. If the edges brown too fast, tent with foil for the last 10 minutes. Must be refrigerated.",
+      "createdAt": "2025-05-22"
     }
 ]
