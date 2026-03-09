@@ -448,6 +448,34 @@
   .ai-prompt .btn-ai { padding: 8px 14px; background: var(--brown); color: var(--cream); border: none; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
   .ai-prompt .btn-ai:hover { background: var(--ink); }
   .ai-prompt .btn-ai:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  @media (max-width: 768px) {
+    .app-header { flex-wrap: wrap; padding: 12px 16px; height: auto; gap: 10px; }
+    .app-wordmark { font-size: 18px; }
+    .app-wordmark span { font-size: 9px; }
+    .header-actions { flex-wrap: wrap; }
+    .btn-sm { min-height: 44px; padding: 10px 14px; }
+    .main { grid-template-columns: 1fr; padding: 20px 16px; gap: 24px; }
+    .form-panel { position: static; }
+    .panel-header { padding: 14px 18px; }
+    .recipe-row { padding: 12px 18px; flex-wrap: wrap; }
+    .recipe-row-actions { width: 100%; justify-content: flex-end; margin-top: 6px; }
+    .btn-edit, .btn-del { min-height: 44px; padding: 8px 14px; }
+    .modal { width: 100%; max-width: 100%; margin: 12px; padding: 24px 20px; }
+    .form-row { grid-template-columns: 1fr; }
+    .pdf-import .row, .ai-prompt .row { flex-direction: column; align-items: stretch; }
+    .pdf-import input[type="file"], .ai-prompt textarea { min-width: 0; }
+    .btn-import, .btn-ai { min-height: 44px; }
+    .login-card { width: 100%; max-width: 100%; margin: 16px; padding: 32px 24px; box-sizing: border-box; }
+  }
+
+  @media (max-width: 480px) {
+    .main { padding: 12px; }
+    .recipe-row { padding: 12px 14px; }
+    .form-actions .btn-primary, .form-actions .btn-secondary { min-height: 48px; }
+    .modal-actions .btn-secondary, .modal-actions .btn-copy { min-height: 48px; padding: 12px 18px; }
+    .json-output { min-height: 200px; font-size: 10px; }
+  }
 </style>
 </head>
 <body>

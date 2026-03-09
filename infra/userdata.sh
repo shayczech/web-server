@@ -77,39 +77,8 @@ cp -r /opt/web-server/site/assets/*     /app/html/assets/
 mkdir -p /app/html/p
 cp -r /opt/web-server/site/p/*         /app/html/p/ 2>/dev/null || true
 
-# --- Nginx config (HTTP only — ALB handles SSL) ---
-cat > /app/config/nginx.conf << 'NGINXCONF'
-limit_req_zone $binary_remote_addr zone=personal_limit:10m rate=5r/s;
-limit_req_status 429;
-
-server {
-    listen 80;
-    server_name _;
-
-    root /usr/share/nginx/html;
-    index index.html;
-    limit_req zone=personal_limit burst=10 nodelay;
-
-    location /api/ {
-        proxy_pass http://localhost:3000/api/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
-        proxy_redirect off;
-        client_max_body_size 10M;
-    }
-
-    location /p/ {
-        try_files $uri $uri/ =404;
-        add_header X-Robots-Tag "noindex, nofollow" always;
-    }
-
-    location / {
-        try_files $uri $uri/ =404;
-    }
-}
-NGINXCONF
+# --- Nginx config (HTTP only — ALB handles SSL); clean URLs (no .html in browser) ---
+cp /opt/web-server/infra/nginx.conf /app/config/nginx.conf
 
 # --- Run Nginx container ---
 docker run -d \
