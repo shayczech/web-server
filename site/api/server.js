@@ -2,12 +2,17 @@ const express = require('express');
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
+const pdf = require('pdf-parse');
 const { SSMClient, GetParameterCommand } = require('@aws-sdk/client-ssm');
 const app = express();
 const PORT = 3000;
 
 const IAC_COUNT_PARAM = '/web-server/iac-resource-count';
 const GITHUB_TOKEN_PARAM = '/web-server/github-token';
+const ANTHROPIC_API_KEY_PARAM = '/web-server/anthropic-api-key';
+
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 
 const SECURITY_SCORE_PATH = path.join('/', 'app', 'security-score.json');
 const FALLBACK_SECURITY_SCORE = 98;
@@ -26,13 +31,13 @@ function getSecurityScore() {
     return FALLBACK_SECURITY_SCORE;
 }
 
+app.use(express.json({ limit: '1mb' }));
+
 // Configure CORS to allow access from the front-end (running on the host)
 app.use((req, res, next) => {
-    // Since the front-end is served on 443, allow requests from the same origin
-    res.setHeader('Access-Control-Allow-Origin', '*'); 
-    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    // Prevent any caching of API responses
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
@@ -161,6 +166,65 @@ async function loadGitHubTokenFromSSM() {
     }
 }
 
+// Load Anthropic API key from SSM (for recipe-from-PDF)
+async function loadAnthropicKeyFromSSM() {
+    if (process.env.ANTHROPIC_API_KEY) return;
+    try {
+        const client = new SSMClient({ region: process.env.AWS_REGION || 'us-east-2' });
+        const out = await client.send(new GetParameterCommand({
+            Name: ANTHROPIC_API_KEY_PARAM,
+            WithDecryption: true,
+        }));
+        const value = out.Parameter?.Value;
+        if (value && typeof value === 'string') {
+            process.env.ANTHROPIC_API_KEY = value;
+            console.log('Anthropic API key loaded from SSM');
+        }
+    } catch (err) {
+        console.warn('SSM Anthropic key not set or unavailable:', err?.message || err);
+    }
+}
+
+const RECIPE_JSON_SCHEMA = `Return only valid JSON (no markdown, no code block) with this shape:
+{
+  "title": "string",
+  "category": "Breakfast|Lunch|Dinner|Dessert|Snack|Baked Good|Appetizer|Drinks|Other",
+  "description": "string (1-2 sentences)",
+  "prepTime": "string e.g. 20 min",
+  "cookTime": "string e.g. 30 min",
+  "servings": number,
+  "ingredients": ["string", "..."],
+  "steps": ["string", "..."],
+  "notes": "string or empty"
+}`;
+
+async function recipeFromText(text) {
+    const key = process.env.ANTHROPIC_API_KEY;
+    if (!key) throw new Error('ANTHROPIC_API_KEY not configured (set env or SSM /web-server/anthropic-api-key)');
+    const truncated = text.slice(0, 12000);
+    const response = await axios.post(
+        'https://api.anthropic.com/v1/messages',
+        {
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 1500,
+            system: `You extract a single recipe from raw text and return only valid JSON. ${RECIPE_JSON_SCHEMA}`,
+            messages: [{ role: 'user', content: truncated }],
+        },
+        {
+            timeout: 60000,
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': key,
+                'anthropic-version': '2023-06-01',
+            },
+        },
+    );
+    const raw = response.data?.content?.[0]?.text;
+    if (!raw) throw new Error('No recipe in response');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+}
+
 // Live IaC resource count from SSM (written by pipeline after terraform apply)
 async function getIacResourceCountFromSSM() {
     try {
@@ -194,6 +258,43 @@ async function getActionsRunCount() {
         return 0;
     }
 }
+
+// Recipe from PDF (admin-only use; obscure admin URL is the gate)
+app.post('/api/recipes/from-pdf', upload.single('pdf'), async (req, res) => {
+    try {
+        if (!req.file || !req.file.buffer) {
+            res.status(400).json({ error: 'No PDF file uploaded' });
+            return;
+        }
+        const data = await pdf(req.file.buffer);
+        const text = data?.text?.trim();
+        if (!text || text.length < 50) {
+            res.status(400).json({ error: 'Could not extract enough text from PDF' });
+            return;
+        }
+        const recipe = await recipeFromText(text);
+        res.json(recipe);
+    } catch (err) {
+        console.error('Recipe from PDF error:', err?.message || err);
+        res.status(500).json({ error: err?.message || 'Failed to generate recipe' });
+    }
+});
+
+// Recipe from description (admin: type a prompt, get structured recipe)
+app.post('/api/recipes/from-text', async (req, res) => {
+    try {
+        const text = req.body?.text?.trim();
+        if (!text || text.length < 3) {
+            res.status(400).json({ error: 'Provide a description (e.g. "banana bread with chocolate chips")' });
+            return;
+        }
+        const recipe = await recipeFromText(text);
+        res.json(recipe);
+    } catch (err) {
+        console.error('Recipe from text error:', err?.message || err);
+        res.status(500).json({ error: err?.message || 'Failed to generate recipe' });
+    }
+});
 
 // Primary Stats Endpoint
 app.get('/api/stats', async (req, res) => {
@@ -232,6 +333,7 @@ app.get('/api/stats', async (req, res) => {
 
 (async () => {
     await loadGitHubTokenFromSSM();
+    await loadAnthropicKeyFromSSM();
     app.listen(PORT, '0.0.0.0', () => {
         console.log(`Stats API listening on port ${PORT}`);
         if (!process.env.GITHUB_TOKEN) {

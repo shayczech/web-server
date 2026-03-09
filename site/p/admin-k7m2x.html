@@ -426,6 +426,28 @@
     line-height: 1.6;
     margin-top: 4px;
   }
+
+  .pdf-import {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream);
+  }
+  .pdf-import .form-group { margin-bottom: 0; }
+  .pdf-import label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: block; }
+  .pdf-import input[type="file"] { font-size: 11px; }
+  .pdf-import .row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+  .pdf-import .row input[type="file"] { flex: 1; min-width: 120px; }
+  .btn-import { padding: 8px 14px; background: var(--sage); color: white; border: none; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
+  .btn-import:hover { background: var(--brown); }
+  .btn-import:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .ai-prompt { padding: 18px 24px; border-bottom: 1px solid var(--border); background: var(--parchment); }
+  .ai-prompt label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: block; }
+  .ai-prompt .row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+  .ai-prompt textarea { flex: 1; min-width: 180px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--border); background: var(--cream); font-family: 'DM Mono', monospace; font-size: 12px; resize: vertical; }
+  .ai-prompt .btn-ai { padding: 8px 14px; background: var(--brown); color: var(--cream); border: none; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
+  .ai-prompt .btn-ai:hover { background: var(--ink); }
+  .ai-prompt .btn-ai:disabled { opacity: 0.6; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -471,6 +493,20 @@
     <div class="form-panel panel" id="form-panel">
       <div class="panel-header">
         <div class="panel-title" id="form-title">New Recipe</div>
+      </div>
+      <div class="pdf-import">
+        <label>Import from PDF</label>
+        <div class="row">
+          <input type="file" id="pdf-file" accept=".pdf">
+          <button type="button" class="btn-import" id="btn-pdf-import" onclick="importFromPdf()">Generate recipe</button>
+        </div>
+      </div>
+      <div class="ai-prompt">
+        <label>Generate from description</label>
+        <div class="row">
+          <textarea id="ai-prompt-text" placeholder="e.g. banana bread with chocolate chips and oats" rows="2"></textarea>
+          <button type="button" class="btn-ai" id="btn-ai-generate" onclick="generateFromPrompt()">Generate recipe</button>
+        </div>
       </div>
       <div style="padding: 20px 24px 24px">
         <input type="hidden" id="edit-id">
@@ -688,6 +724,79 @@ function editRecipe(id) {
   document.getElementById('f-steps').value = (r.steps || []).join('\n');
   document.getElementById('f-notes').value = r.notes || '';
   document.getElementById('form-panel').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function importFromPdf() {
+  const fileInput = document.getElementById('pdf-file');
+  const btn = document.getElementById('btn-pdf-import');
+  if (!fileInput?.files?.length) { toast('Select a PDF file'); return; }
+  const file = fileInput.files[0];
+  if (!file.type || !file.type.includes('pdf')) { toast('File must be a PDF'); return; }
+  const formData = new FormData();
+  formData.append('pdf', file);
+  btn.disabled = true;
+  try {
+    const apiUrl = (typeof window !== 'undefined' && window.location.hostname === 'localhost')
+      ? 'http://localhost:3000/api/recipes/from-pdf'
+      : '/api/recipes/from-pdf';
+    const res = await fetch(apiUrl, { method: 'POST', body: formData });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) { toast(data.error || 'Failed to generate recipe'); return; }
+    clearForm();
+    document.getElementById('edit-id').value = '';
+    document.getElementById('form-title').textContent = 'New Recipe';
+    document.getElementById('f-title').value = data.title || '';
+    document.getElementById('f-category').value = (data.category && /^(Breakfast|Lunch|Dinner|Dessert|Snack|Baked Good|Appetizer|Drinks|Other)$/i.test(data.category)) ? data.category : 'Other';
+    document.getElementById('f-servings').value = Math.max(1, parseInt(data.servings, 10) || 4);
+    document.getElementById('f-prep').value = data.prepTime || '';
+    document.getElementById('f-cook').value = data.cookTime || '';
+    document.getElementById('f-desc').value = data.description || '';
+    document.getElementById('f-ingredients').value = Array.isArray(data.ingredients) ? data.ingredients.join('\n') : '';
+    document.getElementById('f-steps').value = Array.isArray(data.steps) ? data.steps.join('\n') : '';
+    document.getElementById('f-notes').value = data.notes || '';
+    fileInput.value = '';
+    toast('Recipe generated — review and save');
+    document.getElementById('form-panel').scrollIntoView({ behavior: 'smooth' });
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function generateFromPrompt() {
+  const textarea = document.getElementById('ai-prompt-text');
+  const btn = document.getElementById('btn-ai-generate');
+  const text = textarea?.value?.trim();
+  if (!text) { toast('Enter a description'); return; }
+  btn.disabled = true;
+  try {
+    const apiUrl = (typeof window !== 'undefined' && window.location.hostname === 'localhost')
+      ? 'http://localhost:3000/api/recipes/from-text'
+      : '/api/recipes/from-text';
+    const res = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) { toast(data.error || 'Failed to generate recipe'); return; }
+    clearForm();
+    document.getElementById('edit-id').value = '';
+    document.getElementById('form-title').textContent = 'New Recipe';
+    document.getElementById('f-title').value = data.title || '';
+    document.getElementById('f-category').value = (data.category && /^(Breakfast|Lunch|Dinner|Dessert|Snack|Baked Good|Appetizer|Drinks|Other)$/i.test(data.category)) ? data.category : 'Other';
+    document.getElementById('f-servings').value = Math.max(1, parseInt(data.servings, 10) || 4);
+    document.getElementById('f-prep').value = data.prepTime || '';
+    document.getElementById('f-cook').value = data.cookTime || '';
+    document.getElementById('f-desc').value = data.description || '';
+    document.getElementById('f-ingredients').value = Array.isArray(data.ingredients) ? data.ingredients.join('\n') : '';
+    document.getElementById('f-steps').value = Array.isArray(data.steps) ? data.steps.join('\n') : '';
+    document.getElementById('f-notes').value = data.notes || '';
+    textarea.value = '';
+    toast('Recipe generated — review and save');
+    document.getElementById('form-panel').scrollIntoView({ behavior: 'smooth' });
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 function saveRecipe() {

@@ -90,13 +90,14 @@ server {
     index index.html;
     limit_req zone=personal_limit burst=10 nodelay;
 
-    location /api/stats {
-        proxy_pass http://localhost:3000/api/stats;
+    location /api/ {
+        proxy_pass http://localhost:3000/api/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
         proxy_redirect off;
+        client_max_body_size 10M;
     }
 
     location /p/ {
