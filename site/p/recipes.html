@@ -287,6 +287,15 @@
     border-bottom: 1px solid var(--border);
   }
 
+  .ingredient-section-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-top: 14px;
+    margin-bottom: 4px;
+  }
+  .ingredient-section-label:first-of-type { margin-top: 0; }
+
   .ingredient-list { list-style: none; }
 
   .ingredient-list li {
@@ -538,9 +547,13 @@ function openDetail(id) {
       <div class="detail-columns">
         <div>
           <div class="section-label">Ingredients</div>
-          <ul class="ingredient-list">
-            ${(r.ingredients||[]).map(i => `<li>${typeof i === 'string' ? i : i.name}</li>`).join('')}
-          </ul>
+          ${(r.ingredientSections && r.ingredientSections.length)
+            ? r.ingredientSections.map(sec => `
+              <div class="ingredient-section-label">${sec.label}</div>
+              <ul class="ingredient-list">${(sec.items||[]).map(i => `<li>${typeof i === 'string' ? i : i.name}</li>`).join('')}</ul>
+            `).join('')
+            : `<ul class="ingredient-list">${(r.ingredients||[]).map(i => `<li>${typeof i === 'string' ? i : i.name}</li>`).join('')}</ul>`
+          }
         </div>
         <div>
           <div class="section-label">Instructions</div>
