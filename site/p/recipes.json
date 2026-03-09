@@ -1,6 +1,6 @@
 [
     {
-      "id":201,
+      "id": 101,
       "title":"Orange & Ginger Rye Scones",
       "category":"Baked Good",
       "servings":8,
@@ -41,7 +41,7 @@
       "aiGenerated":false
     },
     {
-      "id":202,
+      "id": 102,
       "title":"Banana Oat Power Muffins",
       "category":"Baked Good",
       "servings":12,
@@ -82,7 +82,7 @@
       "aiGenerated":false
     },
     {
-      "id":203,
+      "id": 103,
       "title":"Brown Butter & Garden Herb Chicken",
       "category":"Dinner",
       "servings":2,
@@ -116,7 +116,7 @@
       "aiGenerated":false
     },
     {
-      "id":204,
+      "id": 104,
       "title":"Purple Potato & Lentil Cottage Pie",
       "category":"Dinner",
       "servings":4,
@@ -151,7 +151,7 @@
       "aiGenerated":false
     },
     {
-      "id":205,
+      "id": 105,
       "title":"Crispy Miso-Ginger Tofu",
       "category":"Dinner",
       "servings":2,
@@ -188,7 +188,7 @@
       "aiGenerated":false
     },
     {
-      "id":206,
+      "id": 106,
       "title":"Banana Breakfast Bars",
       "category":"Breakfast",
       "servings":12,
@@ -229,41 +229,45 @@
       "aiGenerated":false
     },
     {
-      "id":207,
-      "title":"Moist Banana Bread",
-      "category":"Baked Good",
-      "servings":10,
-      "prepTime":"10 min",
-      "cookTime":"1 hour",
-      "description":"An insanely moist banana bread using oil as the primary fat and extra-ripe bananas.",
-      "photo":"",
-      "ingredients":[
-          "1 1/3 cups AP Flour",
-          "1 tsp Baking Soda",
-          "1/2 tsp Kosher Salt",
-          "Pinch Ground Nutmeg",
-          "4 Extra ripe large bananas, mashed (black and syrupy)",
-          "2 Large eggs",
-          "1/2 cup Oil (Safflower, Canola, or Avocado)",
-          "1 cup Granulated Sugar",
-          "1 tsp Pure Vanilla Extract",
-          "2 tbsp Turbinado Sugar (for topping)"
+      "id": 107,
+      "title": "Greek Yogurt Banana Bread",
+      "category": "Baking",
+      "description": "A dense, moist banana bread that uses Greek yogurt for a tender crumb and brown sugar for a rich, caramelized flavor profile.",
+      "prepTime": "15 min",
+      "cookTime": "45-55 min",
+      "servings": 10,
+      "photo": "photos/greek-yogurt-banana-bread.jpg",
+      "ingredients": [
+        "210g all-purpose flour",
+        "1 tsp baking soda",
+        "1/2 tsp salt",
+        "1/4 tsp ground nutmeg",
+        "2 eggs (room temperature)",
+        "1/4 cup oil or melted butter",
+        "1/2 cup plain whole milk Greek yogurt",
+        "3 ripe bananas, mashed (about 300g)",
+        "2 tsp vanilla extract",
+        "3/4 cup brown sugar",
+        "Turbinado sugar (for sprinkling)"
       ],
-      "steps":[
-          "Setup: Preheat oven to 325°F. Grease an 8x5 inch loaf pan and line with parchment paper.",
-          "Dry Mix: Whisk together flour, baking soda, salt, and nutmeg.",
-          "Wet Mix: In a large bowl, whisk eggs, oil, sugar, and vanilla until smooth. Stir in mashed bananas.",
-          "Combine: Add the dry mixture to the wet ingredients. Using a stiff whisk, mix until no dry flour bits remain. Avoid overmixing.",
-          "Bake: Transfer batter to pan. Bake for 60–70 minutes until a toothpick comes out clean.",
-          "The Crunch: Immediately sprinkle the top with Turbinado sugar while hot. It will set as it cools.",
-          "Cool: Cool in pan for 20 minutes, then lift out to cool completely on a rack."
+      "steps": [
+        "Preheat oven to 350°F.",
+        "Whisk the flour, baking soda, salt, and nutmeg in a medium bowl; set aside.",
+        "In a mixer, whisk the eggs lightly.",
+        "Add the oil, yogurt, and vanilla to the eggs and mix until combined.",
+        "Add the brown sugar and mix again until incorporated.",
+        "Add the mashed bananas and mix until fully combined.",
+        "Add the dry ingredients and mix until just incorporated (do not overmix).",
+        "Grease a loaf pan and line with parchment paper.",
+        "Pour the batter into the pan and bake at 350°F for 45–55 minutes.",
+        "Let the bread cool in the pan for 10–20 minutes before removing.",
+        "Sprinkle the top with turbinado sugar."
       ],
-      "notes":"Storage: Set a paper towel on top of the loaf in a Ziplock bag to absorb moisture and keep the top from becoming gummy.",
-      "createdAt":"3/8/2026",
-      "aiGenerated":false
+      "notes": "Nutmeg quantity is approximate (a large pinch is about 1/4 tsp). Using very ripe bananas (spotted or brown) provides the best sweetness and texture.",
+      "createdAt": "2025-05-23"
     },
     {
-      "id":208,
+      "id": 108,
       "title":"Simply Sandwich Bread",
       "category":"Baked Good",
       "servings":12,
@@ -295,7 +299,7 @@
       "aiGenerated":false
     },
     {
-      "id": 101,
+      "id": 109,
       "title": "Dark Chocolate Coconut Cream Berry Cake",
       "category": "Dessert",
       "description": "A moist, rich chocolate cake utilizing coconut cream as the primary fat source, loaded with frozen berries and topped with a decadent cocoa cream cheese frosting.",
