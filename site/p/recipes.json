@@ -406,5 +406,82 @@
   ],
   "notes": "Meatballs can be frozen after baking. If freezing, do not apply the glaze; let them cool completely and freeze on a tray before transferring to a bag. Glaze them after thawing and reheating. Serve with udon noodles or jasmine rice.",
   "createdAt": "2026-03-08"
+},
+{
+  "id": 110,
+  "title": "Korean Meatballs",
+  "category": "Dinner",
+  "description": "Sweet, spicy, and flavorful baked meatballs made with ground beef and gochujang. Perfect for a quick weeknight dinner or meal prep.",
+  "prepTime": "20 min",
+  "cookTime": "20-25 min",
+  "servings": "6-8",
+  "photo": "photos/korean-meatballs.jpg",
+  "ingredients": [
+    "1 1/2 lbs ground beef (80/20 recommended)",
+    "3 green onions, very thinly sliced",
+    "3 garlic cloves, minced",
+    "1 egg, lightly beaten",
+    "1/2 cup panko breadcrumbs",
+    "2 tbsp gochujang (Korean chili paste)",
+    "1 tbsp fresh ginger, minced",
+    "1 tbsp low sodium soy sauce",
+    "1/2 tsp salt",
+    "1/4 cup brown sugar (for glaze)",
+    "1 tbsp low sodium soy sauce (for glaze)",
+    "1 tbsp rice vinegar (for glaze)",
+    "1 tbsp gochujang (for glaze)",
+    "Sesame seeds and extra green onions (for garnish)"
+  ],
+  "steps": [
+    "Preheat oven to 350°F and line two large baking sheets with foil.",
+    "In a large mixing bowl, combine all meatball ingredients until just mixed; avoid overmixing to keep meatballs tender.",
+    "Roll the mixture into 24 evenly sized meatballs (a cookie scoop helps) and place 12 on each baking sheet.",
+    "Bake for 10–15 minutes or until the internal temperature reaches 160°F.",
+    "While meatballs bake, combine glaze ingredients (brown sugar, soy sauce, rice vinegar, and gochujang) in a small saucepan over medium heat.",
+    "Whisk the glaze occasionally for about 5 minutes until thickened; do not let it boil.",
+    "Remove meatballs from the oven and brush generously with the thickened glaze.",
+    "Garnish with sesame seeds and sliced green onions if desired, and serve."
+  ],
+  "notes": "Meatballs can be frozen after baking. If freezing, do not apply the glaze; let them cool completely and freeze on a tray before transferring to a bag. Glaze them after thawing and reheating. Serve with udon noodles or jasmine rice.",
+  "createdAt": "2026-03-08"
+},
+{
+  "id": 111,
+  "title": "Fresh Herb & Roasted Corn Chicken Chowder",
+  "category": "Dinner",
+  "description": "A creamy, comforting soup utilizing fresh herbs, frozen corn staples, and pan-seared chicken.",
+  "prepTime": "15 min",
+  "cookTime": "35 min",
+  "servings": "4-6",
+  "photo": "photos/corn-chowder.jpg",
+  "ingredients": [
+    "2 fresh chicken breast cutlets (sliced thin)",
+    "3 bags Frozen Corn (approx. 32-48 oz total)",
+    "1 cup Carrots, chopped",
+    "1 cup Yellow Onion, chopped",
+    "3-4 cloves Fresh Garlic, minced",
+    "1 tbsp Fresh Rosemary, finely minced",
+    "1 tbsp Fresh Thyme, leaves stripped",
+    "4-5 leaves Fresh Sage, minced",
+    "1 tsp Fresh Oregano, finely minced",
+    "2 tbsp Butter (salted)",
+    "2 tbsp AP Flour",
+    "4 cups Chicken Broth (1 oz bouillon + water)",
+    "1 cup Heavy Cream",
+    "1 tsp Smoked Paprika",
+    "Salt & Black Pepper to taste"
+  ],
+  "steps": [
+    "Season chicken with salt and pepper. Melt 1 tbsp butter in a large pot over medium-high. Sear chicken 3 mins per side until golden. Remove and dice.",
+    "Add remaining 1 tbsp butter to pot. Add onions, carrots, rosemary, thyme, and sage. Sauté for 6–8 minutes until onions are translucent.",
+    "Stir in garlic and smoked paprika for 60 seconds.",
+    "Sprinkle AP flour over vegetables. Stir constantly for 2 minutes to cook out raw flour taste.",
+    "Slowly pour in chicken broth, stirring to prevent lumps. Add corn. Bring to a boil, then reduce heat to low.",
+    "Add chicken back in. Simmer for 15–20 minutes (add 5 mins if in Denver to ensure carrots are tender).",
+    "Stir in heavy cream and fresh oregano. Cook on low for 5 minutes without boiling.",
+    "Optional: Blend 1-2 cups of the soup to create a thicker, creamier texture."
+  ],
+  "notes": "Sautéing the sage with onions mellows its flavor. Tastes even better the next day as herbs infuse the cream. Garnish with everything bagel seasoning for extra crunch.",
+  "createdAt": "2026-03-15"
 }
 ]

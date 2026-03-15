@@ -502,7 +502,7 @@
          "category": "Dried Goods",
          "subcategory": "Vegetables",
          "isStaple": true,
-         "unit": "count",
+         "unit": "ct",
          "qty": 1,
          "threshold": 0
       },
@@ -524,7 +524,7 @@
          "category": "Dried Goods",
          "subcategory": "Pasta",
          "isStaple": true,
-         "unit": "count",
+         "unit": "ct",
          "qty": 4,
          "threshold": 0
       },
@@ -667,7 +667,7 @@
          "category": "Produce & Fresh",
          "subcategory": "Alliums",
          "isStaple": true,
-         "unit": "count",
+         "unit": "ct",
          "qty": 1,
          "threshold": 2
       },
@@ -722,9 +722,9 @@
          "category": "Produce & Fresh",
          "subcategory": "Fruit",
          "isStaple": true,
-         "unit": "count",
-         "qty": 1,
-         "threshold": 2
+         "unit": "ct",
+         "qty": 2,
+         "threshold": 1
       },
       {
          "id": 92,
@@ -733,9 +733,9 @@
          "category": "Produce & Fresh",
          "subcategory": "Fruit",
          "isStaple": true,
-         "unit": "count",
+         "unit": "ct",
          "qty": 1,
-         "threshold": 2
+         "threshold": 1
       },
       {
          "id": 96,
@@ -766,9 +766,9 @@
          "category": "Produce & Fresh",
          "subcategory": "Tortillas",
          "isStaple": true,
-         "unit": "count",
+         "unit": "pkg",
          "qty": 1,
-         "threshold": 10
+         "threshold": 0
       },
       {
          "id": 108,
@@ -777,8 +777,8 @@
          "category": "Produce & Fresh",
          "subcategory": "Fruit",
          "isStaple": true,
-         "unit": "count",
-         "qty": 1,
+         "unit": "ct",
+         "qty": 3,
          "threshold": 2
       },
       {
@@ -799,7 +799,7 @@
          "category": "Produce & Fresh",
          "subcategory": "Dips",
          "isStaple": true,
-         "unit": "oz",
+         "unit": "ct",
          "qty": 1,
          "threshold": 0
       },
@@ -810,8 +810,8 @@
          "category": "Produce & Fresh",
          "subcategory": "Fruit",
          "isStaple": true,
-         "unit": "count",
-         "qty": 1,
+         "unit": "ct",
+         "qty": 3,
          "threshold": 0
       },
       {
@@ -821,8 +821,8 @@
          "category": "Produce & Fresh",
          "subcategory": "Vegetables",
          "isStaple": true,
-         "unit": "count",
-         "qty": 1,
+         "unit": "ct",
+         "qty": 2,
          "threshold": 0
       },
       {
@@ -855,8 +855,8 @@
          "subcategory": "Meat",
          "isStaple": true,
          "unit": "lbs",
-         "qty": 1,
-         "threshold": 1
+         "qty": 0,
+         "threshold": 0
       },
       {
          "id": 3,
@@ -866,7 +866,7 @@
          "subcategory": "Meat",
          "isStaple": true,
          "unit": "lbs",
-         "qty": 2,
+         "qty": 3,
          "threshold": 1
       },
       {
@@ -876,7 +876,7 @@
          "category": "Frozen",
          "subcategory": "Meat",
          "isStaple": true,
-         "unit": "count",
+         "unit": "ct",
          "qty": 2,
          "threshold": 0
       },
@@ -997,7 +997,7 @@
          "category": "Frozen",
          "subcategory": "Pasta",
          "isStaple": true,
-         "unit": "count",
+         "unit": "ct",
          "qty": 1,
          "threshold": 0
       },
@@ -1008,7 +1008,7 @@
          "category": "Frozen",
          "subcategory": "Meat",
          "isStaple": true,
-         "unit": "count",
+         "unit": "ct",
          "qty": 1,
          "threshold": 0
       },
@@ -1591,7 +1591,7 @@
          "category": "Spices & Herbs",
          "subcategory": "Baking Spices",
          "isStaple": true,
-         "unit": "count",
+         "unit": "ct",
          "qty": 1,
          "threshold": 0
       }
