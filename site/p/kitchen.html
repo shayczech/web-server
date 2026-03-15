@@ -1406,15 +1406,52 @@ function enterApp() {
   renderPantry();
   renderRecipes();
   renderGrocery();
-  // Load pantry from JSON file (same approach as recipes) and overwrite localStorage
-  fetch('pantry.json?v=' + Date.now())
-    .then(r => r.ok ? r.json() : Promise.reject())
-    .then(data => {
-      const pantry = Array.isArray(data) ? data : (data && data.pantry) || [];
-      localStorage.setItem('kitchen_pantry', JSON.stringify(pantry));
-      renderPantry();
+  const auth = localStorage.getItem(PASS_KEY);
+  // Try to load kitchen data from server (pantry, grocery, recipes)
+  if (auth) {
+    fetch('/api/kitchen/data', {
+      headers: { 'X-Kitchen-Auth': auth }
     })
-    .catch(() => {});
+      .then(r => {
+        if (r.ok) return r.json();
+        if (r.status === 401) throw new Error('Unauthorized');
+        throw new Error('Load failed');
+      })
+      .then(data => {
+        if (Array.isArray(data.pantry) && data.pantry.length > 0) localStorage.setItem('kitchen_pantry', JSON.stringify(data.pantry));
+        if (Array.isArray(data.grocery)) localStorage.setItem('kitchen_grocery', JSON.stringify(data.grocery));
+        if (Array.isArray(data.recipes)) localStorage.setItem('kitchen_recipes', JSON.stringify(data.recipes));
+        renderPantry();
+        renderRecipes();
+        renderGrocery();
+      })
+      .catch(() => {
+        // Fallback: load pantry from static JSON if local pantry is empty
+        const existing = JSON.parse(localStorage.getItem('kitchen_pantry') || '[]');
+        if (existing.length === 0) {
+          fetch('pantry.json?v=' + Date.now())
+            .then(r => r.ok ? r.json() : Promise.reject())
+            .then(data => {
+              const pantry = Array.isArray(data) ? data : (data && data.pantry) || [];
+              localStorage.setItem('kitchen_pantry', JSON.stringify(pantry));
+              renderPantry();
+            })
+            .catch(() => {});
+        }
+      });
+  } else {
+    const existing = JSON.parse(localStorage.getItem('kitchen_pantry') || '[]');
+    if (existing.length === 0) {
+      fetch('pantry.json?v=' + Date.now())
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(data => {
+          const pantry = Array.isArray(data) ? data : (data && data.pantry) || [];
+          localStorage.setItem('kitchen_pantry', JSON.stringify(pantry));
+          renderPantry();
+        })
+        .catch(() => {});
+    }
+  }
 }
 
 async function doSetup() {
@@ -1485,8 +1522,35 @@ function getData() {
   };
 }
 
+let saveToServerTimer = null;
 function saveData(key, val) {
   localStorage.setItem('kitchen_' + key, JSON.stringify(val));
+  if (key === 'pantry' || key === 'grocery' || key === 'recipes') scheduleSaveToServer();
+}
+
+function scheduleSaveToServer() {
+  if (saveToServerTimer) clearTimeout(saveToServerTimer);
+  saveToServerTimer = setTimeout(saveKitchenToServer, 800);
+}
+
+async function saveKitchenToServer() {
+  saveToServerTimer = null;
+  const auth = localStorage.getItem(PASS_KEY);
+  if (!auth) return;
+  const data = getData();
+  try {
+    const res = await fetch('/api/kitchen/data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Kitchen-Auth': auth },
+      body: JSON.stringify({ pantry: data.pantry, grocery: data.grocery, recipes: data.recipes }),
+    });
+    if (!res.ok) {
+      if (res.status === 401) toast('Not authorized to save');
+      else toast('Save failed');
+    }
+  } catch (e) {
+    toast('Save failed');
+  }
 }
 
 // ── NAV ──
