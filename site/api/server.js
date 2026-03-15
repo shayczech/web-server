@@ -187,6 +187,7 @@ async function loadAnthropicKeyFromSSM() {
 }
 
 // Kitchen data: persist pantry, grocery, recipes. Auth via X-Kitchen-Auth (SHA-256 of password).
+// Intentional: authenticated user data only; path is fixed, payload validated (no arbitrary file write).
 async function loadKitchenAuthFromSSM() {
     if (process.env.KITCHEN_AUTH_HASH) return;
     try {
@@ -205,7 +206,16 @@ async function loadKitchenAuthFromSSM() {
     }
 }
 
-const KITCHEN_DATA_PATH = process.env.KITCHEN_DATA_PATH || path.join(__dirname, 'kitchen-data.json');
+// Fixed path only: resolve to absolute and ensure under app dir (no path traversal / user-controlled path).
+const KITCHEN_DATA_PATH = (() => {
+    const baseDir = path.resolve(__dirname);
+    const candidate = path.resolve(path.normalize(process.env.KITCHEN_DATA_PATH || path.join(__dirname, 'kitchen-data.json')));
+    if (!candidate.startsWith(baseDir)) return path.join(__dirname, 'kitchen-data.json');
+    return candidate;
+})();
+
+const KITCHEN_MAX_ITEMS_PER_ARRAY = 20000;
+const KITCHEN_MAX_PAYLOAD_BYTES = 5 * 1024 * 1024; // 5MB
 
 function requireKitchenAuth(req, res, next) {
     const expected = process.env.KITCHEN_AUTH_HASH;
@@ -219,10 +229,27 @@ function requireKitchenAuth(req, res, next) {
     next();
 }
 
+/** Validate and normalize body: only pantry, grocery, recipes arrays; reject extra keys and oversized payload. */
+function validateKitchenPayload(body) {
+    if (!body || typeof body !== 'object') return null;
+    const allowed = ['pantry', 'grocery', 'recipes'];
+    const keys = Object.keys(body);
+    if (keys.some((k) => !allowed.includes(k))) return null;
+    const out = {
+        pantry: Array.isArray(body.pantry) ? body.pantry.slice(0, KITCHEN_MAX_ITEMS_PER_ARRAY) : [],
+        grocery: Array.isArray(body.grocery) ? body.grocery.slice(0, KITCHEN_MAX_ITEMS_PER_ARRAY) : [],
+        recipes: Array.isArray(body.recipes) ? body.recipes.slice(0, KITCHEN_MAX_ITEMS_PER_ARRAY) : [],
+    };
+    const serialized = JSON.stringify(out);
+    if (Buffer.byteLength(serialized, 'utf8') > KITCHEN_MAX_PAYLOAD_BYTES) return null;
+    return out;
+}
+
 function readKitchenData() {
     try {
         if (fs.existsSync(KITCHEN_DATA_PATH)) {
             const raw = fs.readFileSync(KITCHEN_DATA_PATH, 'utf8');
+            if (Buffer.byteLength(raw, 'utf8') > KITCHEN_MAX_PAYLOAD_BYTES) return { pantry: [], grocery: [], recipes: [] };
             const data = JSON.parse(raw);
             return {
                 pantry: Array.isArray(data.pantry) ? data.pantry : [],
@@ -237,15 +264,18 @@ function readKitchenData() {
 }
 
 function writeKitchenData(data) {
+    const toWrite = {
+        pantry: Array.isArray(data.pantry) ? data.pantry : [],
+        grocery: Array.isArray(data.grocery) ? data.grocery : [],
+        recipes: Array.isArray(data.recipes) ? data.recipes : [],
+    };
     const dir = path.dirname(KITCHEN_DATA_PATH);
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
     }
-    fs.writeFileSync(KITCHEN_DATA_PATH, JSON.stringify({
-        pantry: Array.isArray(data.pantry) ? data.pantry : [],
-        grocery: Array.isArray(data.grocery) ? data.grocery : [],
-        recipes: Array.isArray(data.recipes) ? data.recipes : [],
-    }, null, 2), 'utf8');
+    const content = JSON.stringify(toWrite, null, 2);
+    if (Buffer.byteLength(content, 'utf8') > KITCHEN_MAX_PAYLOAD_BYTES) throw new Error('Kitchen data too large');
+    fs.writeFileSync(KITCHEN_DATA_PATH, content, 'utf8');
 }
 
 const RECIPE_JSON_SCHEMA = `Return only valid JSON (no markdown, no code block) with this shape:
@@ -372,13 +402,11 @@ app.get('/api/kitchen/data', requireKitchenAuth, (req, res) => {
 
 app.post('/api/kitchen/data', requireKitchenAuth, (req, res) => {
     try {
-        const body = req.body || {};
-        const data = {
-            pantry: Array.isArray(body.pantry) ? body.pantry : readKitchenData().pantry,
-            grocery: Array.isArray(body.grocery) ? body.grocery : readKitchenData().grocery,
-            recipes: Array.isArray(body.recipes) ? body.recipes : readKitchenData().recipes,
-        };
-        writeKitchenData(data);
+        const validated = validateKitchenPayload(req.body);
+        if (!validated) {
+            return res.status(400).json({ error: 'Invalid payload: only pantry, grocery, recipes arrays allowed; max 5MB' });
+        }
+        writeKitchenData(validated);
         res.json({ ok: true });
     } catch (err) {
         console.error('Kitchen POST error:', err?.message || err);
