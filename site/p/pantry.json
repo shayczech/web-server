@@ -18,7 +18,7 @@
          "category": "Dried Goods",
          "subcategory": "Sweeteners",
          "isStaple": true,
-         "unit": "lbs",
+         "unit": "lb",
          "qty": 1,
          "threshold": 0.5
       },
@@ -29,7 +29,7 @@
          "category": "Dried Goods",
          "subcategory": "Sweeteners",
          "isStaple": true,
-         "unit": "lbs",
+         "unit": "lb",
          "qty": 1,
          "threshold": 0
       },
@@ -40,8 +40,8 @@
          "category": "Dried Goods",
          "subcategory": "Sweeteners",
          "isStaple": true,
-         "unit": "lbs",
-         "qty": 1,
+         "unit": "oz",
+         "qty": 4,
          "threshold": 0
       },
       {
@@ -52,7 +52,7 @@
          "subcategory": "Sweeteners",
          "isStaple": true,
          "unit": "oz",
-         "qty": 1,
+         "qty": 12,
          "threshold": 2
       },
       {
@@ -63,7 +63,7 @@
          "subcategory": "Sweeteners",
          "isStaple": true,
          "unit": "oz",
-         "qty": 1,
+         "qty": 12,
          "threshold": 0
       },
       {
@@ -74,46 +74,46 @@
          "subcategory": "Baking Essentials",
          "isStaple": true,
          "unit": "oz",
-         "qty": 1,
+         "qty": 12,
          "threshold": 2
       },
       {
          "id": 35,
          "name": "AP Flour",
-         "emoji": "🥡",
+         "emoji": "🍞",
          "category": "Dried Goods",
          "subcategory": "Flours",
          "isStaple": true,
          "unit": "lbs",
-         "qty": 1,
-         "threshold": 2
+         "qty": 2,
+         "threshold": 1
       },
       {
          "id": 40,
          "name": "Rye Flour",
-         "emoji": "🌾",
+         "emoji": "🍞",
          "category": "Dried Goods",
          "subcategory": "Flours",
          "isStaple": true,
-         "unit": "lbs",
-         "qty": 1,
+         "unit": "oz",
+         "qty": 4,
          "threshold": 0
       },
       {
          "id": 45,
          "name": "Coconut Flour",
-         "emoji": "🥥",
+         "emoji": "🍞",
          "category": "Dried Goods",
          "subcategory": "Alternative Flours",
          "isStaple": true,
-         "unit": "oz",
+         "unit": "lb",
          "qty": 1,
          "threshold": 0
       },
       {
          "id": 50,
          "name": "Almond Flour",
-         "emoji": "🥜",
+         "emoji": "🍞",
          "category": "Dried Goods",
          "subcategory": "Alternative Flours",
          "isStaple": true,
@@ -129,7 +129,7 @@
          "subcategory": "Baking Essentials",
          "isStaple": true,
          "unit": "oz",
-         "qty": 1,
+         "qty": 4,
          "threshold": 2
       },
       {
@@ -139,20 +139,20 @@
          "category": "Dried Goods",
          "subcategory": "Alternative Flours",
          "isStaple": true,
-         "unit": "lbs",
+         "unit": "lb",
          "qty": 1,
          "threshold": 0
       },
       {
          "id": 65,
          "name": "Semi-Sweet Chips",
-         "emoji": "🍪",
+         "emoji": "🍫",
          "category": "Dried Goods",
          "subcategory": "Baking Essentials",
          "isStaple": true,
          "unit": "oz",
-         "qty": 1,
-         "threshold": 0
+         "qty": 12,
+         "threshold": 3
       },
       {
          "id": 70,
@@ -162,8 +162,8 @@
          "subcategory": "Grains & Seeds",
          "isStaple": true,
          "unit": "oz",
-         "qty": 1,
-         "threshold": 0
+         "qty": 12,
+         "threshold": 3
       },
       {
          "id": 75,
@@ -172,19 +172,19 @@
          "category": "Dried Goods",
          "subcategory": "Rice",
          "isStaple": true,
-         "unit": "lbs",
-         "qty": 1,
-         "threshold": 0.5
+         "unit": "oz",
+         "qty": 12,
+         "threshold": 8
       },
       {
          "id": 79,
          "name": "Brown Rice",
-         "emoji": "🌾",
+         "emoji": "🍚",
          "category": "Dried Goods",
          "subcategory": "Rice",
          "isStaple": true,
-         "unit": "lbs",
-         "qty": 1,
+         "unit": "oz",
+         "qty": 16,
          "threshold": 0
       },
       {
@@ -194,19 +194,19 @@
          "category": "Dried Goods",
          "subcategory": "Rice",
          "isStaple": true,
-         "unit": "lbs",
+         "unit": "lb",
          "qty": 1,
          "threshold": 0
       },
       {
          "id": 87,
          "name": "Sliced Almonds",
-         "emoji": "🥣",
+         "emoji": "🥜",
          "category": "Dried Goods",
          "subcategory": "Nuts & Seeds",
          "isStaple": true,
          "unit": "oz",
-         "qty": 1,
+         "qty": 16,
          "threshold": 0
       },
       {
@@ -223,7 +223,7 @@
       {
          "id": 95,
          "name": "Macadamia Nuts",
-         "emoji": "⚪",
+         "emoji": "🥜",
          "category": "Dried Goods",
          "subcategory": "Nuts & Seeds",
          "isStaple": true,
@@ -234,12 +234,23 @@
       {
          "id": 99,
          "name": "Pine Nuts",
-         "emoji": "🌲",
+         "emoji": "🥜",
          "category": "Dried Goods",
          "subcategory": "Nuts & Seeds",
          "isStaple": true,
          "unit": "oz",
          "qty": 1,
+         "threshold": 0
+      },
+      {
+         "id": 100,
+         "name": "Hazelnuts",
+         "emoji": "🥜",
+         "category": "Dried Goods",
+         "subcategory": "Nuts & Seeds",
+         "isStaple": true,
+         "unit": "oz",
+         "qty": 16,
          "threshold": 0
       },
       {
@@ -250,7 +261,7 @@
          "subcategory": "Baking Essentials",
          "isStaple": true,
          "unit": "oz",
-         "qty": 1,
+         "qty": 6,
          "threshold": 0
       },
       {
@@ -393,7 +404,18 @@
          "subcategory": "Baking Essentials",
          "isStaple": true,
          "unit": "oz",
-         "qty": 1,
+         "qty": 4,
+         "threshold": 0.5
+      },
+      {
+         "id": 145,
+         "name": "Vanilla Bean Paste",
+         "emoji": "🍶",
+         "category": "Dried Goods",
+         "subcategory": "Baking Essentials",
+         "isStaple": true,
+         "unit": "oz",
+         "qty": 2,
          "threshold": 0.5
       },
       {
@@ -414,9 +436,9 @@
          "category": "Dried Goods",
          "subcategory": "Baking Essentials",
          "isStaple": true,
-         "unit": "oz",
+         "unit": "can",
          "qty": 1,
-         "threshold": 1
+         "threshold": 0
       },
       {
          "id": 135,
@@ -425,9 +447,9 @@
          "category": "Dried Goods",
          "subcategory": "Baking Essentials",
          "isStaple": true,
-         "unit": "oz",
+         "unit": "can",
          "qty": 1,
-         "threshold": 1
+         "threshold": 0
       },
       {
          "id": 136,
@@ -437,7 +459,7 @@
          "subcategory": "Toppings",
          "isStaple": true,
          "unit": "oz",
-         "qty": 1,
+         "qty": 16,
          "threshold": 0
       },
       {
@@ -447,8 +469,8 @@
          "category": "Dried Goods",
          "subcategory": "Canned Goods",
          "isStaple": true,
-         "unit": "can",
-         "qty": 1,
+         "unit": "cans",
+         "qty": 4,
          "threshold": 2
       },
       {
@@ -459,7 +481,7 @@
          "subcategory": "Baking Essentials",
          "isStaple": true,
          "unit": "oz",
-         "qty": 1,
+         "qty": 16,
          "threshold": 0
       },
       {
@@ -482,7 +504,7 @@
          "isStaple": true,
          "unit": "count",
          "qty": 1,
-         "threshold": 3
+         "threshold": 0
       },
       {
          "id": 141,
@@ -491,8 +513,8 @@
          "category": "Dried Goods",
          "subcategory": "Legumes",
          "isStaple": true,
-         "unit": "lbs",
-         "qty": 1,
+         "unit": "lb",
+         "qty": 0.5,
          "threshold": 0
       },
       {
@@ -503,7 +525,7 @@
          "subcategory": "Pasta",
          "isStaple": true,
          "unit": "count",
-         "qty": 1,
+         "qty": 4,
          "threshold": 0
       },
       {
@@ -513,9 +535,9 @@
          "category": "Produce & Fresh",
          "subcategory": "Dairy & Eggs",
          "isStaple": true,
-         "unit": "count",
-         "qty": 1,
-         "threshold": 6
+         "unit": "ct",
+         "qty": 4,
+         "threshold": 2
       },
       {
          "id": 7,
@@ -524,7 +546,7 @@
          "category": "Produce & Fresh",
          "subcategory": "Dairy & Eggs",
          "isStaple": true,
-         "unit": "oz",
+         "unit": "ct",
          "qty": 1,
          "threshold": 8
       },
@@ -535,7 +557,7 @@
          "category": "Produce & Fresh",
          "subcategory": "Dairy & Eggs",
          "isStaple": true,
-         "unit": "oz",
+         "unit": "ct",
          "qty": 1,
          "threshold": 8
       },
@@ -546,9 +568,9 @@
          "category": "Produce & Fresh",
          "subcategory": "Dairy & Eggs",
          "isStaple": true,
-         "unit": "oz",
+         "unit": "ct",
          "qty": 1,
-         "threshold": 16
+         "threshold": 0
       },
       {
          "id": 21,
@@ -557,7 +579,7 @@
          "category": "Produce & Fresh",
          "subcategory": "Dairy & Eggs",
          "isStaple": true,
-         "unit": "oz",
+         "unit": "ct",
          "qty": 1,
          "threshold": 8
       },
@@ -568,7 +590,7 @@
          "category": "Produce & Fresh",
          "subcategory": "Dairy & Eggs",
          "isStaple": true,
-         "unit": "oz",
+         "unit": "ct",
          "qty": 1,
          "threshold": 0
       },
@@ -579,9 +601,9 @@
          "category": "Produce & Fresh",
          "subcategory": "Dairy & Eggs",
          "isStaple": true,
-         "unit": "lbs",
+         "unit": "pkg",
          "qty": 1,
-         "threshold": 1
+         "threshold": 0
       },
       {
          "id": 36,
@@ -590,9 +612,9 @@
          "category": "Produce & Fresh",
          "subcategory": "Dairy & Eggs",
          "isStaple": true,
-         "unit": "lbs",
+         "unit": "pkg",
          "qty": 1,
-         "threshold": 1
+         "threshold": 0
       },
       {
          "id": 41,
@@ -601,9 +623,9 @@
          "category": "Produce & Fresh",
          "subcategory": "Cheese",
          "isStaple": true,
-         "unit": "oz",
+         "unit": "pkg",
          "qty": 1,
-         "threshold": 4
+         "threshold": 0
       },
       {
          "id": 46,
@@ -612,9 +634,9 @@
          "category": "Produce & Fresh",
          "subcategory": "Cheese",
          "isStaple": true,
-         "unit": "oz",
+         "unit": "pkg",
          "qty": 1,
-         "threshold": 4
+         "threshold": 0
       },
       {
          "id": 56,
@@ -623,7 +645,7 @@
          "category": "Produce & Fresh",
          "subcategory": "Meat",
          "isStaple": true,
-         "unit": "oz",
+         "unit": "pkg",
          "qty": 1,
          "threshold": 0
       },
@@ -635,7 +657,7 @@
          "subcategory": "Vegetables",
          "isStaple": true,
          "unit": "bunch",
-         "qty": 1,
+         "qty": 2,
          "threshold": 0
       },
       {
@@ -668,8 +690,8 @@
          "subcategory": "Vegetables",
          "isStaple": true,
          "unit": "bunch",
-         "qty": 1,
-         "threshold": 1
+         "qty": 0.5,
+         "threshold": 0
       },
       {
          "id": 80,
@@ -887,7 +909,7 @@
          "category": "Frozen",
          "subcategory": "Vegetables",
          "isStaple": true,
-         "unit": "bag",
+         "unit": "bags",
          "qty": 3,
          "threshold": 1
       },
@@ -911,6 +933,28 @@
          "isStaple": true,
          "unit": "portions",
          "qty": 2,
+         "threshold": 0
+      },
+            {
+         "id": 37,
+         "name": "Korean Meatballs",
+         "emoji": "🧆",
+         "category": "Frozen",
+         "subcategory": "Prepared Meals",
+         "isStaple": true,
+         "unit": "portions",
+         "qty": 2,
+         "threshold": 0
+      },
+      {
+         "id": 144,
+         "name": "Cottage Pie",
+         "emoji": "🧆",
+         "category": "Frozen",
+         "subcategory": "Prepared Meals",
+         "isStaple": true,
+         "unit": "portions",
+         "qty": 4,
          "threshold": 0
       },
       {
