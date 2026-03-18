@@ -230,7 +230,7 @@
     {
       "id": 107,
       "title": "Greek Yogurt Banana Bread",
-      "category": "Baking",
+      "category": "Baked Goods",
       "servings": 10,
       "prepTime": "15 min",
       "cookTime": "55-65 min",
@@ -482,7 +482,7 @@
 {
   "id": 114,
   "title": "Salted Chocolate Chip Cookies",
-  "category": "Baked Good",
+  "category": "Baked Goods",
   "servings": 24,
   "prepTime": "15 min",
   "cookTime": "10-12 min",
