@@ -2,7 +2,7 @@
     {
       "id": 101,
       "title":"Orange & Ginger Rye Scones",
-      "category":"Baked Good",
+      "category":"Baked Goods",
       "servings":8,
       "prepTime":"20 min",
       "cookTime":"18–22 min",
@@ -43,7 +43,7 @@
     {
       "id": 102,
       "title":"Banana Oat Power Muffins",
-      "category":"Baked Good",
+      "category":"Baked Goods",
       "servings":12,
       "prepTime":"15 min",
       "cookTime":"20–22 min",
@@ -231,44 +231,42 @@
       "id": 107,
       "title": "Greek Yogurt Banana Bread",
       "category": "Baking",
-      "description": "A dense, moist banana bread that uses Greek yogurt for a tender crumb and brown sugar for a rich, caramelized flavor profile.",
+      "servings": 10,
       "prepTime": "15 min",
       "cookTime": "55-65 min",
-      "servings": 10,
+      "description": "A dense, moist loaf utilizing Greek yogurt for a tender crumb and a crunchy turbinado sugar finish.",
       "photo": "photos/greek-yogurt-banana-bread.jpg",
       "ingredients": [
-        "210g all-purpose flour",
-        "1 tsp baking soda",
+        "210g flour",
+        "1/2 tsp baking soda",
         "1/2 tsp salt",
-        "1/4 tsp ground nutmeg",
-        "2 eggs (room temperature)",
+        "1/4 tsp ground nutmeg (or a large pinch)",
+        "2 eggs, room temp",
         "1/4 cup oil or melted butter",
         "1/2 cup plain whole milk Greek yogurt",
         "3 ripe bananas, mashed (about 300g)",
-        "2 tsp vanilla extract",
+        "2 tsp vanilla",
         "3/4 cup brown sugar",
-        "Turbinado sugar (for sprinkling)"
+        "Turbinado sugar (for topping)"
       ],
       "steps": [
-        "Preheat oven to 350°F.",
-        "Whisk the flour, baking soda, salt, and nutmeg in a medium bowl; set aside.",
-        "In a mixer, whisk the eggs lightly.",
-        "Add the oil, yogurt, and vanilla to the eggs and mix until combined.",
-        "Add the brown sugar and mix again until incorporated.",
-        "Add the mashed bananas and mix until fully combined.",
-        "Add the dry ingredients and mix until just incorporated (do not overmix).",
-        "Grease a loaf pan and line with parchment paper.",
-        "Pour the batter into the pan and bake at 350°F for 55–65 minutes.",
-        "Let the bread cool in the pan for 10–20 minutes before removing.",
-        "Sprinkle the top with turbinado sugar."
+        "In a medium bowl, whisk together the flour, baking soda, salt, and nutmeg. Set aside.",
+        "In a mixer, whisk the eggs lightly until broken up.",
+        "Add the oil (or melted butter), Greek yogurt, and vanilla. Mix until combined, then add the brown sugar and mix again.",
+        "Add the mashed bananas and mix until fully incorporated.",
+        "Gently add the dry ingredients to the wet mixture, mixing only until just incorporated to avoid a tough bread.",
+        "Grease a loaf pan and line with parchment paper. Pour the batter in and smooth the top.",
+        "Bake at 350°F for 45–55 minutes until a toothpick comes out clean.",
+        "Let cool in the pan for 10–20 minutes before transferring to a rack. Sprinkle generously with turbinado sugar for a crunchy crust."
       ],
-      "notes": "Nutmeg quantity is approximate (a large pinch is about 1/4 tsp). Using very ripe bananas (spotted or brown) provides the best sweetness and texture.",
-      "createdAt": "2025-05-23"
+      "notes": "Using Greek yogurt provides a significant 'lift' and ensures the bread stays moist for days. Very ripe, spotted bananas are essential for the best natural sweetness.",
+      "createdAt": "2026-03-18",
+      "aiGenerated": false
     },
     {
       "id": 108,
       "title":"Simply Sandwich Bread",
-      "category":"Baked Good",
+      "category":"Baked Goods",
       "servings":12,
       "prepTime":"3 hours 20 min",
       "cookTime":"32 min",
@@ -299,7 +297,7 @@
     },
     {
       "id": 109,
-      "title": "Dark Chocolate Coconut Cream Berry Cake",
+      "title": "Dark Chocolate Coconut Cream Cake",
       "category": "Dessert",
       "description": "A moist, rich chocolate cake utilizing coconut cream as the primary fat source, loaded with frozen berries and topped with a decadent cocoa cream cheese frosting.",
       "prepTime": "30 min",
@@ -479,6 +477,40 @@
   ],
   "notes": "The secret to the crackly top is the egg aeration. For extra thick brownies, use an 8x8\" pan and increase bake time slightly. Let cool 30 minutes before slicing.",
   "createdAt": "2026-03-15",
+  "aiGenerated": false
+},
+{
+  "id": 114,
+  "title": "Salted Chocolate Chip Cookies",
+  "category": "Baked Good",
+  "servings": 24,
+  "prepTime": "15 min",
+  "cookTime": "10-12 min",
+  "description": "A perfectly balanced cookie with a hint of almond and a finishing touch of flake salt to enhance the chocolate.",
+  "photo": "photos/salted-cookies.jpg",
+  "ingredients": [
+    "90g white sugar",
+    "130g brown sugar",
+    "1/2 cup (110g) butter, room temp",
+    "5ml vanilla extract",
+    "1/8 tsp almond extract (optional)",
+    "1 egg, room temp",
+    "180g flour",
+    "3/4 tsp baking soda",
+    "1 tsp salt",
+    "1 cup chocolate chips",
+    "Flake salt (for sprinkling)"
+  ],
+  "steps": [
+    "In a mixer, cream together the room temperature butter, white sugar, brown sugar, vanilla, and almond extract until smooth (about 3 minutes).",
+    "Add the room temperature egg and mix until fully combined.",
+    "Add the flour, baking soda, and salt. Mix on low until just combined, then fold in the chocolate chips.",
+    "Scoop the dough into balls and place on a tray. Chill in the refrigerator for at least 30 minutes to improve texture and prevent spreading.",
+    "Preheat oven to 350°F. Arrange cookies on a baking sheet and bake for 10–12 minutes until edges are golden.",
+    "Remove from oven and immediately sprinkle with flake salt while still warm."
+  ],
+  "notes": "Chilling the dough for the full 30 minutes is the secret to a thicker, chewier cookie. I leave a bag in my freezer and pull them out as needed, throw straight into hot oven.",
+  "createdAt": "2026-03-18",
   "aiGenerated": false
 }
 ]
