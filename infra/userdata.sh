@@ -60,7 +60,6 @@ docker run -d \
   --network host \
   -v /app/api/security-score.json:/app/security-score.json:ro \
   -v /app/api:/app/data \
-  -e KITCHEN_DATA_PATH=/app/data/kitchen-data.json \
   stats-api:latest
 
 # Wait for API

@@ -11,7 +11,6 @@ const PORT = 3000;
 const IAC_COUNT_PARAM = '/web-server/iac-resource-count';
 const GITHUB_TOKEN_PARAM = '/web-server/github-token';
 const ANTHROPIC_API_KEY_PARAM = '/web-server/anthropic-api-key';
-const KITCHEN_AUTH_PARAM = '/web-server/kitchen-auth-hash';
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 
@@ -38,7 +37,7 @@ app.use(express.json({ limit: '1mb' }));
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Kitchen-Auth');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
@@ -186,98 +185,6 @@ async function loadAnthropicKeyFromSSM() {
     }
 }
 
-// Kitchen data: persist pantry, grocery, recipes. Auth via X-Kitchen-Auth (SHA-256 of password).
-// Intentional: authenticated user data only; path is fixed, payload validated (no arbitrary file write).
-async function loadKitchenAuthFromSSM() {
-    if (process.env.KITCHEN_AUTH_HASH) return;
-    try {
-        const client = new SSMClient({ region: process.env.AWS_REGION || 'us-east-2' });
-        const out = await client.send(new GetParameterCommand({
-            Name: KITCHEN_AUTH_PARAM,
-            WithDecryption: true,
-        }));
-        const value = out.Parameter?.Value;
-        if (value && typeof value === 'string') {
-            process.env.KITCHEN_AUTH_HASH = value;
-            console.log('Kitchen auth hash loaded from SSM');
-        }
-    } catch (err) {
-        console.warn('SSM Kitchen auth not set or unavailable:', err?.message || err);
-    }
-}
-
-// Fixed path only: resolve to absolute and ensure under app dir (no path traversal / user-controlled path).
-const KITCHEN_DATA_PATH = (() => {
-    const baseDir = path.resolve(__dirname);
-    const candidate = path.resolve(path.normalize(process.env.KITCHEN_DATA_PATH || path.join(__dirname, 'kitchen-data.json')));
-    if (!candidate.startsWith(baseDir)) return path.join(__dirname, 'kitchen-data.json');
-    return candidate;
-})();
-
-const KITCHEN_MAX_ITEMS_PER_ARRAY = 20000;
-const KITCHEN_MAX_PAYLOAD_BYTES = 5 * 1024 * 1024; // 5MB
-
-function requireKitchenAuth(req, res, next) {
-    const expected = process.env.KITCHEN_AUTH_HASH;
-    if (!expected) {
-        return next();
-    }
-    const provided = req.headers['x-kitchen-auth'];
-    if (provided !== expected) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
-    next();
-}
-
-/** Validate and normalize body: only pantry, grocery, recipes arrays; reject extra keys and oversized payload. */
-function validateKitchenPayload(body) {
-    if (!body || typeof body !== 'object') return null;
-    const allowed = ['pantry', 'grocery', 'recipes'];
-    const keys = Object.keys(body);
-    if (keys.some((k) => !allowed.includes(k))) return null;
-    const out = {
-        pantry: Array.isArray(body.pantry) ? body.pantry.slice(0, KITCHEN_MAX_ITEMS_PER_ARRAY) : [],
-        grocery: Array.isArray(body.grocery) ? body.grocery.slice(0, KITCHEN_MAX_ITEMS_PER_ARRAY) : [],
-        recipes: Array.isArray(body.recipes) ? body.recipes.slice(0, KITCHEN_MAX_ITEMS_PER_ARRAY) : [],
-    };
-    const serialized = JSON.stringify(out);
-    if (Buffer.byteLength(serialized, 'utf8') > KITCHEN_MAX_PAYLOAD_BYTES) return null;
-    return out;
-}
-
-function readKitchenData() {
-    try {
-        if (fs.existsSync(KITCHEN_DATA_PATH)) {
-            const raw = fs.readFileSync(KITCHEN_DATA_PATH, 'utf8');
-            if (Buffer.byteLength(raw, 'utf8') > KITCHEN_MAX_PAYLOAD_BYTES) return { pantry: [], grocery: [], recipes: [] };
-            const data = JSON.parse(raw);
-            return {
-                pantry: Array.isArray(data.pantry) ? data.pantry : [],
-                grocery: Array.isArray(data.grocery) ? data.grocery : [],
-                recipes: Array.isArray(data.recipes) ? data.recipes : [],
-            };
-        }
-    } catch (err) {
-        console.warn('Kitchen data read failed:', err?.message || err);
-    }
-    return { pantry: [], grocery: [], recipes: [] };
-}
-
-function writeKitchenData(data) {
-    const toWrite = {
-        pantry: Array.isArray(data.pantry) ? data.pantry : [],
-        grocery: Array.isArray(data.grocery) ? data.grocery : [],
-        recipes: Array.isArray(data.recipes) ? data.recipes : [],
-    };
-    const dir = path.dirname(KITCHEN_DATA_PATH);
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-    }
-    const content = JSON.stringify(toWrite, null, 2);
-    if (Buffer.byteLength(content, 'utf8') > KITCHEN_MAX_PAYLOAD_BYTES) throw new Error('Kitchen data too large');
-    fs.writeFileSync(KITCHEN_DATA_PATH, content, 'utf8');
-}
-
 const RECIPE_JSON_SCHEMA = `Return only valid JSON (no markdown, no code block) with this shape:
 {
   "title": "string",
@@ -389,31 +296,6 @@ app.post('/api/recipes/from-text', async (req, res) => {
     }
 });
 
-// Kitchen data: load/save pantry, grocery, recipes (auth via X-Kitchen-Auth header = SHA-256 of password)
-app.get('/api/kitchen/data', requireKitchenAuth, (req, res) => {
-    try {
-        const data = readKitchenData();
-        res.json(data);
-    } catch (err) {
-        console.error('Kitchen GET error:', err?.message || err);
-        res.status(500).json({ error: 'Failed to load kitchen data' });
-    }
-});
-
-app.post('/api/kitchen/data', requireKitchenAuth, (req, res) => {
-    try {
-        const validated = validateKitchenPayload(req.body);
-        if (!validated) {
-            return res.status(400).json({ error: 'Invalid payload: only pantry, grocery, recipes arrays allowed; max 5MB' });
-        }
-        writeKitchenData(validated);
-        res.json({ ok: true });
-    } catch (err) {
-        console.error('Kitchen POST error:', err?.message || err);
-        res.status(500).json({ error: 'Failed to save kitchen data' });
-    }
-});
-
 // Primary Stats Endpoint
 app.get('/api/stats', async (req, res) => {
     try {
@@ -452,7 +334,6 @@ app.get('/api/stats', async (req, res) => {
 (async () => {
     await loadGitHubTokenFromSSM();
     await loadAnthropicKeyFromSSM();
-    await loadKitchenAuthFromSSM();
     app.listen(PORT, '0.0.0.0', () => {
         console.log(`Stats API listening on port ${PORT}`);
         if (!process.env.GITHUB_TOKEN) {
