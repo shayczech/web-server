@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shay’s Kitchen</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%236b7c5e'/%3E%3Cpath d='M32 10 C32 10 44 22 44 34 C44 44 38 52 32 54 C26 52 20 44 20 34 C20 22 32 10 32 10Z' fill='%23f5f0e8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600&display=swap" rel="stylesheet">
+<style>
+  :root { --sage: #6b7c5e; --cream: #f5f0e8; --ink: #2c2420; --muted: #8a8078; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Lora', Georgia, serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    text-align: center;
+  }
+  h1 { font-size: clamp(2rem, 5vw, 2.75rem); font-weight: 400; color: var(--sage); margin-bottom: 12px; }
+  p { font-size: 1.125rem; color: var(--muted); max-width: 28rem; line-height: 1.6; margin-bottom: 28px; }
+  a {
+    display: inline-block;
+    padding: 14px 28px;
+    background: var(--sage);
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    border-radius: 6px;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  a:hover { opacity: 0.92; transform: translateY(-1px); }
+</style>
+</head>
+<body>
+  <h1>Shay’s Kitchen</h1>
+  <p>Recipe collection — browse, search, and print from the cookbook.</p>
+  <a href="/p/recipes">Open recipes</a>
+</body>
+</html>

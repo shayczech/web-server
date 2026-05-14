@@ -19,7 +19,7 @@ Backend and providers in `terraform.tf`. Flat layout: one VPC, ALB, ASG (no modu
 
 ## Site content
 
-Instances serve static files from `site/p/` (recipes) via Nginx. `/` redirects to `/p/recipes`.
+Instances serve `site/index.html` at `/` and recipes under `site/p/` at `/p/recipes`.
 
 ## Cleanup and cost
 
