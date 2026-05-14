@@ -6,45 +6,44 @@ The architecture is **ALB + Auto Scaling Group across two AZs**: custom VPC, pri
 
 ## Project Overview
 
-* **Site content:** Live pages and stats API live in **`site/`** (HTML in `site/`, Node.js API in `site/api/`). The pipeline and instance userdata use `site/`.
+* **Site content:** Static pages under **`site/`** (recipes at `site/p/`). Nginx on EC2 serves files from userdata; the fast-path workflow copies `site/p/*` and `infra/nginx.conf` over SSM.
 * **Infrastructure:** AWS custom VPC (public subnets for ALB, private subnets for EC2), Application Load Balancer, Auto Scaling Group (2 AZs), ACM certificate, Route 53 ALIAS records.
 * **State Management:** Remote Terraform state in an encrypted S3 bucket with DynamoDB state locking.
 * **Architecture:**
   * **ALB** terminates HTTPS (ACM), redirects HTTP→HTTPS, forwards to a target group.
-  * **EC2 instances** (ASG, private subnets) run Docker: Nginx (HTTP only, rate-limited) and a Node.js stats API. No public IPs; traffic only from the ALB.
-* **Deployment:** Push to `main` → Snyk scan → Terraform apply → ASG instance refresh. New instances boot via Launch Template userdata (Docker, CloudWatch Agent, clone repo, build and run containers).
-* **Security:** IAM instance profiles (CloudWatch, SSM only); no SSH to instances (SSM Session Manager). Snyk (SAST) in pipeline; Nginx rate limiting (5 req/s, 429). ACM for certificate lifecycle.
-* **Monitoring:** CloudWatch Agent on each instance; Nginx access logs to CloudWatch. GRC Compliance Dashboard on the site maps controls to NIST, CIS, HIPAA.
+  * **EC2 instances** (ASG, private subnets) run Docker: Nginx (HTTP only, rate-limited) serves the static site. No public IPs; traffic only from the ALB.
+* **Deployment:** Push to `main` (non-`site/**` paths) or **workflow_dispatch** runs Terraform apply and ASG instance refresh. New instances boot via Launch Template userdata (Docker, CloudWatch Agent, clone repo, Nginx).
+* **Security:** IAM instance profiles (CloudWatch, SSM only); no SSH to instances (SSM Session Manager). Nginx rate limiting (5 req/s, 429). ACM for certificate lifecycle.
+* **Monitoring:** CloudWatch Agent on each instance; Nginx access logs to CloudWatch.
 
 ## Technical Stack
 
 | **Area** | **Tools** |
 | :--- | :--- |
 | Infrastructure as Code | Terraform (VPC, ALB, ASG, ACM, Route 53, security groups) |
-| CI/CD | GitHub Actions (Snyk, Terraform apply, ASG instance refresh) |
+| CI/CD | GitHub Actions (Terraform apply, ASG instance refresh) |
 | Cloud Platform | AWS (VPC, ALB, ASG, EC2, ACM, Route 53, IAM, CloudWatch) |
-| Containers | Nginx (web/proxy), Node.js/Express (stats API) |
-| Security | ACM (SSL), Snyk (SAST), Nginx rate limiting, IAM, GitHub OIDC |
+| Containers | Nginx (static site) |
+| Security | ACM (SSL), Nginx rate limiting, IAM, GitHub OIDC |
 
 ## Deployment Workflow
 
 ### Full pipeline (infra or non-site changes)
 
 1. **Push** to `main` (when `site/` is not the only change) or **workflow_dispatch** triggers the full workflow.
-2. **Snyk** scans dependencies; build fails on high/critical vulnerabilities.
-3. **Terraform** init, validate, apply (provisions/updates VPC, ALB, ASG, etc.).
-4. **ASG instance refresh** starts a rolling replacement so new instances boot with the latest userdata and content.
-5. **Live:** Site is served via ALB; instances in private subnets register with the target group and receive traffic.
+2. **Terraform** init, validate, apply (provisions/updates VPC, ALB, ASG, etc.).
+3. **ASG instance refresh** starts a rolling replacement so new instances boot with the latest userdata and content.
+4. **Live:** Site is served via ALB; instances in private subnets register with the target group and receive traffic.
 
 ### Content-only (fast path)
 
 - **Trigger:** Push to `main` when only files under **`site/**`** change, or run **“Deploy site content only”** manually from the Actions tab.
-- **Behavior:** Skips Snyk, Terraform apply, and ASG refresh. Uses **SSM Send Command** to run on each live instance: `git pull` in `/opt/web-server`, copy `site/*.html` and `site/assets/*` to `/app/html/`, restart Nginx container. Typically finishes in under a couple of minutes.
+- **Behavior:** Skips Terraform apply and ASG refresh. Uses **SSM Send Command** to run on each live instance: `git pull` in `/opt/web-server`, copy `site/p/*` and `infra/nginx.conf`, restart Nginx container. Typically finishes in under a couple of minutes.
 - **IAM:** The GitHub Actions deploy role needs `ssm:SendCommand` and `ssm:GetCommandInvocation` (added in `infra/policies/terraform-ha-deploy-policy.json`). Run the full pipeline or `terraform apply` once after adding this so the role has the new permissions.
 
 ## Future Enhancements
 
-* **Observability:** CloudWatch custom metrics and alarms (e.g., 429 rate, API latency).
+* **Observability:** CloudWatch custom metrics and alarms (e.g., 429 rate, latency).
 * **Scope-down IAM:** Replace broad Terraform-runner permissions with least-privilege policies.
 
 ## Author

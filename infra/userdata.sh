@@ -12,7 +12,7 @@ systemctl enable docker
 systemctl start docker
 
 # --- Create app directories ---
-mkdir -p /app/html /app/config /app/api /var/log/nginx
+mkdir -p /app/html /app/config /var/log/nginx
 
 # --- Install CloudWatch Agent ---
 curl -fsSL https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb \
@@ -45,38 +45,9 @@ systemctl start amazon-cloudwatch-agent
 apt-get install -y git
 git clone https://github.com/shayczech/web-server.git /opt/web-server
 
-# --- Build and run stats-api ---
-cd /opt/web-server/site/api
-
-docker build -t stats-api:latest \
-  --build-arg BUILD_TIMESTAMP=$(date +%s) \
-  -f Dockerfile .
-
-echo '{"securityScore": 100}' > /app/api/security-score.json
-
-docker run -d \
-  --name stats-api \
-  --restart always \
-  --network host \
-  -v /app/api/security-score.json:/app/security-score.json:ro \
-  -v /app/api:/app/data \
-  stats-api:latest
-
-# Wait for API
-for i in $(seq 1 12); do
-  curl -sf http://localhost:3000/api/stats && break
-  sleep 5
-done
-
-# --- Copy static files ---
-cp /opt/web-server/site/index.html       /app/html/
-cp /opt/web-server/site/resume.html     /app/html/
-cp /opt/web-server/site/grc.html        /app/html/
-cp /opt/web-server/site/architecture.html /app/html/
-mkdir -p /app/html/assets
-cp -r /opt/web-server/site/assets/*     /app/html/assets/
+# --- Copy static site (recipes under /p/) ---
 mkdir -p /app/html/p
-cp -r /opt/web-server/site/p/*         /app/html/p/ 2>/dev/null || true
+cp -r /opt/web-server/site/p/* /app/html/p/ 2>/dev/null || true
 
 # --- Nginx config (HTTP only — ALB handles SSL); clean URLs (no .html in browser) ---
 cp /opt/web-server/infra/nginx.conf /app/config/nginx.conf
