@@ -45,8 +45,13 @@ systemctl start amazon-cloudwatch-agent
 apt-get install -y git
 git clone https://github.com/shayczech/web-server.git /opt/web-server
 
-# --- Copy static site ---
+# --- Copy static site (portfolio + recipes under /p/) ---
 cp /opt/web-server/site/index.html /app/html/
+cp /opt/web-server/site/resume.html /app/html/
+cp /opt/web-server/site/grc.html /app/html/
+cp /opt/web-server/site/architecture.html /app/html/
+mkdir -p /app/html/assets
+cp -r /opt/web-server/site/assets/* /app/html/assets/ 2>/dev/null || true
 mkdir -p /app/html/p
 cp -r /opt/web-server/site/p/* /app/html/p/ 2>/dev/null || true
 

@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaylee Czech | Experience</title>
+    
+    <!-- Favicon (Initials) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230D9488%22></rect><text x=%2250%22 y=%2270%22 font-family=%22Arial, sans-serif%22 font-size=%2255%22 font-weight=%22bold%22 text-anchor=%22middle%22 fill=%22%23FFFFFF%22>SC</text></svg>">
+
+    <!-- 1. Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. Configure Tailwind Theme (Teal Palette) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-teal': {
+                            DEFAULT: '#0D9488', // Teal 600
+                            '50': '#F0FDFA',
+                            '100': '#CCFBF1',
+                            '200': '#99F6E4',
+                            '300': '#5EEAD4',
+                            '400': '#2DD4BF',
+                            '500': '#14B8A6',
+                            '600': '#0D9488',
+                            '700': '#0F766E',
+                            '800': '#115E59',
+                            '900': '#134E4A',
+                            '950': '#042f2e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- 3. Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        
+    <!-- 4. Inline Custom Styles -->
+    <style type="text/tailwindcss">
+        /* 1. Global Page Load Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+
+        /* 2. Filter Button Styling */
+        .filter-btn {
+            transition: all 0.3s ease-in-out;
+            @apply bg-white shadow-sm border border-gray-300 text-gray-700 px-5 py-2 rounded-full font-medium text-sm;
+        }
+        
+        .filter-btn.active {
+            @apply bg-primary-teal-600 text-white scale-105 shadow-lg shadow-primary-teal-500/30;
+        }
+        
+        .filter-btn:hover:not(.active) {
+             @apply shadow-md -translate-y-0.5;
+        }
+
+        /* 4. Skill Tag Styling */
+        .skill-tag {
+            @apply inline-flex items-center px-3.5 py-1.5 rounded-full text-sm font-semibold mr-2.5 mb-2.5 transition-all duration-200 ease-in-out shadow-sm bg-primary-teal-600 text-white border border-primary-teal-700;
+        }
+        .skill-tag:hover {
+            @apply -translate-y-0.5 shadow-md bg-primary-teal-700 border-primary-teal-800;
+        }
+
+        /* 5. Job Card Styling */
+        .job-card {
+            transition: all 0.3s ease-in-out;
+            @apply relative overflow-hidden;
+        }
+        .job-card::before {
+            content: '';
+            @apply absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-teal-500 to-primary-teal-600;
+        }
+        .job-header {
+            @apply flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4;
+        }
+        .job-title {
+            @apply text-2xl font-bold text-gray-900 mb-1;
+        }
+        .job-company {
+            @apply text-lg font-semibold text-primary-teal-700 mb-1;
+        }
+        .job-duration {
+            @apply text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full inline-block;
+        }
+        .job-description {
+            @apply text-gray-700 leading-relaxed;
+        }
+        .job-description li {
+            @apply flex items-start mb-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200;
+        }
+        .job-description li svg {
+            @apply flex-shrink-0 h-5 w-5 text-primary-teal-500 mr-3 mt-0.5;
+        }
+        .job-description li span {
+            @apply flex-1;
+        }
+        
+        /* 6. Technology Icon Grid */
+        .tech-grid {
+            @apply grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4 max-w-4xl mx-auto justify-items-center justify-center;
+        }
+        .tech-icon-card {
+            @apply flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl border border-gray-200 transition-all duration-300 ease-in-out aspect-square;
+        }
+        .tech-icon-card:hover {
+            @apply shadow-lg border-primary-teal-300 -translate-y-1 bg-white;
+        }
+        .tech-icon-card svg {
+            @apply h-10 w-10 mb-2;
+        }
+        .tech-icon-card span {
+            @apply text-xs font-semibold text-center text-gray-700;
+        }
+        
+        /* 7. Emphasis style for keywords */
+        .keyword {
+            @apply font-semibold text-primary-teal-700;
+        }
+
+        /* 8. NEW: Spotlight Card Styling (from index.html) */
+        .spotlight-card {
+            @apply bg-white p-8 rounded-2xl shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-2xl hover:border-primary-teal-300 hover:-translate-y-2 relative overflow-hidden; 
+        }
+        .spotlight-card::before {
+            content: '';
+            @apply absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-teal-500 to-primary-teal-600;
+        }
+        .spotlight-title {
+            @apply text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary-teal-700 to-primary-teal-600 mb-6 tracking-tight relative;
+        }
+        .spotlight-title::after {
+            content: '';
+            @apply absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-primary-teal-400 to-primary-teal-500 rounded-full;
+        }
+        .spotlight-list {
+            @apply text-gray-700 space-y-3 list-none;
+        }
+        .spotlight-list li {
+            @apply flex items-start;
+        }
+        .spotlight-list li::before {
+            content: '▶';
+            @apply text-primary-teal-500 mr-3 mt-0.5 text-sm font-bold;
+        }
+        
+    </style>
+</head>
+<body class="bg-gray-100 antialiased font-sans">
+
+    <!-- Header & Navigation (matches index, grc, architecture) -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a href="/" class="group flex items-center space-x-3 hover:scale-[1.02] transform transition-all duration-300">
+                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-primary-teal-500 to-primary-teal-700 rounded-lg flex items-center justify-center shadow-lg">
+                    <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-2xl font-black text-primary-teal-700">Shaylee Czech</span>
+                    <span class="text-sm font-bold text-gray-500 tracking-wide -mt-1" style="font-variant: small-caps;">Senior Security Engineer | CISSP</span>
+                </div>
+            </a>
+            
+            <nav class="hidden md:flex items-center space-x-2">
+                <a href="/#about" class="group px-4 py-2 rounded-lg font-semibold text-gray-700 hover:text-white hover:bg-gradient-to-r hover:from-primary-teal-500 hover:to-primary-teal-600 shadow-sm hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>About</span>
+                </a>
+                <a href="/resume" class="group px-4 py-2 rounded-lg font-semibold text-white bg-gradient-to-r from-primary-teal-600 to-primary-teal-700 hover:from-primary-teal-700 hover:to-primary-teal-800 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14,2 14,8 20,8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10,9 9,9 8,9"></polyline>
+                    </svg>
+                    <span>Experience</span>
+                </a>
+             <a href="/grc" class="group px-4 py-2 rounded-lg font-semibold text-gray-700 hover:text-white hover:bg-gradient-to-r hover:from-primary-teal-500 hover:to-primary-teal-600 shadow-sm hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <path d="M9 12l2 2 4-4"></path>
+                     <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"></path>
+                 </svg>
+                 <span>GRC Dashboard</span>
+             </a>
+                <a href="/architecture" class="group px-4 py-2 rounded-lg font-semibold text-gray-700 hover:text-white hover:bg-gradient-to-r hover:from-primary-teal-500 hover:to-primary-teal-600 shadow-sm hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    <span>Architecture</span>
+                </a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="group px-4 py-2 rounded-lg font-semibold text-gray-700 hover:text-white hover:bg-gradient-to-r hover:from-primary-teal-500 hover:to-primary-teal-600 shadow-sm hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                        <rect x="2" y="9" width="4" height="12"></rect>
+                        <circle cx="4" cy="4" r="2"></circle>
+                    </svg>
+                    <span>LinkedIn</span>
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="text-gray-700 hover:text-primary-teal-600 focus:outline-none">
+                    <svg id="menu-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                    <svg id="close-icon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg border-b border-gray-200 absolute top-full left-0 right-0 z-40">
+            <nav class="flex flex-col space-y-1 px-4 py-4">
+                <a href="/#about" class="mobile-nav-link block px-4 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">About</a>
+                <a href="/resume" class="mobile-nav-link block px-4 py-2 rounded-lg font-semibold text-white bg-primary-teal-600">Experience</a>
+                <a href="/grc" class="mobile-nav-link block px-4 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">GRC Dashboard</a>
+                <a href="/architecture" class="mobile-nav-link block px-4 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">Architecture</a>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="mobile-nav-link block px-4 py-2 rounded-lg font-semibold text-gray-600 hover:text-primary-teal-600 hover:bg-primary-teal-50 transition duration-300">LinkedIn</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- Page Title -->
+        <div class="bg-gradient-to-r from-primary-teal-500 to-primary-teal-600 rounded-2xl p-8 mb-12 text-white">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full mb-6">
+                    <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-4xl sm:text-5xl font-black text-white mb-4 tracking-tight">
+                    Infrastructure & Platform Engineering
+                </h1>
+                <p class="text-lg text-white/90 font-medium max-w-2xl mx-auto leading-relaxed">
+                    IC building and automating complex infrastructure systems — IaC, cloud-native architecture, security automation, and deep database performance experience. Drawn to mission-driven work: quantum, space, AI/ML, clean energy, healthcare, education.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Section Navigation -->
+        <div class="bg-white rounded-2xl p-6 mb-12 shadow-lg border border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">Quick Navigation</h3>
+            <div class="flex flex-wrap justify-center gap-3">
+                <a href="#soft-skills" class="group px-4 py-2 rounded-lg font-medium text-gray-700 hover:text-white hover:bg-gradient-to-r hover:from-primary-teal-500 hover:to-primary-teal-600 shadow-sm hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Professional Skills</span>
+                </a>
+                <a href="#toolkit" class="group px-4 py-2 rounded-lg font-medium text-gray-700 hover:text-white hover:bg-gradient-to-r hover:from-primary-teal-500 hover:to-primary-teal-600 shadow-sm hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                    <span>Toolkit</span>
+                </a>
+                <a href="#experience" class="group px-4 py-2 rounded-lg font-medium text-gray-700 hover:text-white hover:bg-gradient-to-r hover:from-primary-teal-500 hover:to-primary-teal-600 shadow-sm hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14,2 14,8 20,8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10,9 9,9 8,9"></polyline>
+                    </svg>
+                    <span>Experience</span>
+                </a>
+                <a href="#education" class="group px-4 py-2 rounded-lg font-medium text-gray-700 hover:text-white hover:bg-gradient-to-r hover:from-primary-teal-500 hover:to-primary-teal-600 shadow-sm hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                    </svg>
+                    <span>Education</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 
+            NEW: Core Competencies Section 
+            This section is new and highlights the target skills first.
+        -->
+        <section id="competencies" class="mb-16">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary-teal-600 via-primary-teal-500 to-primary-teal-700 mb-4 tracking-tight">
+                    Core Competencies
+                </h3>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary-teal-500 to-primary-teal-600 mx-auto rounded-full"></div>
+                <p class="text-lg text-gray-600 mt-4 font-medium">Infrastructure + security + data — the combination I bring to platform engineering</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <div class="spotlight-card">
+                    <h4 class="spotlight-title">Cloud & IaC</h4>
+                    <ul class="spotlight-list">
+                        <li><span class="keyword">AWS:</span> EC2, ALB, ASG, VPC, S3, IAM, ACM</li>
+                        <li><span class="keyword">Terraform:</span> Infrastructure as Code</li>
+                        <li><span class="keyword">Virtualization:</span> Hyper-V, VMware</li>
+                        <li><span class="keyword">Networking:</span> SD-WAN, Firewalls, DNS</li>
+                    </ul>
+                </div>
+
+                <div class="spotlight-card">
+                    <h4 class="spotlight-title">Automation & CI/CD</h4>
+                    <ul class="spotlight-list">
+                        <li><span class="keyword">GitHub Actions:</span> CI/CD Pipelines</li>
+                        <li><span class="keyword">Ansible:</span> Configuration Management</li>
+                        <li><span class="keyword">Platform:</span> Launch Templates, ASG, rolling deploys</li>
+                        <li><span class="keyword">Scripting:</span> Python, Bash, PowerShell</li>
+                    </ul>
+                </div>
+
+                <div class="spotlight-card">
+                    <h4 class="spotlight-title">Security & Compliance</h4>
+                    <ul class="spotlight-list">
+                        <li><span class="keyword">Identity:</span> Entra ID (Azure AD), IAM</li>
+                        <li><span class="keyword">Frameworks:</span> NIST, CIS, HIPAA, ITAR</li>
+                        <li><span class="keyword">Endpoint:</span> SentinelOne, Huntress</li>
+                        <li><span class="keyword">GRC:</span> Auditing, Policy, DR/BCP</li>
+                    </ul>
+                </div>
+
+                <div class="spotlight-card">
+                    <h4 class="spotlight-title">Data & Performance</h4>
+                    <ul class="spotlight-list">
+                        <li><span class="keyword">Oracle:</span> DBA, RAC, GoldenGate, performance tuning</li>
+                        <li><span class="keyword">SQL:</span> Migration, compliance reporting</li>
+                        <li><span class="keyword">Experience:</span> 5+ years database administration</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Link to project -->
+            <div class="mt-10 text-center">
+                <a href="/#projects" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-primary-teal-600 hover:bg-primary-teal-700 transition duration-300 transform hover:scale-105">
+                    <!-- Gear icon -->
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                    See these skills in my live CI/CD project
+                </a>
+            </div>
+        </section>
+
+        <!-- 
+            Soft Skills Section
+            Professional skills that complement technical expertise
+        -->
+        <section id="soft-skills" class="mb-16">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-700 via-gray-600 to-gray-800 mb-4 tracking-tight">
+                    Professional Skills
+                </h3>
+                <div class="w-24 h-1 bg-gradient-to-r from-gray-500 to-gray-600 mx-auto rounded-full"></div>
+                <p class="text-lg text-gray-600 mt-4 font-medium">The interpersonal and process skills that drive success</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200 hover:shadow-lg transition-all duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800">Collaboration</h4>
+                    </div>
+                    <p class="text-gray-700">Cross-functional teamwork, stakeholder engagement, and building consensus across technical and business teams.</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-green-200 hover:shadow-lg transition-all duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800">Mentorship</h4>
+                    </div>
+                    <p class="text-gray-700">Knowledge sharing, team development, and guiding junior professionals through complex technical challenges.</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border border-purple-200 hover:shadow-lg transition-all duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800">Communication</h4>
+                    </div>
+                    <p class="text-gray-700">Technical writing, presentation skills, and translating complex concepts for diverse audiences.</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl border border-orange-200 hover:shadow-lg transition-all duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14,2 14,8 20,8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800">Documentation</h4>
+                    </div>
+                    <p class="text-gray-700">Process documentation, technical specifications, and maintaining comprehensive knowledge bases.</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl border border-red-200 hover:shadow-lg transition-all duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800">Multitasking</h4>
+                    </div>
+                    <p class="text-gray-700">Managing multiple projects simultaneously while maintaining quality and meeting deadlines.</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-xl border border-indigo-200 hover:shadow-lg transition-all duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-indigo-500 rounded-lg flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 12l2 2 4-4"></path>
+                                <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800">Process Management</h4>
+                    </div>
+                    <p class="text-gray-700">Agile methodologies, ITIL practices, and implementing structured change management processes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+            Toolkit Section - Moved to top for better visibility
+            Technologies I work with daily
+        -->
+        <section id="toolkit" class="mb-16">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary-teal-700 via-primary-teal-600 to-primary-teal-800 mb-4 tracking-tight">
+                    Toolkit
+                </h3>
+                <div class="w-20 h-1 bg-gradient-to-r from-primary-teal-400 to-primary-teal-600 mx-auto rounded-full"></div>
+                <p class="text-lg text-gray-600 mt-4 font-medium">Technologies I work with daily</p>
+            </div>
+            <div class="tech-grid">
+                
+                <!-- AWS -->
+                <div class="tech-icon-card">
+                    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#FF9900"><title>Amazon AWS</title><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                    <span>AWS</span>
+                </div>
+
+                <!-- Azure -->
+                <div class="tech-icon-card">
+                    <svg viewBox="0 -28.5 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>path21</title> <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <path d="M118.431947,187.698037 C151.322003,181.887937 178.48731,177.08008 178.799309,177.013916 L179.366585,176.893612 L148.31513,139.958881 C131.236843,119.644776 117.26369,102.945381 117.26369,102.849118 C117.26369,102.666861 149.32694,14.3716012 149.507189,14.057257 C149.567455,13.952452 171.38747,51.62411 202.400338,105.376064 C231.435152,155.699606 255.372949,197.191547 255.595444,197.580359 L255.999996,198.287301 L157.315912,198.274572 L58.6318456,198.261895 L118.431947,187.698073 L118.431947,187.698037 Z M-4.03864498e-06,176.434723 C-4.03864498e-06,176.382721 14.631291,150.983941 32.5139844,119.992969 L65.0279676,63.6457518 L102.919257,31.8473052 C123.759465,14.3581634 140.866667,0.0274832751 140.935253,0.00062917799 C141.003839,-0.0247829554 140.729691,0.665213042 140.326034,1.53468179 C139.922377,2.40415053 121.407304,42.1170321 99.1814268,89.7855264 L58.7707514,176.455514 L29.3853737,176.492355 C13.2234196,176.512639 -4.03864498e-06,176.486664 -4.03864498e-06,176.434703 L-4.03864498e-06,176.434723 Z" fill="#0089D6" fill-rule="nonzero"> </path> </g> </g></svg>                    
+                    <span>Azure</span>
+                </div>
+
+                <!-- Terraform -->
+                <div class="tech-icon-card">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><g fill-rule="evenodd"><path d="M77.941 44.5v36.836L46.324 62.918V26.082zm0 0" fill="#5c4ee5"/><path d="M81.41 81.336l31.633-18.418V26.082L81.41 44.5zm0 0" fill="#4040b2"/><path d="M11.242 42.36L42.86 60.776V23.941L11.242 5.523zm0 0M77.941 85.375L46.324 66.957v36.82l31.617 18.418zm0 0" fill="#5c4ee5"/></g></svg>
+                    <span>Terraform</span>
+                </div>
+
+                <!-- Ansible -->
+                <div class="tech-icon-card">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><style/><path fill="none" id="canvas_background" d="M-1-1h66v66H-1z"/><path d="M61.9 32.8c0 16.897-13.255 30.6-29.6 30.6S2.7 49.697 2.7 32.8c0-16.897 13.255-30.6 29.6-30.6s29.6 13.703 29.6 30.6" id="svg_23" fill="#c00"/><path d="M47.353 45.11L33.939 12.064c-.385-.957-1.155-1.464-2.09-1.464-.934 0-1.758.507-2.143 1.464L15 48.319h5.03l5.828-14.947 17.399 14.384c.687.59 1.21.844 1.87.844 1.319 0 2.473-1.013 2.473-2.477 0-.225-.082-.591-.247-1.013M31.877 18.003l8.714 22.04-13.167-10.64 4.453-11.4z" id="svg_24" fill="#fff"/></svg>                   
+                    <span>Ansible</span>
+                </div>
+
+                <!-- Docker -->
+                <div class="tech-icon-card">
+                    <svg width="800px" height="800px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><circle cx="512" cy="512" r="512" style="fill:#0091e2"/><path d="M827.3 461.5c-1.6-1.3-16.1-12.2-46.7-12.2-8.1 0-16.2.6-24.2 2.1-5.9-40.7-39.5-60.5-41-61.4l-8.2-4.8-5.4 7.8c-6.8 10.5-11.7 22-14.6 34.2-5.5 23.2-2.2 45 9.6 63.6-14.2 7.9-37.1 9.9-41.7 10H277c-9.9 0-17.9 8-17.9 17.9-.4 33.1 5.2 66 16.5 97.1 13 34.2 32.4 59.3 57.6 74.7 28.2 17.3 74.1 27.2 126.2 27.2 23.5.1 47-2.1 70.1-6.4 32.1-5.9 63-17.1 91.4-33.2 23.4-13.6 44.5-30.8 62.4-51.1 29.9-33.9 47.8-71.7 61.1-105.2h5.3c32.8 0 53-13.1 64.1-24.1 7.4-7 13.2-15.5 16.9-25l2.3-6.9-5.7-4.3zM312 489.9h50.7c2.4 0 4.4-2 4.4-4.4v-45.1c0-2.4-2-4.4-4.4-4.5H312c-2.4 0-4.4 2-4.4 4.4v45.2c0 2.5 2 4.4 4.4 4.4m69.9 0h50.7c2.4 0 4.4-2 4.4-4.4v-45.1c0-2.4-2-4.4-4.4-4.5h-50.7c-2.5 0-4.5 2-4.5 4.5v45.1c0 2.5 2 4.4 4.5 4.4m70.8.1h50.7c2.4 0 4.4-2 4.4-4.4v-45.1c0-2.4-2-4.4-4.4-4.5h-50.7c-2.4 0-4.4 2-4.4 4.4v45.2c0 2.4 2 4.3 4.4 4.4m70.1 0h50.7c2.4 0 4.4-2 4.5-4.4v-45.1c0-2.5-2-4.5-4.5-4.5h-50.7c-2.4 0-4.4 2-4.4 4.4v45.2c0 2.4 1.9 4.4 4.4 4.4m-141-65h50.7c2.4 0 4.4-2 4.4-4.5v-45.1c0-2.4-2-4.4-4.4-4.4h-50.7c-2.5 0-4.4 2-4.5 4.4v45.1c.1 2.5 2.1 4.5 4.5 4.5m70.9 0h50.7c2.4 0 4.4-2 4.4-4.5v-45.1c0-2.4-2-4.4-4.4-4.4h-50.7c-2.4 0-4.4 2-4.4 4.4v45.1c0 2.5 2 4.5 4.4 4.5m70.1 0h50.7c2.5 0 4.4-2 4.5-4.5v-45.1c0-2.5-2-4.4-4.5-4.4h-50.7c-2.4 0-4.4 2-4.4 4.4v45.1c0 2.5 1.9 4.5 4.4 4.5m0-64.9h50.7c2.5 0 4.5-2 4.5-4.5v-45.2c0-2.4-2-4.4-4.5-4.4h-50.7c-2.4 0-4.4 2-4.4 4.4v45.2c0 2.5 1.9 4.5 4.4 4.5M593.4 490h50.7c2.4 0 4.4-2 4.4-4.4v-45.1c0-2.5-2-4.4-4.4-4.5h-50.7c-2.4 0-4.4 2-4.4 4.4v45.2c0 2.4 2 4.4 4.4 4.4" style="fill:#fff"/></svg>
+                    <span>Docker</span>
+                </div>
+
+                <!-- Python -->
+                <div class="tech-icon-card">
+                   <svg role="img" viewBox="0.21 -0.077 110 110" xmlns="http://www.w3.org/2000/svg" width="110" height="110"><title>Python</title><defs><linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="63.8159" y1="56.6829" x2="118.4934" y2="1.8225" gradientTransform="matrix(1 0 0 -1 -53.2974 66.4321)"><stop offset="0" style="stop-color:#387EB8"/><stop offset="1" style="stop-color:#366994"/></linearGradient><linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="97.0444" y1="21.6321" x2="155.6665" y2="-34.5308" gradientTransform="matrix(1 0 0 -1 -53.2974 66.4321)"><stop offset="0" style="stop-color:#FFE052"/><stop offset="1" style="stop-color:#FFC331"/></linearGradient></defs><path fill="url(#SVGID_1_)" d="M55.023-0.077c-25.971,0-26.25,10.081-26.25,12.156c0,3.148,0,12.594,0,12.594h26.75v3.781 c0,0-27.852,0-37.375,0c-7.949,0-17.938,4.833-17.938,26.25c0,19.673,7.792,27.281,15.656,27.281c2.335,0,9.344,0,9.344,0 s0-9.765,0-13.125c0-5.491,2.721-15.656,15.406-15.656c15.91,0,19.971,0,26.531,0c3.902,0,14.906-1.696,14.906-14.406 c0-13.452,0-17.89,0-24.219C82.054,11.426,81.515-0.077,55.023-0.077z M40.273,8.392c2.662,0,4.813,2.15,4.813,4.813 c0,2.661-2.151,4.813-4.813,4.813s-4.813-2.151-4.813-4.813C35.46,10.542,37.611,8.392,40.273,8.392z"/><path fill="url(#SVGID_2_)" d="M55.397,109.923c25.959,0,26.282-10.271,26.282-12.156c0-3.148,0-12.594,0-12.594H54.897v-3.781 c0,0,28.032,0,37.375,0c8.009,0,17.938-4.954,17.938-26.25c0-23.322-10.538-27.281-15.656-27.281c-2.336,0-9.344,0-9.344,0 s0,10.216,0,13.125c0,5.491-2.631,15.656-15.406,15.656c-15.91,0-19.476,0-26.532,0c-3.892,0-14.906,1.896-14.906,14.406 c0,14.475,0,18.265,0,24.219C28.366,100.497,31.562,109.923,55.397,109.923z M70.148,101.454c-2.662,0-4.813-2.151-4.813-4.813 s2.15-4.813,4.813-4.813c2.661,0,4.813,2.151,4.813,4.813S72.809,101.454,70.148,101.454z"/></svg>
+                   <span>Python</span>
+                </div>
+
+                <!-- Nginx -->
+                <div class="tech-icon-card">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><defs><style>.nginx_svg__cls-1{fill:#999}</style></defs><g stroke-width="1.245"><path fill="#009639" d="M3.215 36a2.425 2.425 0 0 0 .91.905l18.636 10.759a2.445 2.445 0 0 0 2.477 0l18.636-10.76a2.444 2.444 0 0 0 1.238-2.145V13.242a2.445 2.445 0 0 0-1.24-2.144L25.237.338a2.442 2.442 0 0 0-2.475 0L4.127 11.096a2.443 2.443 0 0 0-1.24 2.144v21.52A2.43 2.43 0 0 0 3.213 36"/><path fill="#fff" d="M18.033 32.191a2.397 2.397 0 0 1-4.793 0v.001l.002-16.451a2.498 2.498 0 0 1 2.722-2.329 4.262 4.262 0 0 1 3.267 1.461l.724.867 10.012 11.982V15.808a2.397 2.397 0 1 1 4.792 0l-.003 16.45a2.499 2.499 0 0 1-2.72 2.33 4.26 4.26 0 0 1-3.268-1.462L18.032 20.279V32.19z"/></g></svg>
+                    <span>NGINX</span>
+                </div>
+
+                <!-- GitHub Actions -->
+                 <div class="tech-icon-card">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><path fill="#2088ff" d="M26.666 0C11.97 0 0 11.97 0 26.666c0 12.87 9.181 23.651 21.334 26.13v37.87c0 11.77 9.68 21.334 21.332 21.334h.195c1.302 9.023 9.1 16 18.473 16C71.612 128 80 119.612 80 109.334s-8.388-18.668-18.666-18.668c-9.372 0-17.17 6.977-18.473 16h-.195c-8.737 0-16-7.152-16-16V63.779a18.514 18.514 0 0 0 13.24 5.555h2.955c1.303 9.023 9.1 16 18.473 16 9.372 0 17.169-6.977 18.47-16h11.057c1.303 9.023 9.1 16 18.473 16 10.278 0 18.666-8.39 18.666-18.668C128 56.388 119.612 48 109.334 48c-9.373 0-17.171 6.977-18.473 16H79.805c-1.301-9.023-9.098-16-18.471-16s-17.171 6.977-18.473 16h-2.955c-6.433 0-11.793-4.589-12.988-10.672 14.58-.136 26.416-12.05 26.416-26.662C53.334 11.97 41.362 0 26.666 0zm0 5.334A21.292 21.292 0 0 1 48 26.666 21.294 21.294 0 0 1 26.666 48 21.292 21.292 0 0 1 5.334 26.666 21.29 21.29 0 0 1 26.666 5.334zm-5.215 7.541C18.67 12.889 16 15.123 16 18.166v17.043c0 4.043 4.709 6.663 8.145 4.533l13.634-8.455c3.257-2.02 3.274-7.002.032-9.045l-13.635-8.59a5.024 5.024 0 0 0-2.725-.777zm-.117 5.291 13.635 8.588-13.635 8.455V18.166zm40 35.168a13.29 13.29 0 0 1 13.332 13.332A13.293 13.293 0 0 1 61.334 80 13.294 13.294 0 0 1 48 66.666a13.293 13.293 0 0 1 13.334-13.332zm48 0a13.29 13.29 0 0 1 13.332 13.332A13.293 13.293 0 0 1 109.334 80 13.294 13.294 0 0 1 96 66.666a13.293 13.293 0 0 1 13.334-13.332zm-42.568 6.951a2.667 2.667 0 0 0-1.887.78l-6.3 6.294-2.093-2.084a2.667 2.667 0 0 0-3.771.006 2.667 2.667 0 0 0 .008 3.772l3.974 3.96a2.667 2.667 0 0 0 3.766-.001l8.185-8.174a2.667 2.667 0 0 0 .002-3.772 2.667 2.667 0 0 0-1.884-.78zm48 0a2.667 2.667 0 0 0-1.887.78l-6.3 6.294-2.093-2.084a2.667 2.667 0 0 0-3.771.006 2.667 2.667 0 0 0 .008 3.772l3.974 3.96a2.667 2.667 0 0 0 3.766-.001l8.185-8.174a2.667 2.667 0 0 0 .002-3.772 2.667 2.667 0 0 0-1.884-.78zM61.334 96a13.293 13.293 0 0 1 13.332 13.334 13.29 13.29 0 0 1-13.332 13.332A13.293 13.293 0 0 1 48 109.334 13.294 13.294 0 0 1 61.334 96zM56 105.334c-2.193 0-4 1.807-4 4 0 2.195 1.808 4 4 4s4-1.805 4-4c0-2.193-1.807-4-4-4zm10.666 0c-2.193 0-4 1.807-4 4 0 2.195 1.808 4 4 4s4-1.805 4-4c0-2.193-1.807-4-4-4zM56 108c.75 0 1.334.585 1.334 1.334 0 .753-.583 1.332-1.334 1.332-.75 0-1.334-.58-1.334-1.332 0-.75.585-1.334 1.334-1.334zm10.666 0c.75 0 1.334.585 1.334 1.334 0 .753-.583 1.332-1.334 1.332-.75 0-1.332-.58-1.332-1.332 0-.75.583-1.334 1.332-1.334z"/><path fill="#79b8ff" d="M109.334 90.666c-9.383 0-17.188 6.993-18.477 16.031a2.667 2.667 0 0 0-.265-.011l-2.7.09a2.667 2.667 0 0 0-2.578 2.751 2.667 2.667 0 0 0 2.752 2.578l2.7-.087a2.667 2.667 0 0 0 .097-.006C92.17 121.029 99.965 128 109.334 128c10.278 0 18.666-8.388 18.666-18.666s-8.388-18.668-18.666-18.668zm0 5.334a13.293 13.293 0 0 1 13.332 13.334 13.29 13.29 0 0 1-13.332 13.332A13.293 13.293 0 0 1 96 109.334 13.294 13.294 0 0 1 109.334 96z"/></svg>
+                    <span>Actions</span>
+                </div>
+
+                <!-- Kubernetes -->
+                <div class="tech-icon-card">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="Layer_1" x="0" y="0" xml:space="preserve" viewBox="0 0 500 500"><style type="text/css" id="style2"/><g id="Layer_2" transform="translate(5.393 13.296) scale(5.60044)"><g id="Layer_1-2"><path d="M79.8 18.8c-.5-1.6-1.7-2.9-3.2-3.7L46.1.5c-.8-.4-1.7-.5-2.5-.5s-1.7 0-2.5.2L10.6 14.9c-1.5.7-2.6 2-3 3.7L0 51.5c-.3 1.7.1 3.4 1.1 4.8l21.1 26.1c1.2 1.2 2.9 2 4.6 2.1h33.7c1.8.2 3.5-.6 4.6-2.1l21.1-26.1c1-1.4 1.4-3.1 1.2-4.8z" id="path6" fill="#326de6"/><path d="M75 50.2c-.1 0-.1 0-.1-.1s-.3-.1-.4-.1c-.4-.1-.8-.1-1.2-.1-.2 0-.4 0-.6-.1h-.1c-1.1-.1-2.3-.3-3.4-.6-.3-.1-.6-.4-.7-.7 0-.1-.1-.1-.1-.1l-.8-.2c.4-2.9.2-5.9-.4-8.8-.7-2.9-1.9-5.7-3.5-8.2l.6-.6v-.1c0-.3.1-.7.3-.9.9-.7 1.8-1.4 2.8-1.9l.6-.3c.4-.2.7-.4 1.1-.6.1-.1.2-.1.3-.2l.1-.1c.9-.7 1.1-1.9.4-2.8-.3-.4-.9-.7-1.4-.7-.5 0-1 .2-1.4.5l-.1.1c-.1.1-.2.2-.3.2-.3.3-.6.6-.8.9-.1.2-.3.3-.4.4-.8.8-1.6 1.6-2.5 2.2-.2.1-.4.2-.6.2-.1 0-.3 0-.4-.1l-.8.6c-.8-.8-1.7-1.6-2.5-2.4-3.7-2.9-8.3-4.7-13-5.2l-.1-.8-.1-.1c-.3-.2-.4-.5-.5-.8 0-1.1 0-2.2.2-3.4v-.1c0-.2.1-.4.1-.6.1-.4.1-.8.2-1.2v-.6c.1-1-.7-2-1.7-2-.6 0-1.2.2-1.6.6-.4.4-.6.9-.6 1.4v.5c0 .4.1.8.2 1.2.1.2.1.4.1.6v.1c.2 1.1.2 2.2.2 3.4-.1.3-.2.6-.5.8l-.1.1-.1.8c-1.1.1-2.2.3-3.4.5-4.7 1-9 3.5-12.3 7l-.6-.4H25c-.1 0-.2.1-.4.1s-.5-.1-.6-.2c-.9-.7-1.7-1.5-2.5-2.3-.1-.2-.3-.3-.4-.4-.3-.3-.5-.6-.8-.9-.1-.1-.2-.1-.3-.2l-.1-.1c-.4-.3-.9-.5-1.4-.5-.6 0-1.1.2-1.5.7-.6.9-.4 2.1.4 2.8.1 0 .1.1.1.1s.2.2.3.2c.3.2.7.4 1.1.6l.6.3c1 .6 1.9 1.2 2.8 1.9.2.2.4.6.3.9v.1l.6.6c-.1.2-.2.3-.3.5-3.1 4.9-4.3 10.7-3.4 16.4l-.8.2c0 .1-.1.1-.1.1-.1.3-.4.5-.7.7-1.1.3-2.2.5-3.4.6h-.1c-.2 0-.4 0-.6.1-.4 0-.8.1-1.2.1-.1 0-.2.1-.4.1-.1 0-.1 0-.2.1-1.1.2-1.8 1.2-1.6 2.3.2.9 1.1 1.5 2 1.4.2 0 .3 0 .5-.1.1 0 .1 0 .1-.1s.2-.1.4-.1c.4-.1.8-.3 1.1-.4.2-.1.4-.2.6-.2h.1c1-.4 2.1-.7 3.2-.9h.1c.3 0 .6.1.8.3.1 0 .1.1.1.1l.9-.1c1.5 4.6 4.3 8.7 8.2 11.7.9.7 1.7 1.3 2.7 1.8l-.4.8c0 .1.1.1.1.1.2.3.2.7.1 1-.4 1-1 2-1.6 2.9v.1c-.1.2-.2.3-.4.5s-.4.6-.7 1c-.1.1-.1.2-.2.3 0 0 0 .1-.1.1-.5 1-.1 2.2.8 2.7.2.1.5.2.8.2.8 0 1.5-.5 1.9-1.2 0 0 0-.1.1-.1 0-.1.1-.2.2-.3.1-.4.3-.7.4-1.1l.2-.6c.3-1.1.8-2.1 1.3-3.1.2-.3.5-.5.8-.6.1 0 .1 0 .1-.1l.4-.8c2.8 1.1 5.7 1.6 8.7 1.6 1.8 0 3.6-.2 5.4-.6 1.1-.2 2.2-.6 3.2-.9l.4.7c.1 0 .1 0 .1.1.3.1.6.3.8.6.5 1 .9 2 1.3 3v.1l.2.6c.1.4.2.8.4 1.1.1.1.1.2.2.3 0 0 0 .1.1.1.4.7 1.1 1.2 1.9 1.2.3 0 .5-.1.8-.2.4-.2.8-.6.9-1.1.1-.5.1-1.1-.1-1.6 0-.1-.1-.1-.1-.1 0-.1-.1-.2-.2-.3-.2-.4-.4-.7-.7-1-.1-.2-.2-.3-.4-.5v-.1c-.7-.9-1.2-1.9-1.6-2.9-.1-.3-.1-.7.1-1 0-.1.1-.1.1-.1l-.3-.8c5.2-3.1 9-7.9 10.9-13.6l.8.1c.1 0 .1-.1.1-.1.2-.2.5-.3.8-.3h.1c1.1.2 2.2.5 3.2.9h.1c.2.1.4.2.6.2.4.2.7.3 1.1.4.1 0 .2.1.4.1.1 0 .1 0 .2.1.2.1.3.1.5.1.9 0 1.7-.6 2-1.4-.3-1-1-1.8-2-2zm-28.8-3.1l-2.7 1.3-2.7-1.3-.8-2.9 1.9-2.4H45l1.9 2.4zm16.3-6.5c.5 2.1.6 4.2.4 6.3l-9.5-2.7c-.9-.2-1.4-1.1-1.2-2 .1-.3.2-.5.4-.7l7.5-6.8c1.1 1.8 1.9 3.8 2.4 5.9zM57.1 31L49 36.8c-.7.4-1.7.3-2.2-.4-.2-.2-.3-.4-.3-.7l-.6-10.1c4.2.5 8.2 2.4 11.2 5.4zM39 25.9l2-.4-.6 10c0 .9-.8 1.6-1.7 1.6-.3 0-.5-.1-.8-.2L29.8 31c2.5-2.5 5.7-4.3 9.2-5.1zm-12.2 8.8l7.4 6.6c.7.6.8 1.6.2 2.3-.2.3-.4.4-.8.5L24 46.9c-.4-4.2.6-8.5 2.8-12.2zm-1.7 16.9l9.9-1.7c.8 0 1.6.5 1.7 1.3.1.3.1.7-.1 1l-3.8 9.2c-3.5-2.3-6.3-5.8-7.7-9.8zM47.8 64c-1.4.3-2.9.5-4.4.5-2.1 0-4.3-.4-6.3-1l4.9-8.9c.5-.6 1.3-.8 2-.4.3.2.5.4.8.7l4.8 8.7c-.5.1-1.1.2-1.8.4zM60 55.3c-1.5 2.4-3.6 4.5-6 6L50.1 52c-.2-.8.1-1.6.9-2 .3-.1.6-.2.9-.2l10 1.7c-.5 1.4-1.1 2.7-1.9 3.8z" id="path8" fill="#fff"/></g></g></svg>
+                    <span>Kubernetes</span>
+                </div>
+
+                <!-- Huntress -->
+                <div class="tech-icon-card">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"><g><path style="opacity:0.926" fill="#00c5d0" d="M 89.5,-0.5 C 90.5,-0.5 91.5,-0.5 92.5,-0.5C 89.2103,12.5597 91.0436,24.8931 98,36.5C 102.467,41.9681 107.3,47.1347 112.5,52C 122.5,59.6667 132.5,67.3333 142.5,75C 158.53,89.2456 165.03,107.079 162,128.5C 165.425,118.362 166.092,108.028 164,97.5C 161.578,87.7289 158.078,78.3956 153.5,69.5C 153.833,69.1667 154.167,68.8333 154.5,68.5C 168.566,74.7876 178.4,85.121 184,99.5C 184.993,91.8712 184.493,84.3712 182.5,77C 182.833,76.5 183.167,76 183.5,75.5C 194.531,83.3702 202.365,93.7036 207,106.5C 208.708,101.696 209.875,96.6958 210.5,91.5C 222.177,105.858 229.844,122.192 233.5,140.5C 223.673,140.783 214.006,139.95 204.5,138C 207.352,139.591 210.352,140.924 213.5,142C 221.125,143.142 228.792,143.642 236.5,143.5C 234.386,163.199 238.052,181.699 247.5,199C 243.634,198.179 240.467,196.013 238,192.5C 230.492,182.465 227.326,171.131 228.5,158.5C 212.268,160.378 198.768,155.378 188,143.5C 184.004,158.559 186.004,172.892 194,186.5C 196.965,190.932 199.798,195.432 202.5,200C 192.424,216.891 191.924,234.057 201,251.5C 203.951,267.957 202.451,283.957 196.5,299.5C 195.833,299.5 195.167,299.5 194.5,299.5C 193.214,278.096 183.548,261.596 165.5,250C 150.491,240.996 134.491,234.329 117.5,230C 134.996,221.334 148.33,208.501 157.5,191.5C 162.877,201.144 170.543,207.978 180.5,212C 166.05,197.929 157.883,180.762 156,160.5C 154.232,168.803 154.065,177.137 155.5,185.5C 147.495,202.339 134.828,214.173 117.5,221C 114.518,221.498 111.518,221.665 108.5,221.5C 107.959,215.13 109.625,209.463 113.5,204.5C 113.167,204.167 112.833,203.833 112.5,203.5C 104.5,208.389 95.8334,211.056 86.5,211.5C 86.1027,202.46 89.7694,195.627 97.5,191C 88.6655,192.704 79.6655,193.871 70.5,194.5C 88.3524,228.773 116.686,246.94 155.5,249C 162.207,252.354 168.207,256.687 173.5,262C 128.14,269.563 91.6401,255.063 64,218.5C 56.1545,206.137 50.4878,192.803 47,178.5C 46.1786,175.446 46.3452,172.446 47.5,169.5C 53.1059,170.823 58.7726,171.823 64.5,172.5C 65.2087,179.462 67.042,186.128 70,192.5C 76.6467,178.21 87.8133,169.376 103.5,166C 82.6636,169.956 61.997,169.123 41.5,163.5C 41.2965,161.61 41.9632,160.11 43.5,159C 55.3676,148.067 69.3676,142.067 85.5,141C 66.0856,138.895 50.5856,130.062 39,114.5C 38.2797,112.888 38.4464,111.388 39.5,110C 48.7693,105.899 58.436,104.565 68.5,106C 73.0831,107.535 77.7498,108.202 82.5,108C 61.3674,97.0289 48.3674,79.8623 43.5,56.5C 61.2937,56.1493 76.6271,61.9826 89.5,74C 90.1667,74.6667 90.8333,74.6667 91.5,74C 77.6099,57.5461 74.1099,39.0461 81,18.5C 83.3134,11.8781 86.1467,5.54478 89.5,-0.5 Z"/></g><g><path style="opacity:0.874" fill="#00c4d1" d="M 139.5,49.5 C 191.67,46.6436 229.17,68.3103 252,114.5C 262.353,140.842 263.187,167.509 254.5,194.5C 253.5,194.5 252.5,194.5 251.5,194.5C 244.9,177.17 241.733,159.17 242,140.5C 238.045,121.922 229.379,105.922 216,92.5C 213.825,87.4754 211.159,82.8088 208,78.5C 207.506,80.1341 207.34,81.8008 207.5,83.5C 200.231,79.8654 192.897,76.1987 185.5,72.5C 182.844,69.6782 180.011,67.0115 177,64.5C 177.019,66.1075 177.185,67.7741 177.5,69.5C 166.634,69.5169 156.801,66.5169 148,60.5C 149.192,67.5739 146.359,69.4072 139.5,66C 133.676,62.3323 128.009,58.499 122.5,54.5C 128.169,52.6681 133.836,51.0015 139.5,49.5 Z"/></g><g><path style="opacity:0.646" fill="#00c5d1" d="M 60.5,96.5 C 64.4652,97.8254 67.7985,100.159 70.5,103.5C 69.8333,103.833 69.1667,104.167 68.5,104.5C 64.8093,103.979 61.1426,103.312 57.5,102.5C 58.5588,100.466 59.5588,98.4664 60.5,96.5 Z"/></g><g><path style="opacity:0.747" fill="#00c5d1" d="M 48.5,131.5 C 54.9522,133.892 60.9522,137.059 66.5,141C 59.3913,143.72 52.7246,147.22 46.5,151.5C 45.7832,144.721 46.4498,138.054 48.5,131.5 Z"/></g><g><path style="opacity:0.901" fill="#00c5d0" d="M 190.5,154.5 C 201.082,160.118 212.415,163.451 224.5,164.5C 222.93,167.037 222.097,169.704 222,172.5C 223.171,170.384 224.671,169.718 226.5,170.5C 227.466,172.396 227.799,174.396 227.5,176.5C 225.286,176.291 223.619,177.124 222.5,179C 224.464,188.448 229.298,195.948 237,201.5C 237.352,208.169 234.185,212.335 227.5,214C 229.729,216.719 231.729,219.553 233.5,222.5C 232.343,225.93 230.009,228.263 226.5,229.5C 230.028,234.469 229.028,237.636 223.5,239C 221.031,242.021 219.698,245.521 219.5,249.5C 221.914,258.67 218.581,264.67 209.5,267.5C 207.989,257.445 205.156,247.779 201,238.5C 197.471,224.146 200.305,211.313 209.5,200C 197.622,187.212 191.289,172.045 190.5,154.5 Z"/></g></svg>
+                    <span>Huntress</span>
+                </div>
+
+                <!-- SentinelOne -->
+                <div class="tech-icon-card">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"><g><path style="opacity:1" fill="#fefefe" d="M -0.5,-0.5 C 132.833,-0.5 266.167,-0.5 399.5,-0.5C 399.5,132.833 399.5,266.167 399.5,399.5C 266.167,399.5 132.833,399.5 -0.5,399.5C -0.5,266.167 -0.5,132.833 -0.5,-0.5 Z"/></g><g><path style="opacity:1" fill="#553073" d="M 207.5,52.5 C 211.5,52.5 215.5,52.5 219.5,52.5C 219.5,131.5 219.5,210.5 219.5,289.5C 219.167,289.5 218.833,289.5 218.5,289.5C 218.5,288.833 218.5,288.167 218.5,287.5C 218.167,-11.1637 217.167,-11.1637 215.5,287.5C 214.333,211.836 214.167,136.169 215,60.5C 215.333,60.8333 215.667,61.1667 216,61.5C 217.079,58.9373 217.579,56.2706 217.5,53.5C 208.004,53.7634 206.67,56.9301 213.5,63C 211.837,137.788 210.837,212.622 210.5,287.5C 208.669,213.173 207.836,138.507 208,63.5C 202.543,61.8548 196.877,60.8548 191,60.5C 189.887,62.3293 188.387,63.1626 186.5,63C 188,61.5 189.5,60 191,58.5C 196.407,59.4732 201.907,59.8066 207.5,59.5C 207.5,58.5 207.5,57.5 207.5,56.5C 202.125,56.8282 196.792,56.4948 191.5,55.5C 197.229,55.1342 202.563,54.1342 207.5,52.5 Z"/></g><g><path style="opacity:1" fill="#72578a" d="M 219.5,52.5 C 215.5,52.5 211.5,52.5 207.5,52.5C 198.5,52.5 189.5,52.5 180.5,52.5C 180.5,56.1667 180.5,59.8333 180.5,63.5C 180.5,138.167 180.5,212.833 180.5,287.5C 192.789,289.48 205.456,290.147 218.5,289.5C 218.833,289.5 219.167,289.5 219.5,289.5C 206.344,290.496 193.01,290.829 179.5,290.5C 179.5,210.833 179.5,131.167 179.5,51.5C 193.01,51.1711 206.344,51.5044 219.5,52.5 Z"/></g><g><path style="opacity:1" fill="#522b81" d="M 180.5,63.5 C 181.833,100.494 182.5,137.827 182.5,175.5C 182.5,213.173 181.833,250.506 180.5,287.5C 180.5,212.833 180.5,138.167 180.5,63.5 Z"/></g><g><path style="opacity:1" fill="#532c78" d="M 207.5,52.5 C 202.563,54.1342 197.229,55.1342 191.5,55.5C 196.792,56.4948 202.125,56.8282 207.5,56.5C 207.5,57.5 207.5,58.5 207.5,59.5C 201.907,59.8066 196.407,59.4732 191,58.5C 189.5,60 188,61.5 186.5,63C 188.387,63.1626 189.887,62.3293 191,60.5C 196.877,60.8548 202.543,61.8548 208,63.5C 207.836,138.507 208.669,213.173 210.5,287.5C 213.061,288.767 215.728,288.767 218.5,287.5C 218.5,288.167 218.5,288.833 218.5,289.5C 205.456,290.147 192.789,289.48 180.5,287.5C 181.833,250.506 182.5,213.173 182.5,175.5C 182.5,137.827 181.833,100.494 180.5,63.5C 180.5,59.8333 180.5,56.1667 180.5,52.5C 189.5,52.5 198.5,52.5 207.5,52.5 Z"/></g><g><path style="opacity:1" fill="#532d70" d="M 183.5,63.5 C 184.833,100.494 185.5,137.827 185.5,175.5C 185.167,212.833 184.833,250.167 184.5,287.5C 183.5,212.836 183.167,138.17 183.5,63.5 Z"/></g><g><path style="opacity:1" fill="#522c7d" d="M 218.5,287.5 C 215.728,288.767 213.061,288.767 210.5,287.5C 210.837,212.622 211.837,137.788 213.5,63C 206.67,56.9301 208.004,53.7634 217.5,53.5C 217.579,56.2706 217.079,58.9373 216,61.5C 215.667,61.1667 215.333,60.8333 215,60.5C 214.167,136.169 214.333,211.836 215.5,287.5C 217.167,-11.1637 218.167,-11.1637 218.5,287.5 Z"/></g><g><path style="opacity:1" fill="#6d548e" d="M 116.5,316.5 C 118.497,235.173 119.164,153.507 118.5,71.5C 118.795,69.2646 118.461,67.2646 117.5,65.5C 117.783,64.7109 118.283,64.0442 119,63.5C 119.667,148.5 119.667,233.5 119,318.5C 118.005,317.934 117.172,317.267 116.5,316.5 Z"/></g><g><path style="opacity:1" fill="#fefef4" d="M 120.5,63.5 C 121.324,67.3123 121.824,71.3123 122,75.5C 122.167,113.5 122.333,151.5 122.5,189.5C 122.453,233.136 122.12,276.47 121.5,319.5C 120.5,234.169 120.167,148.836 120.5,63.5 Z"/></g><g><path style="opacity:1" fill="#fefdf5" d="M 271.5,76.5 C 272.827,152.85 272.827,229.35 271.5,306C 271.68,308.241 272.513,308.741 274,307.5C 275.713,309.821 274.88,310.821 271.5,310.5C 270.182,252.998 270.182,189.498 271.5,120C 271.297,117.189 270.631,114.522 269.5,112C 272.057,108.57 272.057,105.07 269.5,101.5C 271.427,93.3682 272.094,85.0349 271.5,76.5 Z"/></g><g><path style="opacity:1" fill="#532e72" d="M 117.5,65.5 C 116.176,148.646 116.176,231.646 117.5,314.5C 117.167,315.167 116.833,315.833 116.5,316.5C 109.456,312.651 102.789,308.318 96.5,303.5C 99.5993,303.092 101.933,304.259 103.5,307C 105.909,308.707 108.575,309.54 111.5,309.5C 111.297,307.362 110.297,305.695 108.5,304.5C 109.325,303.614 110.325,303.281 111.5,303.5C 112.156,233.558 111.489,163.725 109.5,94C 111.599,90.3334 111.932,86.5 110.5,82.5C 109.692,82.8076 109.025,83.3076 108.5,84C 109.833,86.3333 109.833,88.6667 108.5,91C 106.802,89.6282 104.802,88.4615 102.5,87.5C 106.726,79.6133 111.726,72.2799 117.5,65.5 Z"/></g><g><path style="opacity:1" fill="#532d7b" d="M 113.5,73.5 C 114.832,153.001 114.832,232.668 113.5,312.5C 112.17,232.765 112.17,153.099 113.5,73.5 Z"/></g><g><path style="opacity:1" fill="#532e7c" d="M 117.5,65.5 C 118.461,67.2646 118.795,69.2646 118.5,71.5C 117.501,152.332 117.167,233.332 117.5,314.5C 116.176,231.646 116.176,148.646 117.5,65.5 Z"/></g><g><path style="opacity:1" fill="#482579" d="M 118.5,71.5 C 119.164,153.507 118.497,235.173 116.5,316.5C 116.833,315.833 117.167,315.167 117.5,314.5C 117.167,233.332 117.501,152.332 118.5,71.5 Z"/></g><g><path style="opacity:1" fill="#9d8bab" d="M 280.5,64.5 C 279.501,147.665 279.167,230.998 279.5,314.5C 279.263,315.791 279.596,316.791 280.5,317.5C 280.44,318.043 280.107,318.376 279.5,318.5C 278.167,233.5 278.167,148.5 279.5,63.5C 280.107,63.6236 280.44,63.9569 280.5,64.5 Z"/></g><g><path style="opacity:1" fill="#452763" d="M 280.5,64.5 C 282.833,67.8333 285.167,71.1667 287.5,74.5C 286.5,74.5 285.5,74.5 284.5,74.5C 284.756,72.0876 283.756,70.4209 281.5,69.5C 280.5,147.497 280.167,225.497 280.5,303.5C 280.815,307.371 280.482,311.038 279.5,314.5C 279.167,230.998 279.501,147.665 280.5,64.5 Z"/></g><g><path style="opacity:1" fill="#542c7d" d="M 287.5,74.5 C 287.5,74.8333 287.5,75.1667 287.5,75.5C 287.751,77.1703 288.418,78.6703 289.5,80C 288.257,81.8697 287.59,84.0363 287.5,86.5C 287.69,89.1576 288.357,91.6576 289.5,94C 287.677,163.725 286.844,233.559 287,303.5C 286.5,228.834 286.333,154.167 286.5,79.5C 285.5,79.5 284.5,79.5 283.5,79.5C 282.858,155.548 283.524,231.548 285.5,307.5C 286.251,311.149 284.918,312.649 281.5,312C 281.833,311.667 282.167,311.333 282.5,311C 281.877,308.393 281.21,305.893 280.5,303.5C 280.167,225.497 280.5,147.497 281.5,69.5C 283.756,70.4209 284.756,72.0876 284.5,74.5C 285.5,74.5 286.5,74.5 287.5,74.5 Z"/></g><g><path style="opacity:1" fill="#532d78" d="M 96.5,303.5 C 95.8333,303.5 95.5,303.167 95.5,302.5C 94.2498,300.068 92.7498,297.734 91,295.5C 90.1841,294.177 89.0174,293.511 87.5,293.5C 83.9323,287.638 81.4323,281.305 80,274.5C 79.3333,228.167 79.3333,181.833 80,135.5C 84.5976,117.979 92.0976,101.979 102.5,87.5C 104.802,88.4615 106.802,89.6282 108.5,91C 109.833,88.6667 109.833,86.3333 108.5,84C 109.025,83.3076 109.692,82.8076 110.5,82.5C 111.932,86.5 111.599,90.3334 109.5,94C 111.489,163.725 112.156,233.558 111.5,303.5C 110.325,303.281 109.325,303.614 108.5,304.5C 110.297,305.695 111.297,307.362 111.5,309.5C 108.575,309.54 105.909,308.707 103.5,307C 101.933,304.259 99.5993,303.092 96.5,303.5 Z"/></g><g><path style="opacity:1" fill="#532d77" d="M 287.5,75.5 C 299.945,91.051 309.279,108.384 315.5,127.5C 317.121,180.192 316.788,232.859 314.5,285.5C 314.672,286.492 314.338,287.158 313.5,287.5C 311.025,291.496 307.858,295.163 304,298.5C 303.51,299.793 303.343,301.127 303.5,302.5C 296.041,307.735 288.374,312.735 280.5,317.5C 279.596,316.791 279.263,315.791 279.5,314.5C 280.482,311.038 280.815,307.371 280.5,303.5C 281.21,305.893 281.877,308.393 282.5,311C 282.167,311.333 281.833,311.667 281.5,312C 284.918,312.649 286.251,311.149 285.5,307.5C 283.524,231.548 282.858,155.548 283.5,79.5C 284.5,79.5 285.5,79.5 286.5,79.5C 286.333,154.167 286.5,228.834 287,303.5C 286.844,233.559 287.677,163.725 289.5,94C 288.357,91.6576 287.69,89.1576 287.5,86.5C 287.59,84.0363 288.257,81.8697 289.5,80C 288.418,78.6703 287.751,77.1703 287.5,75.5 Z"/></g><g><path style="opacity:1" fill="#d4c4de" d="M 231.5,99.5 C 230.167,140.328 229.5,181.495 229.5,223C 229.5,264.335 229.833,305.501 230.5,346.5C 230.44,347.043 230.107,347.376 229.5,347.5C 228.5,264.503 228.167,181.503 228.5,98.5C 229.791,98.2627 230.791,98.596 231.5,99.5 Z"/></g><g><path style="opacity:1" fill="#542c7a" d="M 234.5,102.5 C 235.827,182.503 235.827,262.503 234.5,342.5C 233.292,343.234 231.959,343.567 230.5,343.5C 230.333,263.166 230.5,182.833 231,102.5C 232.292,101.209 233.458,101.209 234.5,102.5 Z"/></g><g><path style="opacity:1" fill="#522b82" d="M 243.5,105.5 C 243.611,106.117 243.944,106.617 244.5,107C 242.975,108.009 241.308,108.509 239.5,108.5C 239.167,180.17 239.5,251.836 240.5,323.5C 242.876,324.579 243.043,325.912 241,327.5C 240.667,327.167 240.333,326.833 240,326.5C 239.819,329.695 239.319,332.695 238.5,335.5C 238.83,260.459 238.497,185.459 237.5,110.5C 238.06,107.004 240.06,105.337 243.5,105.5 Z"/></g><g><path style="opacity:1" fill="#522c82" d="M 159.5,103.5 C 161.026,104.492 161.693,105.992 161.5,108C 160.677,183.82 160.177,259.654 160,335.5C 159.734,331.077 158.567,327.077 156.5,323.5C 157.5,323.5 158.5,323.5 159.5,323.5C 159.5,251.833 159.5,180.167 159.5,108.5C 157.712,108.785 156.045,108.452 154.5,107.5C 154.863,106.817 155.196,106.15 155.5,105.5C 156.833,104.833 158.167,104.167 159.5,103.5 Z"/></g><g><path style="opacity:1" fill="#532d77" d="M 161.5,342.5 C 153.001,337.752 144.668,332.752 136.5,327.5C 134.272,326.623 132.272,325.29 130.5,323.5C 130.509,254.708 130.509,185.708 130.5,116.5C 133.988,112.583 138.321,109.917 143.5,108.5C 147.647,107.797 151.647,106.797 155.5,105.5C 155.196,106.15 154.863,106.817 154.5,107.5C 156.045,108.452 157.712,108.785 159.5,108.5C 159.5,180.167 159.5,251.833 159.5,323.5C 158.5,323.5 157.5,323.5 156.5,323.5C 158.567,327.077 159.734,331.077 160,335.5C 160.177,259.654 160.677,183.82 161.5,108C 161.693,105.992 161.026,104.492 159.5,103.5C 162.491,102.629 165.491,101.629 168.5,100.5C 168.5,181.5 168.5,262.5 168.5,343.5C 166.173,343.753 164.173,343.086 162.5,341.5C 161.893,341.624 161.56,341.957 161.5,342.5 Z"/></g><g><path style="opacity:1" fill="#552b7e" d="M 163.5,111.5 C 164.833,148.494 165.5,185.827 165.5,223.5C 165.167,260.833 164.833,298.167 164.5,335.5C 163.5,260.836 163.167,186.17 163.5,111.5 Z"/></g><g><path style="opacity:1" fill="#624780" d="M 167.5,99.5 C 169.497,181.827 170.164,264.493 169.5,347.5C 166.833,345.833 164.167,344.167 161.5,342.5C 161.56,341.957 161.893,341.624 162.5,341.5C 164.173,343.086 166.173,343.753 168.5,343.5C 168.5,262.5 168.5,181.5 168.5,100.5C 165.491,101.629 162.491,102.629 159.5,103.5C 158.167,104.167 156.833,104.833 155.5,105.5C 151.647,106.797 147.647,107.797 143.5,108.5C 150.906,103.979 158.906,100.979 167.5,99.5 Z"/></g><g><path style="opacity:1" fill="#e9daf1" d="M 167.5,99.5 C 168.209,98.596 169.209,98.2627 170.5,98.5C 170.833,181.668 170.499,264.668 169.5,347.5C 170.164,264.493 169.497,181.827 167.5,99.5 Z"/></g><g><path style="opacity:1" fill="#492d68" d="M 231.5,99.5 C 240.03,101.34 248.03,104.34 255.5,108.5C 251.2,108.46 247.2,107.46 243.5,105.5C 240.848,103.711 237.848,102.711 234.5,102.5C 233.458,101.209 232.292,101.209 231,102.5C 230.5,182.833 230.333,263.166 230.5,343.5C 231.959,343.567 233.292,343.234 234.5,342.5C 235.708,341.766 237.041,341.433 238.5,341.5C 235.869,343.153 233.203,344.819 230.5,346.5C 229.833,305.501 229.5,264.335 229.5,223C 229.5,181.495 230.167,140.328 231.5,99.5 Z"/></g><g><path style="opacity:1" fill="#532e72" d="M 234.5,102.5 C 237.848,102.711 240.848,103.711 243.5,105.5C 240.06,105.337 238.06,107.004 237.5,110.5C 238.497,185.459 238.83,260.459 238.5,335.5C 237.708,336.967 237.708,338.3 238.5,339.5C 241.116,337.197 244.116,335.864 247.5,335.5C 244.709,337.735 241.709,339.735 238.5,341.5C 237.041,341.433 235.708,341.766 234.5,342.5C 235.827,262.503 235.827,182.503 234.5,102.5 Z"/></g><g><path style="opacity:1" fill="#522c78" d="M 243.5,105.5 C 247.2,107.46 251.2,108.46 255.5,108.5C 260.372,110.429 264.705,113.095 268.5,116.5C 269.163,184.508 268.497,252.175 266.5,319.5C 266.5,255.5 266.5,191.5 266.5,127.5C 265.5,127.5 264.5,127.5 263.5,127.5C 262.855,192.609 263.522,257.609 265.5,322.5C 264.025,324.41 262.025,325.576 259.5,326C 258.011,327.468 256.677,328.968 255.5,330.5C 253.371,332.95 250.704,334.617 247.5,335.5C 244.116,335.864 241.116,337.197 238.5,339.5C 237.708,338.3 237.708,336.967 238.5,335.5C 239.319,332.695 239.819,329.695 240,326.5C 240.333,326.833 240.667,327.167 241,327.5C 243.043,325.912 242.876,324.579 240.5,323.5C 239.5,251.836 239.167,180.17 239.5,108.5C 241.308,108.509 242.975,108.009 244.5,107C 243.944,106.617 243.611,106.117 243.5,105.5 Z"/></g><g><path style="opacity:1" fill="#522d74" d="M 138.5,127.5 C 138.274,124.751 138.607,122.084 139.5,119.5C 141.378,118.339 142.378,119.006 142.5,121.5C 142.479,187.438 142.479,253.438 142.5,319.5C 141.5,319.5 140.5,319.5 139.5,319.5C 139.832,255.331 139.499,191.331 138.5,127.5 Z"/></g><g><path style="opacity:1" fill="#eadcf3" d="M 129.5,116.5 C 129.167,185.669 129.501,254.669 130.5,323.5C 132.272,325.29 134.272,326.623 136.5,327.5C 133.579,327.854 131.246,326.854 129.5,324.5C 128.168,255.001 128.168,185.668 129.5,116.5 Z"/></g><g><path style="opacity:1" fill="#644d82" d="M 129.5,116.5 C 129.833,116.5 130.167,116.5 130.5,116.5C 130.509,185.708 130.509,254.708 130.5,323.5C 129.501,254.669 129.167,185.669 129.5,116.5 Z"/></g><g><path style="opacity:1" fill="#502c7e" d="M 138.5,127.5 C 138.833,191.503 138.5,255.503 137.5,319.5C 137.167,287.5 136.833,255.5 136.5,223.5C 136.5,191.16 137.167,159.16 138.5,127.5 Z"/></g><g><path style="opacity:1" fill="#522d74" d="M 256.5,127.5 C 257.5,127.5 258.5,127.5 259.5,127.5C 259.667,192.168 259.5,256.834 259,321.5C 257.989,322.337 256.822,322.67 255.5,322.5C 256.489,257.529 256.823,192.529 256.5,127.5 Z"/></g><g><path style="opacity:1" fill="#552d71" d="M 266.5,319.5 C 266.737,320.791 266.404,321.791 265.5,322.5C 263.522,257.609 262.855,192.609 263.5,127.5C 264.5,127.5 265.5,127.5 266.5,127.5C 266.5,191.5 266.5,255.5 266.5,319.5 Z"/></g><g><path style="opacity:1" fill="#52336f" d="M 315.5,127.5 C 316.384,130.023 317.218,132.69 318,135.5C 318.667,182.5 318.667,229.5 318,276.5C 317.1,279.718 315.933,282.718 314.5,285.5C 316.788,232.859 317.121,180.192 315.5,127.5 Z"/></g><g><path style="opacity:1" fill="#53396c" d="M 313.5,287.5 C 311.728,293.594 308.394,298.594 303.5,302.5C 303.343,301.127 303.51,299.793 304,298.5C 307.858,295.163 311.025,291.496 313.5,287.5 Z"/></g><g><path style="opacity:1" fill="#4e3564" d="M 87.5,293.5 C 89.0174,293.511 90.1841,294.177 91,295.5C 92.7498,297.734 94.2498,300.068 95.5,302.5C 92.1195,300.12 89.4528,297.12 87.5,293.5 Z"/></g><g><path style="opacity:1" fill="#755d8e" d="M 268.5,116.5 C 269.832,185.335 269.832,254.335 268.5,323.5C 264.272,326.113 259.939,328.446 255.5,330.5C 256.677,328.968 258.011,327.468 259.5,326C 262.025,325.576 264.025,324.41 265.5,322.5C 266.404,321.791 266.737,320.791 266.5,319.5C 268.497,252.175 269.163,184.508 268.5,116.5 Z"/></g></svg>
+                    <span>SentinelOne</span>
+                </div>
+
+                <!-- Snyk -->
+                <div class="tech-icon-card">
+                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none"><g fill="#000000"><path fill-rule="evenodd" d="M10.936 6.174c.17 1.583.22 2.664.134 2.893-.078.204-.383.637-.64.985l.373 3.546-2.804 2.064L5.85 14.08l.235-2.223a6.168 6.168 0 01-.166-1.28l-.347 3.298-.372-.274.373-3.542c-.259-.349-.568-.788-.645-.993-.087-.229-.037-1.31.133-2.893l.003-.024-.545-1.505v-.03c0-.657.828-2.415 1.317-3.35L6.076.81l.506 3.623.303.512.076-.027a3.3 3.3 0 011.036-.194c.413 0 .829.122 1.04.195l.076.026.304-.512L9.922.81l.24.456c.488.934 1.316 2.692 1.316 3.348v.03l-.544 1.506.002.024zm.113-1.604c-.03-.432-.469-1.467-.886-2.338l-.103.735c.015.12.192 1.439.755 2.25l.234-.647zm-1.48 2.979c.044-.05.422-.49-.083-.49-.458 0-.787.378-.874.49h.957zm-.461.513c.052-.001.097-.04.105-.095a.112.112 0 00-.031-.094c.002 0 .003-.002.005-.004h-.308v.016c0 .226.178.41.399.41.22 0 .4-.184.4-.41v-.016h-.304a.182.182 0 01.08.178.177.177 0 01-.199.155.178.178 0 01-.147-.14zm-.689 4.781a.934.934 0 01-.184-.096.337.337 0 01-.236.07.338.338 0 01-.235-.07.93.93 0 01-.185.096c.101.118.24.178.42.178s.319-.06.42-.178zM6.55 8.062c.052-.001.098-.04.105-.095a.111.111 0 00-.031-.094l.002-.001.003-.003H6.32v.016c0 .226.179.41.4.41.22 0 .399-.184.399-.41v-.016h-.304c.057.037.09.106.08.178a.177.177 0 01-.199.155.178.178 0 01-.147-.14zm-.037-1.003c-.506 0-.128.44-.083.49h.956c-.087-.112-.416-.49-.873-.49zm-.671-4.827c-.418.871-.856 1.906-.886 2.338l.24.663c.52-.737.715-1.906.757-2.204l-.111-.797zm.408 8.221c0 .037.002.92.227 1.551.18.509.586.564.752.564.428 0 .603-.4.61-.417v-.203l-.003-.002s.008-.17-.016-.228c-.043-.101-.136-.077-.21.055l-.003.01a.074.074 0 01-.004.008c-.205-.152-.413-.341-.413-.487 0-.133.163-.367.17-.377l-.111-2.14-.706.826-.45.135c-.288-.387-.55-.766-.603-.89-.037-.177.027-1.346.172-2.68l.012-.105-.078-.215c.214-.25.404-.57.566-.954l.48.809.344-.152c.005-.002.521-.225 1.01-.225H8v-.272h-.002c-.55 0-1.106.243-1.115.247l-.133.059-.486-.82-.071-.508-.135.392c-.194.565-.438 1.008-.724 1.316l-.043.046.113.311-.004.04c-.102.94-.237 2.527-.162 2.793l.003.009c.084.221.641.974.973 1.397l.037.047v.06zm.927 2.453c.046.43.51.589.828.589.313 0 .77-.159.817-.59l-.011.001-.041.002a1.01 1.01 0 01-.108-.006c-.142.28-.4.37-.663.37s-.522-.089-.664-.37a1.01 1.01 0 01-.106.006c-.014 0-.028 0-.041-.002h-.011zm2.571-2.513l.037-.047c.114-.145.254-.328.392-.516l-.722-.217-.705-.825-.11 2.14c.006.01.168.243.168.376 0 .146-.208.335-.413.487l-.003-.008a.08.08 0 00-.005-.01c-.072-.132-.166-.156-.209-.055-.024.057-.016.228-.016.228l-.003.003v.194c.011.026.188.425.61.425.166 0 .572-.055.753-.564.224-.63.226-1.514.226-1.55v-.061z" clip-rule="evenodd"/><path d="M7.997 4.452c-.367 0-.726.083-.994.167l-.166-.28-.112-.796c.397-.027.824-.043 1.28-.043.492 0 1.268.042 1.268.042l-.111.797-.167.28a3.46 3.46 0 00-.998-.167zM11.744 4.614c0-.193-.058-.455-.149-.748a8.22 8.22 0 011.09.305v8.041l-1.603 1.18-.348-3.302c.32-.44.517-.752.583-.925.132-.349.013-1.804-.113-2.98l.54-1.491v-.08zM4.682 9.165c-.133-.349-.013-1.804.112-2.98l-.54-1.491v-.08c0-.193.058-.454.149-.747-.709.157-1.089.304-1.089.304v8.042l1.609 1.184.347-3.3c-.324-.443-.523-.758-.588-.932z"/></g></svg>
+                    <span>Snyk</span>
+                </div>
+
+                <!-- Zscaler -->
+                <div class="tech-icon-card">
+                    <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1570 974"><path fill-rule="evenodd" fill="#236bf5" d="m1566.1 496.2c25.3 155.6-109.7 243.2-246.6 253.3-87.1 179.3-394.3 300.2-660 169.8-113.2 17.2-176.3-11.3-224.4-65.6 96.9-125.3 391.6-350.7 751.6-234.1 192.4 62 242.3-84 193.9-138.7-181.4-206-591-20.6-605.5-5.1 160.8-246.4 736.2-315.4 791 20.4zm-551.3-283c0.9 0-130.9-47-315 32.6q-2.8-1-5.5-2.1-2.8-1.1-5.5-2.2-2.8-1.2-5.5-2.5-2.7-1.3-5.3-2.6c177.2-117.7 332.4-167.7 465.4-148.3-80.6-92.4-466.9-160.5-688.3 61.5-273.6-53.9-465.2 178.1-454.3 390 10.9 211.8 242.1 344.1 373.8 308q1.1-0.1 2.3-0.2 1.2 0 2.4 0 1.2 0 2.3 0 1.2 0.1 2.4 0.2c29.4-139.9 148.2-465.7 630.8-634.4z"/></svg>
+                    <span>Zscaler</span>
+                </div>
+
+                <!-- F5 -->
+                <div class="tech-icon-card">
+                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none"><path fill="#E4002B" d="M13.777 4.048c-.086.354-.13.722-.213 1.098a39.715 39.715 0 00-3.668-.285c-.112.351-.217.696-.337 1.071 2.318.143 3.444.754 4.112 1.473.65.728.788 1.533.75 2.28-.084 1.213-.619 1.98-1.353 2.549a4.712 4.712 0 01-2.361.898c-1.061.08-2.48-.173-2.782-.358-.182-.414-.36-.83-.553-1.285-.047-.096-.077-.196.056-.31.206-.199.405-.39.613-.593.093-.09.195-.174.273-.045.285.44.552.844.82 1.246.304.449.768.858 1.78.79.851-.076 1.498-.72 1.567-1.428.075-1.31-1.251-2.24-4.699-2.538.662-1.997 1.306-3.93 1.822-5.466a27.93 27.93 0 012.302.198c.535.068 1.033.193 1.532.25a7 7 0 00-11.076 8.555c.297.002.502-.064.525-.192.027-.133.004-.34-.02-.549a32.121 32.121 0 01-.136-4.343c-.355.015-.674.031-.98.05.013-.276.028-.536.05-.807.302-.029.621-.054.972-.084.015-.237.032-.466.053-.697.157-1.418 1.65-2.285 2.893-2.62.552-.134.89-.176 1.154-.19.096-.003.2-.007.302-.007.258 0 .52.024.685.137.268.2.533.4.815.623.028.038.059.098-.011.201l-.386.452c-.076.092-.201.067-.307.039a32.529 32.529 0 00-.652-.323c-.392-.174-.798-.354-1.25-.336-.281.023-.554.311-.582.706-.04.6-.066 1.215-.088 1.882a100.06 100.06 0 012.389-.04l-.001.552c-.27.12-.523.241-.792.364-.556.006-1.085.01-1.617.02a72.993 72.993 0 00.07 4.627c.014.22.024.444.088.593.076.189.513.334 1.464.387l.014.483c-1.549-.046-3.036-.194-4.228-.408a7 7 0 0010.991-8.62z"/><path fill="#ffffff" d="M14.42 9.684c.038-.746-.1-1.55-.75-2.279-.667-.72-1.794-1.33-4.112-1.473.12-.375.226-.72.337-1.071 1.386.049 2.62.148 3.668.285.083-.376.128-.744.214-1.098a6.937 6.937 0 00-.339-.455c-.499-.057-.996-.182-1.532-.25a27.93 27.93 0 00-2.301-.198c-.516 1.536-1.16 3.469-1.822 5.467 3.447.298 4.773 1.227 4.699 2.538-.069.708-.716 1.352-1.567 1.428-1.013.068-1.476-.34-1.78-.79-.268-.403-.535-.806-.82-1.246-.078-.129-.18-.045-.273.045-.209.203-.407.394-.614.592-.132.116-.103.215-.056.311.193.455.373.871.554 1.285.302.185 1.72.438 2.782.358a4.714 4.714 0 002.36-.898c.735-.57 1.27-1.337 1.353-2.55z"/><path fill="#ffffff" d="M2.363 12.148c.132.18.273.354.422.52 1.193.215 2.68.363 4.23.408-.006-.16-.01-.317-.015-.483-.951-.053-1.388-.198-1.464-.386-.064-.15-.075-.373-.088-.594a72.784 72.784 0 01-.07-4.627c.532-.01 1.061-.014 1.617-.02.27-.123.523-.244.792-.364v-.551c-.823.003-1.604.017-2.387.039.022-.667.048-1.282.087-1.883.028-.394.301-.683.583-.705.451-.018.857.162 1.25.336.216.105.43.209.651.323.106.028.232.052.307-.04l.386-.451c.07-.104.04-.163.011-.201a39.675 39.675 0 00-.815-.624c-.165-.112-.427-.136-.685-.136-.102 0-.206.004-.301.007-.265.014-.602.056-1.154.19-1.244.335-2.736 1.202-2.894 2.62-.02.231-.037.46-.052.697-.351.03-.671.055-.973.084-.022.271-.037.532-.05.806.306-.018.625-.033.98-.049a32.19 32.19 0 00.137 4.343c.023.209.046.416.019.55-.022.127-.228.193-.524.191z"/></svg>
+                    <span>F5</span>
+                </div>
+
+                <!-- Palo Alto -->
+                <div class="tech-icon-card">
+                    <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="none"><circle cx="512" cy="512" r="512" fill="#fa582d"/><path d="M592.93 310.51 512.42 391l40 40.06L350.58 633l80.51 80.51L511.6 633l-40-40 201.84-202zM230 512.4l201.89-201.89L512.41 391l-201.9 201.91zM511.59 633l201.9-201.91L794 511.6 592.11 713.49z" fill="#fff"/></svg>
+                    <span>Palo Alto</span>
+                </div>
+
+                <!-- Varonis -->
+                <div class="tech-icon-card">
+                    <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1549 1244"><path fill="#000000" d="m276.8 0h-276.8l731.8 1074.5 137.9-203.7z"/><path fill="#000000" d="m929.8 959.2l-137.9 203.6 19.2 27.9c7.7 13.4 18.2 24.5 30.7 33.6 12.5 8.7 26.5 14.4 41.4 17.3 15.3 2.9 30.7 2.4 45.6-1.4 14.4-3.9 28.3-10.6 40.4-20.2 12.9-7.7 24.5-18.3 33.1-30.8 8.7-12.4 14.9-26.4 17.8-41.3 2.9-15.3 2.4-30.7-1-45.1-3.8-14.9-10.5-28.8-20.2-40.8z"/><path fill="#000000" d="m805.8 0h-276.8l466.6 685.4 138.4-204.1z"/><path fill="#000000" d="m1528.9 1062l-336.3-492.4-137.9 203.7 285.4 417.4c17.3 25 43.7 42.3 73.5 48 29.3 5.8 60.6-0.9 85.5-17.8 25-17.2 41.8-43.7 47.6-73.4 5.8-29.8-0.9-60.6-17.8-85.5z"/></svg>
+                    <span>Varonis</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+            RENAMED: "Professional Timeline"
+            This section is now the support for the skills above.
+        -->
+        <section id="experience" class="mb-16">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-800 via-gray-700 to-gray-900 mb-4 tracking-tight">
+                    Professional Timeline
+                </h3>
+                <div class="w-32 h-1 bg-gradient-to-r from-gray-400 to-gray-600 mx-auto rounded-full"></div>
+                <p class="text-lg text-gray-600 mt-4 font-medium">My journey in technology and security</p>
+            </div>
+            
+            <!-- Filter Buttons (UPDATED) -->
+            <div id="filter-container" class="flex flex-wrap justify-center gap-3 mb-12">
+                <button data-filter="all" class="filter-btn active">
+                    View All
+                </button>
+                <button data-filter="security" class="filter-btn">
+                    Security & Compliance
+                </button>
+                <button data-filter="cloud" class="filter-btn">
+                    Cloud & Infrastructure
+                </button>
+                <button data-filter="automation" class="filter-btn">
+                    Automation
+                </button>
+            </div>
+
+            <!-- Experience Timeline -->
+            <div id="experience-list" class="space-y-8">
+
+                <!-- Job 1: Dish Network -->
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="security">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Senior Security Engineer</h3>
+                            <p class="job-company">Dish Network</p>
+                        </div>
+                        <span class="job-duration">Dec 2025 - Present</span>
+                    </div>
+                    
+                    <div class="my-4 flex flex-wrap gap-2">
+                        <span class="skill-tag">AWS Lambda</span>
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">Git</span>
+                        <span class="skill-tag">Policy-as-Code</span>
+                        <span class="skill-tag">Palo Alto</span>
+                        <span class="skill-tag">Zscaler</span>
+                        <span class="skill-tag">DevSecOps</span>
+                    </div>
+                    
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Spearheading the design and implementation of an event-driven automation engine using <span class="keyword">AWS Lambda</span> and <span class="keyword">Python</span>, reducing Firewall Change Request (FCR) fulfillment times from 5 business days to under 15 minutes.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Developed a Git-backed <span class="keyword">Policy-as-Code</span> registry to codify security standards and "Trusted Patterns," enabling automated, data-driven implementation of firewall rules across a hybrid-cloud estate (<span class="keyword">AWS</span>, <span class="keyword">Palo Alto Strata</span>, and <span class="keyword">Zscaler</span>).</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Established a standardized "Definition of Ready" for network boundary changes, successfully launching a new triage process that eliminated administrative drag and streamlined collaboration between <span class="keyword">DevOps</span>, Network, and Security Architecture teams.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Achieved a zero-backlog state for PGP legacy tickets and orchestrated a 95% migration of services to virtualized infrastructure, including the complete overhaul of support documentation for zero-knowledge handovers.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Managed the successful "scream test" and teardown of legacy platforms (<span class="keyword">Thales CipherTrust</span> and <span class="keyword">Imperva</span>), reducing operational overhead and tightening the corporate perimeter.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Enforced the API Control Framework by identifying and remediating unauthorized public-facing cloud deployments, ensuring global alignment with corporate security posture.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Job 2: RBS IT Solutions -->
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="security automation">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Systems Engineer</h3>
+                            <p class="job-company">RBS IT Solutions | Wichita, KS</p>
+                        </div>
+                        <span class="job-duration">Feb 2025 - Nov 2025</span>
+                    </div>
+                    
+                    <div class="my-4 flex flex-wrap gap-2">
+                        <span class="skill-tag">MSP Management</span>
+                        <span class="skill-tag">PowerShell</span>
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">ConnectWise RMM</span>
+                        <span class="skill-tag">Proofpoint</span>
+                        <span class="skill-tag">Microsoft Purview</span>
+                        <span class="skill-tag">Huntress</span>
+                        <span class="skill-tag">SentinelOne</span>
+                        <span class="skill-tag">Acronis</span>
+                    </div>
+                    
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Managed and secured infrastructures for 75+ MSP clients (3,000+ endpoints) ensuring reliability, compliance, and business continuity.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Automated hardware and security audits using <span class="keyword">PowerShell</span> and <span class="keyword">Python</span> scripts to identify vulnerabilities and improve lifecycle management, proactively eliminating 600+ deprecated devices from our attack surface.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Led incident response and post-incident analysis using <span class="keyword">ConnectWise RMM</span>, <span class="keyword">Proofpoint</span>, and <span class="keyword">Microsoft Purview</span>.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Standardized backup, monitoring, and endpoint security with <span class="keyword">Huntress</span>, <span class="keyword">SentinelOne</span>, and <span class="keyword">Acronis</span> enterprise solutions.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Job 2: Leading Edge Technology Partners -->
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="security cloud">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Systems Engineer</h3>
+                            <p class="job-company">Leading Edge Technology Partners | Hutchinson, KS</p>
+                        </div>
+                        <span class="job-duration">Oct 2024 - Feb 2025</span>
+                    </div>
+                    
+                    <div class="my-4 flex flex-wrap gap-2">
+                        <span class="skill-tag">Entra ID</span>
+                        <span class="skill-tag">SSO</span>
+                        <span class="skill-tag">Veeam</span>
+                        <span class="skill-tag">Synology</span>
+                        <span class="skill-tag">Hyper-V</span>
+                        <span class="skill-tag">VMware</span>
+                    </div>
+                    
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Implemented secure identity management and SSO using <span class="keyword">Entra ID</span> across hybrid client infrastructures.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Enhanced DR operations using <span class="keyword">Veeam</span> and <span class="keyword">Synology</span> solutions with tested recovery playbooks and automated reporting, reducing recovery time by 30%.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Supported deployment and segmentation of virtualized environments using <span class="keyword">Hyper-V</span> and <span class="keyword">VMware</span> to strengthen system isolation.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Job 3: Wichita Tech Services -->
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="security cloud">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">IT Support Manager</h3>
+                            <p class="job-company">Wichita Tech Services | Wichita, KS</p>
+                        </div>
+                        <span class="job-duration">May 2024 - Oct 2024</span>
+                    </div>
+                    
+                    <div class="my-4 flex flex-wrap gap-2">
+                        <span class="skill-tag">NIST</span>
+                        <span class="skill-tag">CIS</span>
+                        <span class="skill-tag">HIPAA</span>
+                        <span class="skill-tag">ITAR</span>
+                        <span class="skill-tag">VMware</span>
+                        <span class="skill-tag">SonicWall</span>
+                        <span class="skill-tag">VeloCloud SD-WAN</span>
+                        <span class="skill-tag">RMM</span>
+                        <span class="skill-tag">Proofpoint</span>
+                    </div>
+                    
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Directed security and compliance programs for 25+ managed clients, including <span class="keyword">NIST</span>/<span class="keyword">CIS</span> auditing and <span class="keyword">HIPAA</span>/<span class="keyword">ITAR</span> implementation for over 1500 devices.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Architected multi-tenant, high-availability environments using <span class="keyword">VMware</span>, <span class="keyword">SonicWall</span>, and <span class="keyword">VeloCloud SD-WAN</span> solutions.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Developed automated monitoring strategies integrating <span class="keyword">RMM</span> tools and <span class="keyword">Proofpoint</span> for proactive threat detection.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Job 4: Village Travel -->
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="security cloud">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Infrastructure Administrator</h3>
+                            <p class="job-company">Village Travel | Wichita, KS</p>
+                        </div>
+                        <span class="job-duration">Oct 2023 - May 2024</span>
+                    </div>
+                    
+                    <div class="my-4 flex flex-wrap gap-2">
+                        <span class="skill-tag">Jira</span>
+                        <span class="skill-tag">NIST</span>
+                        <span class="skill-tag">CIS Controls</span>
+                        <span class="skill-tag">DR Policies</span>
+                    </div>
+                    
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Deployed <span class="keyword">Jira</span> for incident tracking and asset management for 500+ assets, improving response time and audit visibility.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Performed full <span class="keyword">NIST</span>-based infrastructure audits to remediate security gaps and optimize resource utilization.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Developed and enforced formalized DR policies aligned with <span class="keyword">CIS controls</span> to strengthen resilience.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Job 5: Flint Hills Resources -->
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="security automation cloud">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Database Administrator</h3>
+                            <p class="job-company">Flint Hills Resources | Wichita, KS</p>
+                        </div>
+                        <span class="job-duration">Jan 2023 - Jun 2023</span>
+                    </div>
+                    
+                    <div class="my-4 flex flex-wrap gap-2">
+                        <span class="skill-tag">Bash</span>
+                        <span class="skill-tag">PowerShell</span>
+                        <span class="skill-tag">SQL</span>
+                        <span class="skill-tag">AWS</span>
+                        <span class="skill-tag">RHEL</span>
+                        <span class="skill-tag">Neo4j</span>
+                    </div>
+                    
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Built automation for database monitoring and compliance reporting using <span class="keyword">Bash</span>, <span class="keyword">PowerShell</span>, and <span class="keyword">SQL</span>.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Consolidated servers into a multitenant architecture, reducing operational risk and attack surface by 10%.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Migrated legacy databases to <span class="keyword">AWS</span>-managed infrastructure to increase scalability and reduced licensing costs by $200k/year.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Engineered highly available infrastructure by deploying and hardening <span class="keyword">Red Hat Linux (RHEL)</span> servers on <span class="keyword">AWS</span> to specifically support and host <span class="keyword">Neo4j</span> databases.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Job 6: TDS Telecommunications -->
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="security automation cloud">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Database Administrator</h3>
+                            <p class="job-company">TDS Telecommunications | Remote</p>
+                        </div>
+                        <span class="job-duration">Jul 2018 - Dec 2022</span>
+                    </div>
+                    
+                    <div class="my-4 flex flex-wrap gap-2">
+                        <span class="skill-tag">Oracle</span>
+                        <span class="skill-tag">SQL Server</span>
+                        <span class="skill-tag">GoldenGate</span>
+                        <span class="skill-tag">Oracle RAC</span>
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">Bash</span>
+                    </div>
+                    
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Led the upgrade of 400+ <span class="keyword">Oracle</span> databases from 12c→19c, integrating encryption, audit logging, and patch automation.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Maintained 400+ <span class="keyword">SQL</span>/<span class="keyword">Oracle</span> systems using <span class="keyword">GoldenGate</span> replication and <span class="keyword">Oracle RAC</span> to ensure data integrity and availability.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Developed <span class="keyword">Python</span> and <span class="keyword">Bash</span> scripts to automate refresh processes, eliminating 10+ hours of manual work weekly.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Job 7: TDS Telecommunications (Network Intern) -->
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="automation">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Network Engineer Intern</h3>
+                            <p class="job-company">TDS Telecommunications | Bend, OR</p>
+                        </div>
+                        <span class="job-duration">Jan 2018 - Jul 2018</span>
+                    </div>
+                    
+                    <div class="my-4 flex flex-wrap gap-2">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">R</span>
+                        <span class="skill-tag">Data Mining</span>
+                        <span class="skill-tag">Visualization</span>
+                        <span class="skill-tag">PNM</span>
+                    </div>
+                    
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Developed a regression model using <span class="keyword">Python</span> to analyze <span class="keyword">PNM</span> data and network efficiency to improve technician deployment strategies.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Performed data mining and visualization in <span class="keyword">Python</span> and <span class="keyword">R</span> to identify access point inefficiencies and enhance user experience.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Job 8: Sunriver Computer Services -->
+                <div class="job-card bg-white p-6 rounded-xl shadow-lg" data-tags="cloud">
+                    <div class="job-header">
+                        <div>
+                            <h3 class="job-title">Technical Support Engineer</h3>
+                            <p class="job-company">Sunriver Computer Services | Sunriver, OR</p>
+                        </div>
+                        <span class="job-duration">Jun 2017 - Dec 2017</span>
+                    </div>
+                    
+                    <div class="my-4 flex flex-wrap gap-2">
+                        <span class="skill-tag">Network Setup</span>
+                        <span class="skill-tag">Firewall Administration</span>
+                        <span class="skill-tag">POS Technology</span>
+                        <span class="skill-tag">PCI DSS</span>
+                        <span class="skill-tag">Windows</span>
+                    </div>
+                    
+                    <ul class="job-description">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Provided technical support for 15–20 business clients including network setup, firewall administration, and software maintenance.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Led the end-to-end overhaul of outdated POS technology, successfully transitioning to new systems that met all required <span class="keyword">PCI DSS</span> regulatory mandates.</span>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Configured and maintained multi-site <span class="keyword">Windows</span> environments with consistent uptime and security baselines.</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div> <!-- /#experience-list -->
+        </section>
+
+        <!-- Education & Certifications Section -->
+        <section id="education" class="mb-16">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary-teal-700 via-primary-teal-600 to-primary-teal-800 mb-4 tracking-tight">
+                    Education & Certifications
+                </h3>
+                <div class="w-32 h-1 bg-gradient-to-r from-primary-teal-400 to-primary-teal-600 mx-auto rounded-full"></div>
+                <p class="text-lg text-gray-600 mt-4 font-medium">Academic foundation and professional credentials</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Education Card -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-teal-500 to-primary-teal-600"></div>
+                    
+                    <div class="flex items-start mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-primary-teal-500 to-primary-teal-700 rounded-xl flex items-center justify-center mr-6 flex-shrink-0">
+                            <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-2xl font-bold text-gray-900 mb-2">Bachelor of Science in Computer Science</h4>
+                            <p class="text-lg font-semibold text-primary-teal-700 mb-1">Western Washington University</p>
+                            <p class="text-sm text-gray-500">Jan 2014 - Jun 2017</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h5 class="font-semibold text-gray-800 mb-2">Leadership & Activities:</h5>
+                            <ul class="space-y-2 text-gray-700">
+                                <li class="flex items-start">
+                                    <span class="text-primary-teal-500 mr-2 font-bold">•</span>
+                                    <span><span class="font-semibold">Group Leader:</span> Creators and Innovators Club for Girls (2015-2017) - Volunteer mentorship program focused on robotics and engineering for middle school girls, including Little Bits, Lego NXT Mindstorms, and Arduino programming.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-primary-teal-500 mr-2 font-bold">•</span>
+                                    <span><span class="font-semibold">Officer:</span> Association for Women in Computing (2014-2017) - Coordinated outreach opportunities to promote diversity and empower women in Computer Science.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-primary-teal-500 mr-2 font-bold">•</span>
+                                    <span><span class="font-semibold">Scholarship Recipient:</span> Computer Science and Mathematics Scholars Program (2014-2017) - High achieving women pursuing technology degrees.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certifications Card -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-teal-500 to-primary-teal-600"></div>
+                    
+                    <div class="flex items-start mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-primary-teal-500 to-primary-teal-700 rounded-xl flex items-center justify-center mr-6 flex-shrink-0">
+                            <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 12l2 2 4-4"></path>
+                                <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-2xl font-bold text-gray-900 mb-2">Professional Certifications</h4>
+                            <p class="text-lg font-semibold text-primary-teal-700 mb-1">Security & Cloud Focus</p>
+                            <p class="text-sm text-gray-500">Earned credentials</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h5 class="font-semibold text-gray-800 mb-3">Current:</h5>
+                            <div class="space-y-3">
+                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                    <div class="w-10 h-10 bg-primary-teal-100 rounded-lg flex items-center justify-center mr-4">
+                                        <svg class="w-5 h-5 text-primary-teal-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M9 12l2 2 4-4"></path>
+                                            <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">CISSP (Certified Information Systems Security Professional)</p>
+                                        <p class="text-sm text-gray-600">Obtained November 2025</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h5 class="font-semibold text-gray-800 mb-3">Technical Skills Validated:</h5>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-primary-teal-100 text-primary-teal-800 rounded-full text-sm font-medium">AWS Cloud</span>
+                                <span class="px-3 py-1 bg-primary-teal-100 text-primary-teal-800 rounded-full text-sm font-medium">Security Frameworks</span>
+                                <span class="px-3 py-1 bg-primary-teal-100 text-primary-teal-800 rounded-full text-sm font-medium">Automation</span>
+                                <span class="px-3 py-1 bg-primary-teal-100 text-primary-teal-800 rounded-full text-sm font-medium">DevSecOps</span>
+                                <span class="px-3 py-1 bg-primary-teal-100 text-primary-teal-800 rounded-full text-sm font-medium">Compliance</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+         <!--  <p class="text-sm">Relocating to Denver, CO | Seeking Cloud/DevSecOps Roles</p>-->
+               <div class="mt-2 space-x-4">
+                <a href="mailto:shayleeczech@gmail.com" class="text-gray-400 hover:text-white">Email</a>
+                <span class="text-gray-600">|</span>
+                <a href="https://linkedin.com/in/shayleeczech" target="_blank" class="text-gray-400 hover:text-white">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Mobile Menu Toggle ---
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            const closeIcon = document.getElementById('close-icon');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+            if (menuBtn) {
+                menuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    menuIcon.classList.toggle('hidden');
+                    closeIcon.classList.toggle('hidden');
+                });
+            }
+
+            // --- Close Mobile Menu on Link Click ---
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.classList.remove('hidden');
+                    closeIcon.classList.add('hidden');
+                });
+            });
+            
+            // --- Experience Filter Function ---
+            const filterContainer = document.getElementById('filter-container');
+            const jobCards = document.querySelectorAll('.job-card');
+            
+            if (filterContainer) {
+                filterContainer.addEventListener('click', (e) => {
+                    const targetButton = e.target.closest('button.filter-btn');
+                    if (!targetButton) return;
+
+                    const filter = targetButton.dataset.filter;
+
+                    // Update active button state
+                    filterContainer.querySelector('.filter-btn.active').classList.remove('active');
+                    targetButton.classList.add('active');
+
+                    // Filter job cards
+                    jobCards.forEach(card => {
+                        const tags = card.dataset.tags;
+                        if (filter === 'all' || (tags && tags.includes(filter))) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
+

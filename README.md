@@ -6,7 +6,7 @@ The architecture is **ALB + Auto Scaling Group across two AZs**: custom VPC, pri
 
 ## Project Overview
 
-* **Site content:** Static pages under **`site/`** (recipes at `site/p/`). Nginx on EC2 serves files from userdata; the fast-path workflow copies `site/p/*` and `infra/nginx.conf` over SSM.
+* **Site content:** Static portfolio in **`site/`**, recipes in **`site/p/`**. Nginx on EC2 serves both; the fast-path workflow copies root HTML, **`site/assets/`**, **`site/p/*`**, and **`infra/nginx.conf`** over SSM.
 * **Infrastructure:** AWS custom VPC (public subnets for ALB, private subnets for EC2), Application Load Balancer, Auto Scaling Group (2 AZs), ACM certificate, Route 53 ALIAS records.
 * **State Management:** Remote Terraform state in an encrypted S3 bucket with DynamoDB state locking.
 * **Architecture:**
@@ -38,7 +38,7 @@ The architecture is **ALB + Auto Scaling Group across two AZs**: custom VPC, pri
 ### Content-only (fast path)
 
 - **Trigger:** Push to `main` when only files under **`site/**`** change, or run **“Deploy site content only”** manually from the Actions tab.
-- **Behavior:** Skips Terraform apply and ASG refresh. Uses **SSM Send Command** to run on each live instance: `git pull` in `/opt/web-server`, copy `site/p/*` and `infra/nginx.conf`, restart Nginx container. Typically finishes in under a couple of minutes.
+- **Behavior:** Skips Terraform apply and ASG refresh. Uses **SSM Send Command** to run on each live instance: `git pull` in `/opt/web-server`, copy portfolio HTML, **`site/assets/`**, **`site/p/*`**, and **`infra/nginx.conf`**, restart Nginx. Typically finishes in under a couple of minutes.
 - **IAM:** The GitHub Actions deploy role needs `ssm:SendCommand` and `ssm:GetCommandInvocation` (added in `infra/policies/terraform-ha-deploy-policy.json`). Run the full pipeline or `terraform apply` once after adding this so the role has the new permissions.
 
 ## Future Enhancements
