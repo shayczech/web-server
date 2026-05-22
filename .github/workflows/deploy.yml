@@ -20,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AWS_REGION: us-east-2
+      SECURITY_SCORE: 98
 
     steps:
       - name: Checkout Code
@@ -34,13 +35,21 @@ jobs:
         run: npm install
         working-directory: site/api/
 
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
+      - name: Snyk scan and compute security score
+        working-directory: site/api
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: monitor site/api/
-          args: --fail-on=high
+        run: |
+          npm install
+          set +e
+          npx snyk@latest test --json-file-output=snyk.json >/dev/null 2>&1
+          SNYK_EXIT=$?
+          set -e
+          SCORE=$(node compute-snyk-score.js snyk.json)
+          echo "Security score from Snyk: ${SCORE}"
+          echo "SECURITY_SCORE=${SCORE}" >> "$GITHUB_ENV"
+          rm -f snyk.json
+          npx snyk@latest test --severity-threshold=high
 
       - name: Clean up node_modules to prevent Ansible copy hang
         run: rm -rf site/api/node_modules
@@ -71,6 +80,14 @@ jobs:
         run: |
           COUNT=$(terraform state list 2>/dev/null | wc -l | tr -d ' ')
           aws ssm put-parameter --name "/web-server/iac-resource-count" --value "$COUNT" --type String --overwrite
+
+      - name: Publish security score to SSM
+        run: |
+          aws ssm put-parameter \
+            --name "/web-server/security-score" \
+            --value "${{ env.SECURITY_SCORE }}" \
+            --type String \
+            --overwrite
 
       # --- ASG instance refresh (deploys new userdata to all instances) ---
       - name: Get ASG name

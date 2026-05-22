@@ -94,12 +94,15 @@
       "Resource": "*"
     },
     {
-      "Sid": "TerraformSSMIacCount",
+      "Sid": "TerraformSSMPipelineMetrics",
       "Effect": "Allow",
       "Action": [
         "ssm:PutParameter"
       ],
-      "Resource": "arn:aws:ssm:*:*:parameter/web-server/iac-resource-count"
+      "Resource": [
+        "arn:aws:ssm:*:*:parameter/web-server/iac-resource-count",
+        "arn:aws:ssm:*:*:parameter/web-server/security-score"
+      ]
     },
     {
       "Sid": "ContentDeploySSMSendCommand",

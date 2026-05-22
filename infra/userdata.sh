@@ -52,7 +52,8 @@ docker build -t stats-api:latest \
   --build-arg BUILD_TIMESTAMP=$(date +%s) \
   -f Dockerfile .
 
-echo '{"securityScore": 100}' > /app/api/security-score.json
+# Bootstrap score until pipeline writes /web-server/security-score to SSM
+echo '{"securityScore": 98}' > /app/api/security-score.json
 
 docker run -d \
   --name stats-api \

@@ -40,6 +40,20 @@ resource "aws_iam_role_policy" "ec2_ssm_iac_count" {
   })
 }
 
+# Allow stats API to read Snyk-derived security score (written by pipeline)
+resource "aws_iam_role_policy" "ec2_ssm_security_score" {
+  name   = "${var.server_name}-ec2-ssm-security-score"
+  role   = aws_iam_role.ec2_role.id
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = "ssm:GetParameter"
+      Resource = "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/web-server/security-score"
+    }]
+  })
+}
+
 # Allow userdata/stats API to read GitHub token from SSM (avoids unauthenticated rate limit)
 resource "aws_iam_role_policy" "ec2_ssm_github_token" {
   name   = "${var.server_name}-ec2-ssm-github-token"

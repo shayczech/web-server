@@ -7,12 +7,33 @@ const PORT = 3000;
 
 const IAC_COUNT_PARAM = '/web-server/iac-resource-count';
 const GITHUB_TOKEN_PARAM = '/web-server/github-token';
+const SECURITY_SCORE_PARAM = '/web-server/security-score';
 const GITHUB_FETCH_TIMEOUT_MS = 3000;
 
 const SECURITY_SCORE_PATH = path.join('/', 'app', 'security-score.json');
 const FALLBACK_SECURITY_SCORE = 98;
 
-function getSecurityScore() {
+async function getSecurityScoreFromSSM() {
+    try {
+        const client = new SSMClient({ region: process.env.AWS_REGION || 'us-east-2' });
+        const out = await client.send(new GetParameterCommand({
+            Name: SECURITY_SCORE_PARAM,
+            WithDecryption: false,
+        }));
+        const value = out.Parameter?.Value;
+        if (value == null) return null;
+        const n = parseInt(value, 10);
+        return Number.isFinite(n) && n >= 0 && n <= 100 ? n : null;
+    } catch (err) {
+        console.warn('SSM security score fetch failed:', err?.message || err);
+        return null;
+    }
+}
+
+async function getSecurityScore() {
+    const fromSsm = await getSecurityScoreFromSSM();
+    if (fromSsm != null) return fromSsm;
+
     try {
         if (fs.existsSync(SECURITY_SCORE_PATH)) {
             const raw = fs.readFileSync(SECURITY_SCORE_PATH, 'utf8');
@@ -190,12 +211,13 @@ async function getActionsRunCount() {
 
 app.get('/api/stats', async (req, res) => {
     try {
-        const [totalCommits, terraformModules, ansiblePlaybooks, ciCdRuns, iacFromSSM] = await Promise.all([
+        const [totalCommits, terraformModules, ansiblePlaybooks, ciCdRuns, iacFromSSM, securityScore] = await Promise.all([
             getTotalCommitCount(),
             getTerraformModuleCount(),
             getTotalAnsiblePlaybooks(),
             getActionsRunCount(),
             getIacResourceCountFromSSM(),
+            getSecurityScore(),
         ]);
 
         const fileCountFallback = (terraformModules || 0) + (ansiblePlaybooks || 0);
@@ -204,19 +226,20 @@ app.get('/api/stats', async (req, res) => {
             ansiblePlaybooks: ansiblePlaybooks || 0,
             iacResources: iacFromSSM != null ? iacFromSSM : fileCountFallback,
             ciCdRuns: ciCdRuns ?? 0,
-            securityScore: getSecurityScore(),
+            securityScore,
             githubCommits: totalCommits || 0,
         };
 
         res.json(data);
     } catch (err) {
         console.error('Unexpected stats error:', err && err.message ? err.message : err);
+        const securityScore = await getSecurityScore();
         res.json({
             terraformModules: 0,
             ansiblePlaybooks: 8,
             iacResources: 0,
             ciCdRuns: 0,
-            securityScore: getSecurityScore(),
+            securityScore,
             githubCommits: 0,
         });
     }
