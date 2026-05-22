@@ -31,3 +31,9 @@ variable "instance_type" {
   type        = string
   default     = "t2.micro"
 }
+
+variable "github_actions_deploy_role_name" {
+  description = "IAM role assumed by GitHub Actions OIDC for deploy/terraform."
+  type        = string
+  default     = "GitHub-Actions-Deploy-Role"
+}
