@@ -2,17 +2,14 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "TerraformStateLock",
+      "Sid": "TerraformStateLockS3",
       "Effect": "Allow",
       "Action": [
-        "dynamodb:GetItem",
-        "dynamodb:PutItem",
-        "dynamodb:DeleteItem",
-        "dynamodb:ConditionCheckItem",
-        "dynamodb:DescribeTable",
-        "dynamodb:BatchGetItem"
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject"
       ],
-      "Resource": "arn:aws:dynamodb:us-east-2:643913568924:table/portfolio-tf-state-lock"
+      "Resource": "arn:aws:s3:::shaylee-portfolio-tf-state-2025/portfolio/terraform.tfstate.tflock"
     }
   ]
 }

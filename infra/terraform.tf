@@ -10,7 +10,7 @@ terraform {
     key            = "portfolio/terraform.tfstate"
     region         = "us-east-2"
     encrypt        = true
-    dynamodb_table = "portfolio-tf-state-lock"
+    use_lockfile   = true
   }
 
   required_providers {
