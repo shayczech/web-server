@@ -12,7 +12,7 @@ systemctl enable docker
 systemctl start docker
 
 # --- Create app directories ---
-mkdir -p /app/html /app/config /var/log/nginx
+mkdir -p /app/html /app/config /app/api /var/log/nginx
 
 # --- Install CloudWatch Agent ---
 curl -fsSL https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb \
@@ -44,6 +44,29 @@ systemctl start amazon-cloudwatch-agent
 # --- Pull app source from GitHub (public repo) ---
 apt-get install -y git
 git clone https://github.com/shayczech/web-server.git /opt/web-server
+
+# --- Build and run stats-api ---
+cd /opt/web-server/site/api
+
+docker build -t stats-api:latest \
+  --build-arg BUILD_TIMESTAMP=$(date +%s) \
+  -f Dockerfile .
+
+echo '{"securityScore": 100}' > /app/api/security-score.json
+
+docker run -d \
+  --name stats-api \
+  --restart always \
+  --network host \
+  -v /app/api/security-score.json:/app/security-score.json:ro \
+  -v /app/api:/app/data \
+  stats-api:latest
+
+# Wait for API
+for i in $(seq 1 12); do
+  curl -sf http://localhost:3000/api/stats && break
+  sleep 5
+done
 
 # --- Copy static site (portfolio + recipes under /p/) ---
 cp /opt/web-server/site/index.html /app/html/

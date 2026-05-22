@@ -312,7 +312,7 @@
                         </div>
                     
                     <p class="text-gray-700 mb-6">
-                        I built this to demonstrate end-to-end platform ownership: design, provision, deploy, and observe. Terraform defines a highly available architecture (custom VPC, ALB, ASG across two AZs); GitHub Actions runs Terraform apply and rolling instance refresh. The ALB terminates SSL with ACM; Nginx serves the site from containers in private subnets. The repo includes GRC compliance mapping and CloudWatch logging — the kind of automated, secure, observable infrastructure I deliver for production systems.
+                        I built this to demonstrate end-to-end platform ownership: design, provision, deploy, and observe. Terraform defines a highly available architecture (custom VPC, ALB, ASG across two AZs); GitHub Actions runs Terraform apply and rolling instance refresh. The ALB terminates SSL with ACM; Nginx serves static pages and proxies `/api/stats` to a Node.js container in private subnets. The repo includes GRC compliance mapping and CloudWatch logging — the kind of automated, secure, observable infrastructure I deliver for production systems.
                     </p>
                      
                     <!-- Flow Diagram -->
@@ -377,7 +377,7 @@
                         <ul class="space-y-3">
                             <li class="flex items-start">
                                 <span class="text-primary-teal-500 mr-2 text-xl font-bold">✓</span>
-                                <span class="font-medium">Static site: portfolio and supporting pages served by Nginx behind the ALB.</span>
+                                <span class="font-medium">Dynamic API: Real-time GitHub statistics via containerized Node.js API with resilience checks.</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-primary-teal-500 mr-2 text-xl font-bold">✓</span>
@@ -456,15 +456,23 @@
             });
 
 
-            // --- Stats (static placeholders; live stats API not deployed on this site) ---
+            // --- Stats API Function ---
             async function fetchStats() {
-                return {
-                    githubCommits: '—',
-                    terraformModules: '—',
-                    iacResources: '—',
-                    ciCdRuns: '—',
-                    securityScore: null,
-                };
+                const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:3000/api/stats'
+                    : '/api/stats';
+
+                try {
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    return data;
+                } catch (error) {
+                    console.error('Failed to fetch stats:', error);
+                    return { githubCommits: 'N/A', terraformModules: 'N/A', securityScore: 'N/A' };
+                }
             }
 
 

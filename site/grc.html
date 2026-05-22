@@ -402,13 +402,28 @@
     </footer>
 
     <script>
-        // Overall score (static; no stats API on this deployment)
+        // Overall Score: fetch from stats API (same as index)
         (function() {
+            const apiUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                ? 'http://localhost:3000/api/stats'
+                : '/api/stats';
             const valueEl = document.getElementById('grc-overall-score-value');
             const fillEl = document.getElementById('grc-overall-score-fill');
             if (!valueEl || !fillEl) return;
-            valueEl.textContent = '100%';
-            fillEl.style.width = '100%';
+            fetch(apiUrl)
+                .then(r => r.ok ? r.json() : Promise.reject())
+                .then(data => {
+                    const score = data.securityScore;
+                    const pct = (score !== undefined && score !== null && !isNaN(Number(score)))
+                        ? Math.min(100, Math.max(0, Number(score)))
+                        : 100;
+                    valueEl.textContent = pct + '%';
+                    fillEl.style.width = pct + '%';
+                })
+                .catch(() => {
+                    valueEl.textContent = '100%';
+                    fillEl.style.width = '100%';
+                });
         })();
 
         // Mobile Menu Toggle

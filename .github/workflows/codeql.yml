@@ -36,6 +36,17 @@ jobs:
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies (API)
+        if: ${{ hashFiles('site/api/package.json') != '' }}
+        working-directory: site/api
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund || npm install --ignore-scripts --no-audit --no-fund
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:

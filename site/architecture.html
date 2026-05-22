@@ -224,7 +224,7 @@
                         <image href="assets/aws-icons/Arch_Amazon-EC2_48.svg" x="224" y="486" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
                         <circle class="health-dot" cx="322" cy="492" r="4" fill="#22c55e"/>
                         <text x="240" y="536" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">EC2 (AZ-a)</text>
-                        <text x="240" y="550" text-anchor="middle" fill="#94a3b8" font-size="10">Docker: Nginx (static site)</text>
+                        <text x="240" y="550" text-anchor="middle" fill="#94a3b8" font-size="10">Docker: Nginx + Node.js API</text>
                     </g>
                     <g id="node-ec2b" class="node-group" data-id="ec2b">
                         <rect class="node-card" x="460" y="480" width="200" height="88" rx="10"/>
@@ -307,7 +307,7 @@
             igw: { label: 'Internet Gateway', subtitle: 'VPC Entry Point', accent: '#0D9488', tech: ['VPC', 'Public Access'], desc: 'Attached to the custom VPC (10.0.0.0/16). Routes internet traffic to public subnets where the ALB lives. Free tier — no hourly cost.', connections: ['Route 53', 'ALB (Ingress)'] },
             alb: { label: 'Application Load Balancer', subtitle: 'SSL Termination + Health Checks', accent: '#F59E0B', tech: ['HTTPS/443', 'HTTP→HTTPS Redirect', 'Target Groups', 'Health Checks'], desc: 'Internet-facing ALB in 2 public subnets (us-east-2a, us-east-2b). Terminates SSL with ACM certificate, redirects HTTP to HTTPS, and forwards to healthy targets on port 80.', connections: ['Internet Gateway', 'EC2 (AZ-a)', 'EC2 (AZ-b)', 'ACM (TLS Cert)'] },
             asg: { label: 'Auto Scaling Group', subtitle: 'Min: 1  Max: 2  Desired: 1', accent: '#EF4444', tech: ['Launch Template', 'Instance Refresh', 'Health Check: ELB'], desc: 'Maintains desired capacity across AZs. On deployment, GitHub Actions triggers an instance refresh — the ASG launches a new instance from the latest Launch Template, waits for it to pass ALB health checks, then terminates the old one.', connections: ['EC2 (AZ-a)', 'EC2 (AZ-b)', 'GitHub Actions', 'S3 (State + Artifacts)'] },
-            ec2a: { label: 'EC2 (AZ-a)', subtitle: 'Docker: Nginx', accent: '#0D9488', tech: ['t3.micro', 'Docker', 'Nginx', 'CloudWatch Agent'], desc: 'Nginx (port 80) serves the portfolio at / and static recipes under /p/ from the ALB. CloudWatch Agent forwards access logs.', connections: ['ALB', 'ASG', 'CloudWatch'] },
+            ec2a: { label: 'EC2 (AZ-a)', subtitle: 'Docker: Nginx + Node.js API', accent: '#0D9488', tech: ['t3.micro', 'Docker', 'Nginx', 'Node.js API', 'CloudWatch Agent'], desc: 'Nginx (port 80) serves static pages and proxies /api/stats to the Node.js container (port 3000); recipes live under /p/. CloudWatch Agent forwards access logs.', connections: ['ALB', 'ASG', 'CloudWatch'] },
             ec2b: { label: 'EC2 (AZ-b)', subtitle: 'Standby / Auto-Replace', accent: '#0D9488', tech: ['t3.micro', 'Auto-Replace', 'Multi-AZ'], desc: 'Standby capacity in a second AZ. The ASG can launch instances here if AZ-a has issues, or during instance refresh for zero-downtime deployments. Demonstrates multi-AZ resilience.', connections: ['ALB', 'ASG'] },
             cw: { label: 'CloudWatch', subtitle: 'Metrics + Logs + Alarms', accent: '#3B82F6', tech: ['Dashboards', 'Alarms', 'SNS Alerts', 'Log Groups'], desc: 'Centralized monitoring: Nginx access logs, ALB metrics (RequestCount, 5xx rate, TargetResponseTime), instance health. Alarms trigger SNS email alerts when thresholds are breached.', connections: ['EC2 (AZ-a)'] },
             s3: { label: 'S3 Bucket', subtitle: 'Terraform State + Artifacts', accent: '#10B981', tech: ['Terraform State', 'DynamoDB Lock', 'Encrypted', 'Versioned'], desc: 'Stores Terraform remote state with server-side encryption and versioning. DynamoDB table provides state locking to prevent concurrent modifications. Also hosts deployment artifacts.', connections: ['ASG (state)'] },
@@ -332,7 +332,7 @@
             { id: 'r53', text: 'Route 53 resolves domain → ALB IP address' },
             { id: 'igw', text: 'Request enters VPC through Internet Gateway' },
             { id: 'alb', text: 'ALB terminates SSL, checks health, routes to target' },
-            { id: 'ec2a', text: 'Nginx serves portfolio at / and recipes under /p/' },
+            { id: 'ec2a', text: 'Nginx serves pages, proxies /api/stats to Node.js' },
             { id: 'cw', text: 'CloudWatch receives access logs and metrics' }
         ];
 

@@ -25,6 +25,26 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Node.js Dependencies (for Snyk Scan)
+        run: npm install
+        working-directory: site/api/
+
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor site/api/
+          args: --fail-on=high
+
+      - name: Clean up node_modules to prevent Ansible copy hang
+        run: rm -rf site/api/node_modules
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -45,6 +65,12 @@ jobs:
         id: apply
         run: terraform apply -auto-approve
         working-directory: infra/
+
+      - name: Update IaC resource count in SSM
+        working-directory: infra
+        run: |
+          COUNT=$(terraform state list 2>/dev/null | wc -l | tr -d ' ')
+          aws ssm put-parameter --name "/web-server/iac-resource-count" --value "$COUNT" --type String --overwrite
 
       # --- ASG instance refresh (deploys new userdata to all instances) ---
       - name: Get ASG name
