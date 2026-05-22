@@ -24,12 +24,12 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install Node.js Dependencies (for Snyk Scan)
         run: npm install
@@ -63,7 +63,7 @@ jobs:
 
       # --- PHASE 1: Terraform (IaC) (No changes) ---
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v4
 
       - name: Terraform Init
         id: init
