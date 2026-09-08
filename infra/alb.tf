@@ -107,7 +107,9 @@ resource "aws_lb_listener" "https" {
   }
 }
 
-# --- Route 53 ALIAS: apex domain → ALB ---
+# --- Route 53 ALIAS: apex domain → CloudFront ---
+# Cut over from the ALB (Phase B). evaluate_target_health must be false here —
+# Route53 rejects true for CloudFront alias targets, unlike ALB targets.
 resource "aws_route53_record" "apex" {
   allow_overwrite = true
   zone_id         = data.aws_route53_zone.main.zone_id
@@ -115,13 +117,13 @@ resource "aws_route53_record" "apex" {
   type            = "A"
 
   alias {
-    name                   = aws_lb.web.dns_name
-    zone_id                = aws_lb.web.zone_id
-    evaluate_target_health = true
+    name                   = aws_cloudfront_distribution.site.domain_name
+    zone_id                = "Z2FDTNDATAQYW2" # fixed CloudFront hosted-zone-id constant
+    evaluate_target_health = false
   }
 }
 
-# --- Route 53 ALIAS: www → ALB ---
+# --- Route 53 ALIAS: www → CloudFront ---
 resource "aws_route53_record" "www" {
   allow_overwrite = true
   zone_id         = data.aws_route53_zone.main.zone_id
@@ -129,8 +131,8 @@ resource "aws_route53_record" "www" {
   type            = "A"
 
   alias {
-    name                   = aws_lb.web.dns_name
-    zone_id                = aws_lb.web.zone_id
-    evaluate_target_health = true
+    name                   = aws_cloudfront_distribution.site.domain_name
+    zone_id                = "Z2FDTNDATAQYW2"
+    evaluate_target_health = false
   }
 }
