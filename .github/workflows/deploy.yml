@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - 'site/**'
-      - '**.md'
-      - 'README*'
+    paths:
+      - 'infra/**'
+      - 'site/api/**'
+      - '.github/workflows/deploy.yml'
   workflow_dispatch: # Allows manual triggering (full pipeline)
 
 # --- PERMISSIONS YOU ADDED FOR OIDC ---
@@ -51,8 +51,13 @@ jobs:
           rm -f snyk.json
           npx snyk@latest test --severity-threshold=high
 
-      - name: Clean up node_modules to prevent Ansible copy hang
-        run: rm -rf site/api/node_modules
+      - name: Install Lambda dependencies and build deployment zip
+        working-directory: site/api
+        run: |
+          npm ci --omit=dev
+          mkdir -p ../../infra/lambda
+          zip -r ../../infra/lambda/stats-api.zip index.js node_modules package.json -x "*.md" >/dev/null
+          rm -rf node_modules
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -61,7 +66,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: GitHubActionsSession
 
-      # --- PHASE 1: Terraform (IaC) (No changes) ---
+      # --- PHASE 1: Terraform (IaC) ---
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v4
 
@@ -89,51 +94,10 @@ jobs:
             --type String \
             --overwrite
 
-      # --- ASG instance refresh (deploys new userdata to all instances) ---
-      - name: Get ASG name
-        id: asg
+      - name: Invalidate CloudFront cache
         working-directory: infra
         run: |
-          ASG_NAME=$(terraform output -raw asg_name)
-          echo "name=${ASG_NAME}" >> $GITHUB_OUTPUT
-
-      - name: Start ASG instance refresh
-        run: |
-          aws autoscaling start-instance-refresh \
-            --auto-scaling-group-name "${{ steps.asg.outputs.name }}" \
-            --preferences '{"MinHealthyPercentage": 50, "InstanceWarmup": 300}'
-
-      - name: Wait for instance refresh to complete
-        run: |
-          # Allow up to 50 min for launch, warmup, and ALB health checks.
-          # Print status reason + progress every poll so failures are diagnosable.
-          for i in $(seq 1 100); do
-            STATUS=$(aws autoscaling describe-instance-refreshes \
-              --auto-scaling-group-name "${{ steps.asg.outputs.name }}" \
-              --query 'InstanceRefreshes[0].Status' --output text)
-            PCT=$(aws autoscaling describe-instance-refreshes \
-              --auto-scaling-group-name "${{ steps.asg.outputs.name }}" \
-              --query 'InstanceRefreshes[0].PercentageComplete' --output text)
-            REASON=$(aws autoscaling describe-instance-refreshes \
-              --auto-scaling-group-name "${{ steps.asg.outputs.name }}" \
-              --query 'InstanceRefreshes[0].StatusReason' --output text)
-            INSTANCES_LEFT=$(aws autoscaling describe-instance-refreshes \
-              --auto-scaling-group-name "${{ steps.asg.outputs.name }}" \
-              --query 'InstanceRefreshes[0].InstancesToUpdate' --output text)
-            echo "Refresh status: $STATUS | complete: ${PCT}% | instances remaining: $INSTANCES_LEFT"
-            echo "Status reason: $REASON"
-            if [ "$STATUS" = "Successful" ]; then
-              echo "Instance refresh complete."
-              exit 0
-            elif [ "$STATUS" = "Failed" ] || [ "$STATUS" = "Cancelled" ]; then
-              echo "Instance refresh failed with status: $STATUS"
-              exit 1
-            fi
-            sleep 30
-          done
-          echo "Timed out waiting for instance refresh."
-          echo "Final ASG refresh state:"
-          aws autoscaling describe-instance-refreshes \
-            --auto-scaling-group-name "${{ steps.asg.outputs.name }}" \
-            --max-items 1
-          exit 1
+          DIST_ID=$(terraform output -raw cloudfront_distribution_id 2>/dev/null || echo "")
+          if [ -n "$DIST_ID" ]; then
+            aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/api/*"
+          fi
