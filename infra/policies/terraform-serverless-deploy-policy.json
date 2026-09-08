@@ -110,6 +110,49 @@
         "arn:aws:s3:::web-server-site-*",
         "arn:aws:s3:::web-server-site-*/*"
       ]
+    },
+    {
+      "Sid": "TerraformApiGatewayV2",
+      "Effect": "Allow",
+      "Action": [
+        "apigateway:GET",
+        "apigateway:POST",
+        "apigateway:PUT",
+        "apigateway:PATCH",
+        "apigateway:DELETE"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "TerraformManageLambdaExecRole",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateRole",
+        "iam:DeleteRole",
+        "iam:GetRole",
+        "iam:PassRole",
+        "iam:AttachRolePolicy",
+        "iam:DetachRolePolicy",
+        "iam:ListAttachedRolePolicies",
+        "iam:ListRolePolicies",
+        "iam:TagRole",
+        "iam:UntagRole"
+      ],
+      "Resource": "arn:aws:iam::643913568924:role/web-server-lambda-stats-api-role"
+    },
+    {
+      "Sid": "TerraformManageLambdaSsmPolicy",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreatePolicy",
+        "iam:DeletePolicy",
+        "iam:GetPolicy",
+        "iam:CreatePolicyVersion",
+        "iam:DeletePolicyVersion",
+        "iam:ListPolicyVersions",
+        "iam:GetPolicyVersion"
+      ],
+      "Resource": "arn:aws:iam::643913568924:policy/web-server-lambda-ssm-read"
     }
   ]
 }
