@@ -1,0 +1,44 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "TerraformS3SiteBucketReadExtra",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetBucketAcl",
+        "s3:GetBucketCors",
+        "s3:GetBucketWebsite",
+        "s3:GetBucketLogging",
+        "s3:GetBucketRequestPayment",
+        "s3:GetAccelerateConfiguration",
+        "s3:GetBucketObjectLockConfiguration",
+        "s3:GetLifecycleConfiguration",
+        "s3:GetEncryptionConfiguration",
+        "s3:GetReplicationConfiguration",
+        "s3:GetBucketPolicyStatus",
+        "s3:GetIntelligentTieringConfiguration",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": "arn:aws:s3:::web-server-site-*"
+    },
+    {
+      "Sid": "TerraformLambdaReadExtra",
+      "Effect": "Allow",
+      "Action": [
+        "lambda:ListVersionsByFunction",
+        "lambda:GetFunctionCodeSigningConfig",
+        "lambda:GetFunctionEventInvokeConfig",
+        "lambda:GetFunctionConcurrency"
+      ],
+      "Resource": "arn:aws:lambda:*:643913568924:function:web-server-*"
+    },
+    {
+      "Sid": "TerraformCloudFrontFunctionRead",
+      "Effect": "Allow",
+      "Action": [
+        "cloudfront:GetFunction"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
