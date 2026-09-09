@@ -322,15 +322,15 @@
                         <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                         <h4 class="text-xl font-bold text-gray-900">Vulnerability & Patch Management</h4>
                     </div>
-                    <p class="text-gray-700 mb-4">The CI/CD pipeline enforces shift-left security by automatically scanning for vulnerabilities in code and containers, stopping non-compliant images. CloudWatch monitoring provides centralized logging and real-time security analysis.</p>
+                    <p class="text-gray-700 mb-4">The CI/CD pipeline enforces shift-left security by automatically scanning dependencies for vulnerabilities before every deploy. There's no OS or runtime to patch in the first place — the serverless stack (S3, CloudFront, Lambda, API Gateway) has no instance layer for a CVE to land on.</p>
                     <div class="space-y-1">
                         <span class="compliance-tag bg-green-100 text-green-800">NIST SP 800-53: RA-5 (Scanning)</span>
                         <span class="compliance-tag cissp-domain">CISSP Domain 6: Security Assessment</span>
                     </div>
                     <ul class="control-list mt-4">
                         <li>Snyk (SAST) checks <span class="keyword">package.json</span> for vulnerable dependencies and fails the pipeline on high/critical.</li>
-                        <li>Launch Template userdata bootstraps instances from a known baseline; pipeline gates block vulnerable builds.</li>
-                        <li>CloudWatch and centralized logging support ongoing monitoring and incident response.</li>
+                        <li>No EC2/OS layer to patch — AWS manages the Lambda runtime, CloudFront edge, and S3 storage layer entirely.</li>
+                        <li>CloudWatch Logs capture every Lambda invocation for ongoing monitoring and incident response.</li>
                     </ul>
                 </div>
 
@@ -339,15 +339,15 @@
                         <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
                         <h4 class="text-xl font-bold text-gray-900">Principle of Least Privilege (PoLP)</h4>
                     </div>
-                    <p class="text-gray-700 mb-4">Infrastructure is deployed using AWS IAM instance profiles; EC2 instances have no hardcoded credentials and only minimal permissions (CloudWatch, SSM). Terraform runs via GitHub OIDC with scoped IAM.</p>
+                    <p class="text-gray-700 mb-4">The Lambda execution role is scoped to exactly the 3 SSM parameters it reads and CloudWatch Logs — nothing else. Both origins behind CloudFront (S3 and API Gateway) are reachable only through this specific distribution, enforced by Origin Access Control conditions rather than network-perimeter trust. Terraform itself runs via GitHub OIDC with scoped IAM — no long-lived AWS credentials stored anywhere.</p>
                     <div class="space-y-1">
                         <span class="compliance-tag bg-green-100 text-green-800">NIST SP 800-53: AC-3 (Access Enforcement)</span>
                         <span class="compliance-tag cissp-domain">CISSP Domain 5: Identity & Access Management</span>
                     </div>
                      <ul class="control-list mt-4">
-                        <li>No SSH to instances; access when needed via SSM Session Manager. GitHub OIDC is used for Terraform and ASG operations.</li>
-                        <li>EC2 roles are scoped to CloudWatch and SSM; Terraform (via OIDC) manages infrastructure and Route 53.</li>
-                        <li>The application containers themselves run without any cloud credentials.</li>
+                        <li>No SSH, no servers, no persistent compute to access at all — there's no shell to get into.</li>
+                        <li>Lambda's execution role: <span class="keyword">ssm:GetParameter</span> on 3 specific parameter ARNs, nothing else.</li>
+                        <li>S3's bucket policy and the API Gateway origin both key off an Origin Access Control condition scoped to this exact CloudFront distribution's ARN — no other caller can reach either origin directly.</li>
                     </ul>
                 </div>
                 
@@ -356,15 +356,15 @@
                         <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.108 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.164.398-.142.854.108 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.108-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.272-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.164-.398.142-.854-.108-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.806.272 1.204.108.397-.165.71-.505.78-.929l.15-.894z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                         <h4 class="text-xl font-bold text-gray-900">Secure Baselines & Configuration</h4>
                     </div>
-                    <p class="text-gray-700 mb-4">Terraform and Launch Template userdata enforce a secure baseline; instances run in private subnets with traffic allowed only from the ALB. No Ansible or separate config management—userdata and Terraform define state.</p>
+                    <p class="text-gray-700 mb-4">Terraform defines the entire baseline as code — S3 bucket policy, CloudFront cache and origin behaviors, Lambda configuration, and IAM roles. There's no instance userdata and no "golden image" to drift from a running server, because there's no server to drift.</p>
                     <div class="space-y-1">
                         <span class="compliance-tag bg-green-100 text-green-800">CIS Control 7 (Configuration Management)</span>
                         <span class="compliance-tag cissp-domain">CISSP Domain 3: Security Architecture</span>
                     </div>
                     <ul class="control-list mt-4">
-                        <li>Userdata bootstraps instances to a consistent baseline; Terraform defines security groups and network isolation.</li>
-                        <li>Terraform defines network baselines (Security Groups) and prevents drift.</li>
-                        <li>Docker images are defined by code (Dockerfile) and are immutable. Full deploy via ASG instance refresh; content-only updates via SSM Send Command.</li>
+                        <li>Every resource is declared in Terraform; there's no mutable instance state that can drift from it between deploys.</li>
+                        <li>The S3 bucket blocks all public access by default (all four Block Public Access settings) and is versioned.</li>
+                        <li>Every deploy replaces the Lambda function's code wholesale from a fresh build — no incremental patching of a running process.</li>
                     </ul>
                 </div>
 
@@ -373,15 +373,15 @@
                         <svg class="status-icon status-pass" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
                         <h4 class="text-xl font-bold text-gray-900">Data & Communication Protection</h4>
                     </div>
-                    <p class="text-gray-700 mb-4">The ALB terminates HTTPS/TLS 1.2+ with ACM certificates (automatic renewal). Traffic to instances is HTTP only within the VPC; Nginx serves the app behind the ALB, fulfilling requirements for data in transit.</p>
+                    <p class="text-gray-700 mb-4">CloudFront terminates TLS 1.2+ at the edge with an ACM-managed certificate (us-east-1, auto-renewing). Both origins behind it — S3 and API Gateway — are private and reject unauthenticated requests, so there's no unencrypted or untrusted hop anywhere in the request path, not even internally.</p>
                     <div class="space-y-1">
                         <span class="compliance-tag bg-green-100 text-green-800">HIPAA (Technical Safeguard: Encryption)</span>
                         <span class="compliance-tag cissp-domain">CISSP Domain 4: Network Security</span>
                     </div>
                     <ul class="control-list mt-4">
-                        <li>ALB enforces SSL/TLS termination with ACM; Nginx serves HTTP only behind it.</li>
-                        <li>ACM provides automatic certificate renewal with no on-instance cert management.</li>
-                        <li>Instances run in private subnets with no public IPs; only the ALB security group can reach them on port 80.</li>
+                        <li>CloudFront enforces TLS 1.2+ (the TLS 1.2_2021 policy) for every viewer connection; HTTP requests are redirected to HTTPS.</li>
+                        <li>ACM provides automatic certificate renewal with zero on-instance cert management — there's no instance.</li>
+                        <li>Origin traffic to S3 and API Gateway stays on AWS's own network backbone, authenticated via Origin Access Control rather than network-perimeter trust.</li>
                     </ul>
                 </div>
             </div>
