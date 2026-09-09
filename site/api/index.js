@@ -42,10 +42,22 @@ function githubFetchHeaders() {
 }
 
 async function githubGet(url) {
-    const response = await fetch(url, {
-        headers: githubFetchHeaders(),
-        signal: AbortSignal.timeout(GITHUB_FETCH_TIMEOUT_MS),
-    });
+    // A manually-cleared AbortController, not AbortSignal.timeout() — the
+    // latter's internal timer isn't reliably cleared on Lambda's Node 22
+    // runtime once the fetch settles, and a dangling timer surviving past
+    // the response causes a "Runtime.NodeJsExit: unsettled Promise" crash
+    // on a later invocation (reproduced via CloudWatch Logs after deploy).
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), GITHUB_FETCH_TIMEOUT_MS);
+    let response;
+    try {
+        response = await fetch(url, {
+            headers: githubFetchHeaders(),
+            signal: controller.signal,
+        });
+    } finally {
+        clearTimeout(timeoutId);
+    }
     if (!response.ok) {
         throw new Error(`GitHub HTTP ${response.status}`);
     }
