@@ -49,11 +49,11 @@
         #sim-narration.active { display: block; }
         /* Mobile: diagram scales to fit width with proportional height; cap height so it fits above the fold */
         @media (max-width: 1023px) {
-            #diagram-container { min-height: 0; aspect-ratio: 800 / 680; max-height: 77vh; }
+            #diagram-container { min-height: 0; aspect-ratio: 800 / 620; max-height: 77vh; }
             #diagram-svg { touch-action: pan-x pan-y; }
         }
         @media (min-width: 1024px) {
-            #diagram-container { aspect-ratio: auto; min-height: 748px; }
+            #diagram-container { aspect-ratio: auto; min-height: 680px; }
         }
     </style>
 </head>
@@ -116,7 +116,7 @@
                     Infrastructure Architecture
                 </h1>
                 <p class="text-lg text-white/90 font-medium max-w-2xl mx-auto leading-relaxed">
-                    Interactive visualization of the AWS infrastructure powering this site.
+                    Interactive visualization of the AWS infrastructure powering this site — S3 + CloudFront + Lambda, no servers to patch.
                 </p>
             </div>
         </div>
@@ -128,7 +128,7 @@
         <div class="py-6 flex flex-col lg:flex-row gap-6">
             <div class="flex-1 min-w-0 w-full">
                 <div id="diagram-container" class="w-full rounded-xl overflow-hidden border border-gray-700/60 shadow-xl">
-                    <svg id="diagram-svg" width="100%" height="100%" viewBox="0 0 800 680" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" class="block">
+                    <svg id="diagram-svg" width="100%" height="100%" viewBox="0 0 800 620" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" class="block">
                     <defs>
                         <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
                             <feGaussianBlur stdDeviation="3" result="blur"/>
@@ -136,50 +136,44 @@
                         </filter>
                         <symbol id="icon-user" viewBox="0 0 24 24" fill="#94a3b8" stroke="none"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="#94a3b8"/></symbol>
                         <symbol id="icon-github-actions" viewBox="0 0 128 128"><path fill="#2088ff" d="M26.666 0C11.97 0 0 11.97 0 26.666c0 12.87 9.181 23.651 21.334 26.13v37.87c0 11.77 9.68 21.334 21.332 21.334h.195c1.302 9.023 9.1 16 18.473 16C71.612 128 80 119.612 80 109.334s-8.388-18.668-18.666-18.668c-9.372 0-17.17 6.977-18.473 16h-.195c-8.737 0-16-7.152-16-16V63.779a18.514 18.514 0 0 0 13.24 5.555h2.955c1.303 9.023 9.1 16 18.473 16 9.372 0 17.169-6.977 18.47-16h11.057c1.303 9.023 9.1 16 18.473 16 10.278 0 18.666-8.39 18.666-18.668C128 56.388 119.612 48 109.334 48c-9.373 0-17.171 6.977-18.473 16H79.805c-1.301-9.023-9.098-16-18.471-16s-17.171 6.977-18.473 16h-2.955c-6.433 0-11.793-4.589-12.988-10.672 14.58-.136 26.416-12.05 26.416-26.662C53.334 11.97 41.362 0 26.666 0zm0 5.334A21.292 21.292 0 0 1 48 26.666 21.294 21.294 0 0 1 26.666 48 21.292 21.292 0 0 1 5.334 26.666 21.29 21.29 0 0 1 26.666 5.334zm-5.215 7.541C18.67 12.889 16 15.123 16 18.166v17.043c0 4.043 4.709 6.663 8.145 4.533l13.634-8.455c3.257-2.02 3.274-7.002.032-9.045l-13.635-8.59a5.024 5.024 0 0 0-2.725-.777zm-.117 5.291 13.635 8.588-13.635 8.455V18.166zm40 35.168a13.29 13.29 0 0 1 13.332 13.332A13.293 13.293 0 0 1 61.334 80 13.294 13.294 0 0 1 48 66.666a13.293 13.293 0 0 1 13.334-13.332zm48 0a13.29 13.29 0 0 1 13.332 13.332A13.293 13.293 0 0 1 109.334 80 13.294 13.294 0 0 1 96 66.666a13.293 13.293 0 0 1 13.334-13.332zm-42.568 6.951a2.667 2.667 0 0 0-1.887.78l-6.3 6.294-2.093-2.084a2.667 2.667 0 0 0-3.771.006 2.667 2.667 0 0 0 .008 3.772l3.974 3.96a2.667 2.667 0 0 0 3.766-.001l8.185-8.174a2.667 2.667 0 0 0 .002-3.772 2.667 2.667 0 0 0-1.884-.78zm48 0a2.667 2.667 0 0 0-1.887.78l-6.3 6.294-2.093-2.084a2.667 2.667 0 0 0-3.771.006 2.667 2.667 0 0 0 .008 3.772l3.974 3.96a2.667 2.667 0 0 0 3.766-.001l8.185-8.174a2.667 2.667 0 0 0 .002-3.772 2.667 2.667 0 0 0-1.884-.78zM61.334 96a13.293 13.293 0 0 1 13.332 13.334 13.29 13.29 0 0 1-13.332 13.332A13.293 13.293 0 0 1 48 109.334 13.294 13.294 0 0 1 61.334 96zM56 105.334c-2.193 0-4 1.807-4 4 0 2.195 1.808 4 4 4s4-1.805 4-4c0-2.193-1.807-4-4-4zm10.666 0c-2.193 0-4 1.807-4 4 0 2.195 1.808 4 4 4s4-1.805 4-4c0-2.193-1.807-4-4-4zM56 108c.75 0 1.334.585 1.334 1.334 0 .753-.583 1.332-1.334 1.332-.75 0-1.334-.58-1.334-1.332 0-.75.585-1.334 1.334-1.334zm10.666 0c.75 0 1.334.585 1.334 1.334 0 .753-.583 1.332-1.334 1.332-.75 0-1.332-.58-1.332-1.332 0-.75.583-1.334 1.332-1.334z"/><path fill="#79b8ff" d="M109.334 90.666c-9.383 0-17.188 6.993-18.477 16.031a2.667 2.667 0 0 0-.265-.011l-2.7.09a2.667 2.667 0 0 0-2.578 2.751 2.667 2.667 0 0 0 2.752 2.578l2.7-.087a2.667 2.667 0 0 0 .097-.006C92.17 121.029 99.965 128 109.334 128c10.278 0 18.666-8.388 18.666-18.666s-8.388-18.668-18.666-18.668zm0 5.334a13.293 13.293 0 0 1 13.332 13.334 13.29 13.29 0 0 1-13.332 13.332A13.293 13.293 0 0 1 96 109.334 13.294 13.294 0 0 1 109.334 96z"/></symbol>
+                        <symbol id="icon-cloudfront" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#8C4FFF"/><text x="12" y="16" font-family="Arial, sans-serif" font-size="8.5" font-weight="bold" text-anchor="middle" fill="#fff">CF</text></symbol>
+                        <symbol id="icon-cff" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#2DD4BF"/><text x="12" y="17" font-family="Georgia, serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#fff">ƒ</text></symbol>
+                        <symbol id="icon-apigateway" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#E7157B"/><text x="12" y="15.5" font-family="Arial, sans-serif" font-size="7" font-weight="bold" text-anchor="middle" fill="#fff">API</text></symbol>
+                        <symbol id="icon-lambda" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#ED7100"/><text x="12" y="17.5" font-family="Georgia, serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#fff">λ</text></symbol>
                     </defs>
-                    <!-- VPC boundary (taller to fit diagram with margin) -->
-                    <rect x="40" y="60" width="720" height="580" fill="rgba(13,148,136,0.04)" stroke="rgba(13,148,136,0.35)" stroke-width="1.5" stroke-dasharray="6 4"/>
-                    <text x="60" y="85" fill="rgba(148,163,184,0.9)" font-size="11" font-family="Inter" font-weight="600">VPC 10.0.0.0/16</text>
-                    <!-- AZ boxes: EC2 in upper part; region labels in strip below EC2 cards (564–598) so not covered -->
-                    <rect x="120" y="438" width="240" height="160" fill="rgba(13,148,136,0.06)" stroke="rgba(13,148,136,0.25)" stroke-width="1" stroke-dasharray="4 2"/>
-                    <text x="130" y="582" fill="rgba(148,163,184,0.8)" font-size="10" font-weight="500">us-east-2a</text>
-                    <rect x="440" y="438" width="240" height="160" fill="rgba(13,148,136,0.06)" stroke="rgba(13,148,136,0.25)" stroke-width="1" stroke-dasharray="4 2"/>
-                    <text x="450" y="582" fill="rgba(148,163,184,0.8)" font-size="10" font-weight="500">us-east-2b</text>
-                    <!-- Edges: node centers (user 42, r53 138, igw 234, alb 330, asg 426, ec2 522; 24px gap ASG–EC2; sides 234/330) -->
-                    <line id="edge-user-r53" class="edge-line" x1="400" y1="42" x2="400" y2="138"/>
-                    <line id="edge-r53-igw" class="edge-line" x1="400" y1="138" x2="400" y2="234"/>
-                    <line id="edge-igw-alb" class="edge-line" x1="400" y1="234" x2="400" y2="330"/>
-                    <line id="edge-alb-ec2a" class="edge-line" x1="400" y1="330" x2="240" y2="522"/>
-                    <line id="edge-alb-ec2b" class="edge-line" x1="400" y1="330" x2="560" y2="522" stroke-dasharray="6 4"/>
-                    <line id="edge-asg-ec2a" class="edge-line" x1="400" y1="426" x2="240" y2="522"/>
-                    <line id="edge-asg-ec2b" class="edge-line" x1="400" y1="426" x2="560" y2="522" stroke-dasharray="6 4"/>
-                    <line id="edge-ec2a-cw" class="edge-line" x1="240" y1="522" x2="704" y2="234"/>
-                    <line id="edge-gh-asg" class="edge-line" x1="96" y1="234" x2="400" y2="426"/>
-                    <line id="edge-acm-alb" class="edge-line" x1="96" y1="330" x2="400" y2="330"/>
-                    <line id="edge-s3-asg" class="edge-line" x1="704" y1="330" x2="400" y2="426"/>
+                    <!-- Edges: node centers — user 44, r53 140, tier3 236, tier4 332, lambda 434, cw 536 -->
+                    <line id="edge-user-r53" class="edge-line" x1="400" y1="44" x2="400" y2="140"/>
+                    <line id="edge-r53-cf" class="edge-line" x1="400" y1="140" x2="400" y2="236"/>
+                    <line id="edge-acm-cf" class="edge-line" x1="96" y1="236" x2="400" y2="236"/>
+                    <line id="edge-cf-cff" class="edge-line" x1="400" y1="236" x2="704" y2="236"/>
+                    <line id="edge-gh-s3" class="edge-line" x1="96" y1="332" x2="300" y2="332"/>
+                    <line id="edge-cf-s3" class="edge-line" x1="400" y1="236" x2="300" y2="332"/>
+                    <line id="edge-cf-apigw" class="edge-line" x1="400" y1="236" x2="560" y2="332"/>
+                    <line id="edge-apigw-lambda" class="edge-line" x1="560" y1="332" x2="560" y2="434"/>
+                    <line id="edge-lambda-cw" class="edge-line" x1="560" y1="434" x2="560" y2="536"/>
+                    <line id="edge-gh-lambda" class="edge-line" x1="96" y1="332" x2="560" y2="434" stroke-dasharray="6 4"/>
                     <!-- Edge labels (shown on hover) -->
-                    <text id="label-user-r53" class="edge-label" x="400" y="90">DNS lookup</text>
-                    <text id="label-r53-igw" class="edge-label" x="400" y="186">→ ALB IP</text>
-                    <text id="label-igw-alb" class="edge-label" x="400" y="282">Ingress</text>
-                    <text id="label-alb-ec2a" class="edge-label" x="300" y="420">Port 80</text>
-                    <text id="label-alb-ec2b" class="edge-label" x="460" y="420">Port 80</text>
-                    <text id="label-asg-ec2a" class="edge-label" x="300" y="472">Manages</text>
-                    <text id="label-asg-ec2b" class="edge-label" x="500" y="472">Manages</text>
-                    <text id="label-ec2a-cw" class="edge-label" x="460" y="382">Logs/Metrics</text>
-                    <text id="label-gh-asg" class="edge-label" x="250" y="378" text-anchor="end"><tspan x="250" dy="0">Instance</tspan><tspan x="250" dy="12">Refresh</tspan></text>
-                    <text id="label-acm-alb" class="edge-label" x="225" y="322" text-anchor="middle">TLS Cert</text>
-                    <text id="label-s3-asg" class="edge-label" x="570" y="382">State + Artifacts</text>
-                    <!-- Animated flow packets (solid edges only); visibility toggled by Flow button -->
+                    <text id="label-user-r53" class="edge-label" x="400" y="92">DNS lookup</text>
+                    <text id="label-r53-cf" class="edge-label" x="400" y="188">→ CDN</text>
+                    <text id="label-acm-cf" class="edge-label" x="248" y="228" text-anchor="middle">TLS Cert</text>
+                    <text id="label-cf-cff" class="edge-label" x="552" y="228" text-anchor="middle">Viewer Request</text>
+                    <text id="label-gh-s3" class="edge-label" x="198" y="324" text-anchor="middle">Content Sync</text>
+                    <text id="label-cf-s3" class="edge-label" x="330" y="280">Static Assets</text>
+                    <text id="label-cf-apigw" class="edge-label" x="500" y="278">/api/*</text>
+                    <text id="label-apigw-lambda" class="edge-label" x="580" y="382">Invoke</text>
+                    <text id="label-lambda-cw" class="edge-label" x="580" y="484">Logs</text>
+                    <text id="label-gh-lambda" class="edge-label" x="220" y="420" text-anchor="middle">Code Deploy</text>
+                    <!-- Animated flow packets (solid + dashed edges); visibility toggled by Flow button -->
                     <g id="flow-packets" visibility="visible">
-                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;400" dur="2.5s" begin="0s" repeatCount="indefinite"/><animate attributeName="cy" values="42;138" dur="2.5s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="0s" repeatCount="indefinite"/></circle>
-                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;400" dur="2.5s" begin="0.7s" repeatCount="indefinite"/><animate attributeName="cy" values="138;234" dur="2.5s" begin="0.7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="0.7s" repeatCount="indefinite"/></circle>
-                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;400" dur="2.5s" begin="1.4s" repeatCount="indefinite"/><animate attributeName="cy" values="234;330" dur="2.5s" begin="1.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="1.4s" repeatCount="indefinite"/></circle>
-                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;240" dur="2.5s" begin="2.1s" repeatCount="indefinite"/><animate attributeName="cy" values="330;522" dur="2.5s" begin="2.1s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="2.1s" repeatCount="indefinite"/></circle>
-                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;240" dur="2.5s" begin="2.8s" repeatCount="indefinite"/><animate attributeName="cy" values="426;522" dur="2.5s" begin="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="2.8s" repeatCount="indefinite"/></circle>
-                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="240;704" dur="2.5s" begin="3.5s" repeatCount="indefinite"/><animate attributeName="cy" values="522;234" dur="2.5s" begin="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="3.5s" repeatCount="indefinite"/></circle>
-                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="96;400" dur="2.5s" begin="4.2s" repeatCount="indefinite"/><animate attributeName="cy" values="234;426" dur="2.5s" begin="4.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="4.2s" repeatCount="indefinite"/></circle>
-                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="96;400" dur="2.5s" begin="4.9s" repeatCount="indefinite"/><animate attributeName="cy" values="330;330" dur="2.5s" begin="4.9s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="4.9s" repeatCount="indefinite"/></circle>
-                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="704;400" dur="2.5s" begin="5.6s" repeatCount="indefinite"/><animate attributeName="cy" values="330;426" dur="2.5s" begin="5.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="5.6s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;400" dur="2.5s" begin="0s" repeatCount="indefinite"/><animate attributeName="cy" values="44;140" dur="2.5s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="0s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;400" dur="2.5s" begin="0.7s" repeatCount="indefinite"/><animate attributeName="cy" values="140;236" dur="2.5s" begin="0.7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="0.7s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="96;400" dur="2.5s" begin="1.4s" repeatCount="indefinite"/><animate attributeName="cy" values="236;236" dur="2.5s" begin="1.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="1.4s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;704" dur="2.5s" begin="2.1s" repeatCount="indefinite"/><animate attributeName="cy" values="236;236" dur="2.5s" begin="2.1s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="2.1s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;300" dur="2.5s" begin="2.8s" repeatCount="indefinite"/><animate attributeName="cy" values="236;332" dur="2.5s" begin="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="2.8s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="400;560" dur="2.5s" begin="3.5s" repeatCount="indefinite"/><animate attributeName="cy" values="236;332" dur="2.5s" begin="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="3.5s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="560;560" dur="2.5s" begin="4.2s" repeatCount="indefinite"/><animate attributeName="cy" values="332;434" dur="2.5s" begin="4.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="4.2s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="560;560" dur="2.5s" begin="4.9s" repeatCount="indefinite"/><animate attributeName="cy" values="434;536" dur="2.5s" begin="4.9s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="4.9s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#0D9488" opacity="0.9"><animate attributeName="cx" values="96;300" dur="2.5s" begin="5.6s" repeatCount="indefinite"/><animate attributeName="cy" values="332;332" dur="2.5s" begin="5.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin="5.6s" repeatCount="indefinite"/></circle>
                     </g>
                     <!-- Node cards: icon above text -->
                     <g id="node-user" class="node-group" data-id="user">
@@ -196,71 +190,63 @@
                         <text x="400" y="156" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">Route 53</text>
                         <text x="400" y="168" text-anchor="middle" fill="#94a3b8" font-size="10">DNS Resolution</text>
                     </g>
-                    <g id="node-igw" class="node-group" data-id="igw">
-                        <rect class="node-card" x="300" y="198" width="200" height="76" rx="10"/>
-                        <path class="node-bar" d="M 310 199.5 L 490 199.5 A 8.5 8.5 0 0 1 498.5 208 L 498.5 203.5 L 301.5 203.5 L 301.5 208 A 8.5 8.5 0 0 1 310 199.5 Z" fill="#0D9488"/>
-                        <image href="assets/aws-icons/Res_Amazon-VPC_Internet-Gateway_48.svg" x="384" y="204" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
-                        <text x="400" y="252" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">Internet Gateway</text>
-                        <text x="400" y="264" text-anchor="middle" fill="#94a3b8" font-size="10">VPC Entry Point</text>
-                    </g>
-                    <g id="node-alb" class="node-group" data-id="alb">
-                        <rect class="node-card" x="270" y="294" width="260" height="76" rx="10"/>
-                        <path class="node-bar" d="M 280 295.5 L 520 295.5 A 8.5 8.5 0 0 1 528.5 304 L 528.5 299.5 L 271.5 299.5 L 271.5 304 A 8.5 8.5 0 0 1 280 295.5 Z" fill="#F59E0B"/>
-                        <image href="assets/aws-icons/Arch_Elastic-Load-Balancing_48.svg" x="384" y="300" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
-                        <circle class="health-dot" cx="514" cy="304" r="4" fill="#22c55e"/>
-                        <text x="400" y="350" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">Application Load Balancer</text>
-                        <text x="400" y="362" text-anchor="middle" fill="#94a3b8" font-size="9">SSL Termination + Health Checks</text>
-                    </g>
-                    <g id="node-asg" class="node-group" data-id="asg">
-                        <rect class="node-card" x="300" y="390" width="200" height="76" rx="10"/>
-                        <path class="node-bar" d="M 310 391.5 L 490 391.5 A 8.5 8.5 0 0 1 498.5 400 L 498.5 395.5 L 301.5 395.5 L 301.5 400 A 8.5 8.5 0 0 1 310 391.5 Z" fill="#EF4444"/>
-                        <image href="assets/aws-icons/Arch_AWS-Auto-Scaling_48.svg" x="384" y="396" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
-                        <text x="400" y="444" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">Auto Scaling Group</text>
-                        <text x="400" y="456" text-anchor="middle" fill="#94a3b8" font-size="10">Min: 1  Max: 2  Desired: 1</text>
-                    </g>
-                    <g id="node-ec2a" class="node-group" data-id="ec2a">
-                        <rect class="node-card" x="140" y="480" width="200" height="88" rx="10"/>
-                        <path class="node-bar" d="M 150 481.5 L 330 481.5 A 8.5 8.5 0 0 1 338.5 490 L 338.5 485.5 L 141.5 485.5 L 141.5 490 A 8.5 8.5 0 0 1 150 481.5 Z" fill="#0D9488"/>
-                        <image href="assets/aws-icons/Arch_Amazon-EC2_48.svg" x="224" y="486" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
-                        <circle class="health-dot" cx="322" cy="492" r="4" fill="#22c55e"/>
-                        <text x="240" y="536" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">EC2 (AZ-a)</text>
-                        <text x="240" y="550" text-anchor="middle" fill="#94a3b8" font-size="10">Docker: Nginx + Node.js API</text>
-                    </g>
-                    <g id="node-ec2b" class="node-group" data-id="ec2b">
-                        <rect class="node-card" x="460" y="480" width="200" height="88" rx="10"/>
-                        <path class="node-bar" d="M 470 481.5 L 650 481.5 A 8.5 8.5 0 0 1 658.5 490 L 658.5 485.5 L 461.5 485.5 L 461.5 490 A 8.5 8.5 0 0 1 470 481.5 Z" fill="#0D9488"/>
-                        <image href="assets/aws-icons/Arch_Amazon-EC2_48.svg" x="544" y="486" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
-                        <circle class="health-dot standby" cx="642" cy="492" r="4" fill="#64748b"/>
-                        <text x="560" y="536" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">EC2 (AZ-b)</text>
-                        <text x="560" y="550" text-anchor="middle" fill="#94a3b8" font-size="10">Standby / Auto-Replace</text>
-                    </g>
-                    <g id="node-cw" class="node-group" data-id="cw">
-                        <rect class="node-card" x="614" y="198" width="180" height="76" rx="10"/>
-                        <path class="node-bar" d="M 624 199.5 L 784 199.5 A 8.5 8.5 0 0 1 792.5 208 L 792.5 203.5 L 615.5 203.5 L 615.5 208 A 8.5 8.5 0 0 1 624 199.5 Z" fill="#3B82F6"/>
-                        <image href="assets/aws-icons/Arch_Amazon-CloudWatch_48.svg" x="684" y="204" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
-                        <text x="704" y="252" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">CloudWatch</text>
-                        <text x="704" y="264" text-anchor="middle" fill="#94a3b8" font-size="10">Metrics + Logs + Alarms</text>
-                    </g>
-                    <g id="node-s3" class="node-group" data-id="s3">
-                        <rect class="node-card" x="614" y="296" width="180" height="76" rx="10"/>
-                        <path class="node-bar" d="M 624 297.5 L 784 297.5 A 8.5 8.5 0 0 1 792.5 306 L 792.5 301.5 L 615.5 301.5 L 615.5 306 A 8.5 8.5 0 0 1 624 297.5 Z" fill="#10B981"/>
-                        <image href="assets/aws-icons/Res_Amazon-Simple-Storage-Service_S3-Standard_48.svg" x="684" y="302" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
-                        <text x="704" y="350" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">S3 Bucket</text>
-                        <text x="704" y="362" text-anchor="middle" fill="#94a3b8" font-size="10">Terraform State + Artifacts</text>
-                    </g>
                     <g id="node-acm" class="node-group" data-id="acm">
-                        <rect class="node-card" x="12" y="296" width="168" height="76" rx="10"/>
-                        <path class="node-bar" d="M 22 297.5 L 170 297.5 A 8.5 8.5 0 0 1 178.5 306 L 178.5 301.5 L 13.5 301.5 L 13.5 306 A 8.5 8.5 0 0 1 22 297.5 Z" fill="#EC4899"/>
-                        <image href="assets/aws-icons/Arch_AWS-Certificate-Manager_48.svg" x="82" y="302" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
-                        <text x="96" y="350" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">ACM</text>
-                        <text x="96" y="362" text-anchor="middle" fill="#94a3b8" font-size="10">SSL Certificate</text>
+                        <rect class="node-card" x="12" y="198" width="168" height="76" rx="10"/>
+                        <path class="node-bar" d="M 22 199.5 L 170 199.5 A 8.5 8.5 0 0 1 178.5 208 L 178.5 203.5 L 13.5 203.5 L 13.5 208 A 8.5 8.5 0 0 1 22 199.5 Z" fill="#EC4899"/>
+                        <image href="assets/aws-icons/Arch_AWS-Certificate-Manager_48.svg" x="80" y="204" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
+                        <text x="96" y="252" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">ACM</text>
+                        <text x="96" y="264" text-anchor="middle" fill="#94a3b8" font-size="10">SSL Certificate</text>
+                    </g>
+                    <g id="node-cf" class="node-group" data-id="cf">
+                        <rect class="node-card" x="270" y="198" width="260" height="76" rx="10"/>
+                        <path class="node-bar" d="M 280 199.5 L 520 199.5 A 8.5 8.5 0 0 1 528.5 208 L 528.5 203.5 L 271.5 203.5 L 271.5 208 A 8.5 8.5 0 0 1 280 199.5 Z" fill="#F59E0B"/>
+                        <use href="#icon-cloudfront" x="384" y="204" width="32" height="32"/>
+                        <circle class="health-dot" cx="514" cy="208" r="4" fill="#22c55e"/>
+                        <text x="400" y="252" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">CloudFront</text>
+                        <text x="400" y="264" text-anchor="middle" fill="#94a3b8" font-size="9">CDN + Edge Routing + TLS</text>
+                    </g>
+                    <g id="node-cff" class="node-group" data-id="cff">
+                        <rect class="node-card" x="614" y="198" width="180" height="76" rx="10"/>
+                        <path class="node-bar" d="M 624 199.5 L 784 199.5 A 8.5 8.5 0 0 1 792.5 208 L 792.5 203.5 L 615.5 203.5 L 615.5 208 A 8.5 8.5 0 0 1 624 199.5 Z" fill="#2DD4BF"/>
+                        <use href="#icon-cff" x="688" y="204" width="32" height="32"/>
+                        <text x="704" y="252" text-anchor="middle" fill="#e2e8f0" font-size="13" font-weight="600">CloudFront Fn</text>
+                        <text x="704" y="264" text-anchor="middle" fill="#94a3b8" font-size="10">Viewer Request (Edge JS)</text>
                     </g>
                     <g id="node-gh" class="node-group" data-id="gh">
-                        <rect class="node-card" x="12" y="198" width="168" height="76" rx="10"/>
-                        <path class="node-bar" d="M 22 199.5 L 170 199.5 A 8.5 8.5 0 0 1 178.5 208 L 178.5 203.5 L 13.5 203.5 L 13.5 208 A 8.5 8.5 0 0 1 22 199.5 Z" fill="#6366F1"/>
-                        <use href="#icon-github-actions" x="72" y="204" width="32" height="32"/>
-                        <text x="96" y="252" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">GitHub Actions</text>
-                        <text x="96" y="264" text-anchor="middle" fill="#94a3b8" font-size="10">CI/CD Pipeline</text>
+                        <rect class="node-card" x="12" y="294" width="168" height="76" rx="10"/>
+                        <path class="node-bar" d="M 22 295.5 L 170 295.5 A 8.5 8.5 0 0 1 178.5 304 L 178.5 299.5 L 13.5 299.5 L 13.5 304 A 8.5 8.5 0 0 1 22 295.5 Z" fill="#6366F1"/>
+                        <use href="#icon-github-actions" x="72" y="300" width="32" height="32"/>
+                        <text x="96" y="348" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">GitHub Actions</text>
+                        <text x="96" y="360" text-anchor="middle" fill="#94a3b8" font-size="10">CI/CD Pipeline</text>
+                    </g>
+                    <g id="node-s3" class="node-group" data-id="s3">
+                        <rect class="node-card" x="200" y="294" width="200" height="76" rx="10"/>
+                        <path class="node-bar" d="M 210 295.5 L 390 295.5 A 8.5 8.5 0 0 1 398.5 304 L 398.5 299.5 L 201.5 299.5 L 201.5 304 A 8.5 8.5 0 0 1 210 295.5 Z" fill="#10B981"/>
+                        <image href="assets/aws-icons/Res_Amazon-Simple-Storage-Service_S3-Standard_48.svg" x="284" y="300" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
+                        <text x="300" y="348" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">S3 Bucket</text>
+                        <text x="300" y="360" text-anchor="middle" fill="#94a3b8" font-size="9">Static Site (Private, OAC-only)</text>
+                    </g>
+                    <g id="node-apigw" class="node-group" data-id="apigw">
+                        <rect class="node-card" x="460" y="294" width="200" height="76" rx="10"/>
+                        <path class="node-bar" d="M 470 295.5 L 650 295.5 A 8.5 8.5 0 0 1 658.5 304 L 658.5 299.5 L 461.5 299.5 L 461.5 304 A 8.5 8.5 0 0 1 470 295.5 Z" fill="#E7157B"/>
+                        <use href="#icon-apigateway" x="544" y="300" width="32" height="32"/>
+                        <text x="560" y="348" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">API Gateway</text>
+                        <text x="560" y="360" text-anchor="middle" fill="#94a3b8" font-size="10">HTTP API</text>
+                    </g>
+                    <g id="node-lambda" class="node-group" data-id="lambda">
+                        <rect class="node-card" x="460" y="390" width="200" height="88" rx="10"/>
+                        <path class="node-bar" d="M 470 391.5 L 650 391.5 A 8.5 8.5 0 0 1 658.5 400 L 658.5 395.5 L 461.5 395.5 L 461.5 400 A 8.5 8.5 0 0 1 470 391.5 Z" fill="#ED7100"/>
+                        <use href="#icon-lambda" x="544" y="396" width="32" height="32"/>
+                        <circle class="health-dot" cx="642" cy="400" r="4" fill="#22c55e"/>
+                        <text x="560" y="444" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">Lambda</text>
+                        <text x="560" y="458" text-anchor="middle" fill="#94a3b8" font-size="9">stats-api (Node.js 22, arm64)</text>
+                    </g>
+                    <g id="node-cw" class="node-group" data-id="cw">
+                        <rect class="node-card" x="460" y="498" width="200" height="76" rx="10"/>
+                        <path class="node-bar" d="M 470 499.5 L 650 499.5 A 8.5 8.5 0 0 1 658.5 508 L 658.5 503.5 L 461.5 503.5 L 461.5 508 A 8.5 8.5 0 0 1 470 499.5 Z" fill="#3B82F6"/>
+                        <image href="assets/aws-icons/Arch_Amazon-CloudWatch_48.svg" x="544" y="504" width="32" height="32" preserveAspectRatio="xMidYMid meet"/>
+                        <text x="560" y="552" text-anchor="middle" fill="#e2e8f0" font-size="13" font-weight="600">CloudWatch Logs</text>
+                        <text x="560" y="564" text-anchor="middle" fill="#94a3b8" font-size="10">Lambda Execution Logs</text>
                     </g>
                 </svg>
                 </div>
@@ -287,6 +273,10 @@
             <button id="btn-flow" class="px-4 py-2 rounded-lg font-medium border border-primary-teal-500 text-primary-teal-300 hover:bg-primary-teal-500/20 transition">Flow: Active</button>
             <button id="btn-simulate" class="px-4 py-2 rounded-lg font-medium bg-primary-teal-600 text-white hover:bg-primary-teal-500 transition">Simulate Request</button>
         </div>
+
+        <div class="max-w-7xl mx-auto px-4 py-6 mt-4 rounded-xl bg-gray-800/60 border border-gray-700/60 text-sm text-gray-400 leading-relaxed">
+            <p><span class="font-semibold text-gray-300">Why API Gateway, not a Lambda Function URL:</span> Function URLs were tried first — both <code class="text-primary-teal-300">AuthType=AWS_IAM</code> behind CloudFront's Origin Access Control, and <code class="text-primary-teal-300">AuthType=NONE</code> with an explicit public resource policy. Both were rejected with a hard <code class="text-primary-teal-300">AccessDeniedException</code> at the Lambda invoke layer itself, confirmed against a disposable from-scratch probe function with no other configuration. API Gateway sidesteps whatever that restriction is. Migrated off a VPC + ALB + Auto Scaling Group + EC2 + NAT Gateway architecture (~$64/mo) to this one (~$2–5/mo) in September 2026 — same site, same <code class="text-primary-teal-300">/api/stats</code> behavior, no servers left to patch.</p>
+        </div>
     </main>
 
     <footer class="bg-[#0f172a] border-t border-gray-700/60 text-gray-300 mt-8">
@@ -302,38 +292,35 @@
     <script>
 (function() {
         const NODES = {
-            user: { label: 'User', subtitle: 'HTTPS Request', accent: '#64748b', tech: [], desc: 'Visitors access shayleeczech.com over HTTPS. The ALB terminates SSL so the user always gets a secure connection with an ACM-managed certificate.', connections: ['Route 53 (DNS lookup)'] },
-            r53: { label: 'Route 53', subtitle: 'DNS Resolution', accent: '#8B5CF6', tech: ['DNS', 'Alias Record', 'Health Checks'], desc: 'Routes shayleeczech.com to the ALB via an alias A record. Supports automatic failover and latency-based routing.', connections: ['User', 'Internet Gateway (→ ALB IP)'] },
-            igw: { label: 'Internet Gateway', subtitle: 'VPC Entry Point', accent: '#0D9488', tech: ['VPC', 'Public Access'], desc: 'Attached to the custom VPC (10.0.0.0/16). Routes internet traffic to public subnets where the ALB lives. Free tier — no hourly cost.', connections: ['Route 53', 'ALB (Ingress)'] },
-            alb: { label: 'Application Load Balancer', subtitle: 'SSL Termination + Health Checks', accent: '#F59E0B', tech: ['HTTPS/443', 'HTTP→HTTPS Redirect', 'Target Groups', 'Health Checks'], desc: 'Internet-facing ALB in 2 public subnets (us-east-2a, us-east-2b). Terminates SSL with ACM certificate, redirects HTTP to HTTPS, and forwards to healthy targets on port 80.', connections: ['Internet Gateway', 'EC2 (AZ-a)', 'EC2 (AZ-b)', 'ACM (TLS Cert)'] },
-            asg: { label: 'Auto Scaling Group', subtitle: 'Min: 1  Max: 2  Desired: 1', accent: '#EF4444', tech: ['Launch Template', 'Instance Refresh', 'Health Check: ELB'], desc: 'Maintains desired capacity across AZs. On deployment, GitHub Actions triggers an instance refresh — the ASG launches a new instance from the latest Launch Template, waits for it to pass ALB health checks, then terminates the old one.', connections: ['EC2 (AZ-a)', 'EC2 (AZ-b)', 'GitHub Actions', 'S3 (State + Artifacts)'] },
-            ec2a: { label: 'EC2 (AZ-a)', subtitle: 'Docker: Nginx + Node.js API', accent: '#0D9488', tech: ['t3.micro', 'Docker', 'Nginx', 'Node.js API', 'CloudWatch Agent'], desc: 'Nginx (port 80) serves static pages and proxies /api/stats to the Node.js container (port 3000); recipes live under /p/. CloudWatch Agent forwards access logs.', connections: ['ALB', 'ASG', 'CloudWatch'] },
-            ec2b: { label: 'EC2 (AZ-b)', subtitle: 'Standby / Auto-Replace', accent: '#0D9488', tech: ['t3.micro', 'Auto-Replace', 'Multi-AZ'], desc: 'Standby capacity in a second AZ. The ASG can launch instances here if AZ-a has issues, or during instance refresh for zero-downtime deployments. Demonstrates multi-AZ resilience.', connections: ['ALB', 'ASG'] },
-            cw: { label: 'CloudWatch', subtitle: 'Metrics + Logs + Alarms', accent: '#3B82F6', tech: ['Dashboards', 'Alarms', 'SNS Alerts', 'Log Groups'], desc: 'Centralized monitoring: Nginx access logs, ALB metrics (RequestCount, 5xx rate, TargetResponseTime), instance health. Alarms trigger SNS email alerts when thresholds are breached.', connections: ['EC2 (AZ-a)'] },
-            s3: { label: 'S3 Bucket', subtitle: 'Terraform State + Artifacts', accent: '#10B981', tech: ['Terraform State', 'DynamoDB Lock', 'Encrypted', 'Versioned'], desc: 'Stores Terraform remote state with server-side encryption and versioning. DynamoDB table provides state locking to prevent concurrent modifications. Also hosts deployment artifacts.', connections: ['ASG (state)'] },
-            acm: { label: 'ACM', subtitle: 'SSL Certificate', accent: '#EC4899', tech: ['DNS Validation', 'Auto-Renewal', 'Free with ALB'], desc: 'Manages the SSL/TLS certificate for shayleeczech.com. Validated via Route 53 DNS records (automated by Terraform). Auto-renews — no more Certbot.', connections: ['ALB (TLS Cert)'] },
-            gh: { label: 'GitHub Actions', subtitle: 'CI/CD Pipeline', accent: '#6366F1', tech: ['Snyk SAST', 'Terraform Apply', 'ASG Refresh', 'Trivy Scan'], desc: 'A single git push triggers: (1) Snyk dependency scan, (2) Terraform apply for infrastructure, (3) Upload artifacts to S3, (4) Trigger ASG instance refresh for zero-downtime deployment.', connections: ['ASG (Instance Refresh)'] }
+            user: { label: 'User', subtitle: 'HTTPS Request', accent: '#64748b', tech: [], desc: 'Visitors access shayleeczech.com over HTTPS. CloudFront terminates TLS at the edge using an ACM-managed certificate — no origin ever sees unencrypted traffic.', connections: ['Route 53 (DNS lookup)'] },
+            r53: { label: 'Route 53', subtitle: 'DNS Resolution', accent: '#8B5CF6', tech: ['DNS', 'Alias Record'], desc: 'Routes shayleeczech.com and www to CloudFront via alias A records, using CloudFront\'s fixed hosted-zone ID — no health-check evaluation needed since CloudFront alias targets don\'t support it.', connections: ['User', 'CloudFront'] },
+            acm: { label: 'ACM', subtitle: 'SSL Certificate', accent: '#EC4899', tech: ['us-east-1', 'DNS Validation', 'Auto-Renewal'], desc: 'Manages the TLS certificate for CloudFront. Must live in us-east-1 regardless of where every other resource runs — a CloudFront-specific requirement. Validated via Route 53 DNS records, automated by Terraform.', connections: ['CloudFront (TLS Cert)'] },
+            cf: { label: 'CloudFront', subtitle: 'CDN + Edge Routing + TLS', accent: '#F59E0B', tech: ['Origin Access Control ×2', '2 Cache Behaviors', 'Price Class 100'], desc: 'One distribution, two origins: a private S3 bucket for static pages (behind Origin Access Control) and API Gateway for /api/* (CachingDisabled). Runs a CloudFront Function at the edge before either origin is ever contacted.', connections: ['Route 53', 'ACM (TLS Cert)', 'CloudFront Function', 'S3 (static)', 'API Gateway (dynamic)'] },
+            cff: { label: 'CloudFront Function', subtitle: 'Viewer Request (Edge JS)', accent: '#2DD4BF', tech: ['cloudfront-js-2.0', 'Sub-ms Execution', 'No Origin Round-Trip'], desc: 'Runs at 300+ edge locations before the origin is ever contacted: rewrites clean URLs to their .html file, 301-redirects any bare .html request to the clean path, and redirects one legacy bookmarked URL. Replaces what nginx used to do server-side.', connections: ['CloudFront'] },
+            gh: { label: 'GitHub Actions', subtitle: 'CI/CD Pipeline', accent: '#6366F1', tech: ['Snyk SAST', 'Terraform Apply', 'S3 Sync', 'Lambda Zip Deploy'], desc: 'Two workflows: a fast content-only path (S3 sync + CloudFront invalidation) for site changes, and a full pipeline (Snyk scan, Terraform apply, Lambda zip build + deploy) for infra or API changes.', connections: ['S3 (Content Sync)', 'Lambda (Code Deploy)'] },
+            s3: { label: 'S3 Bucket', subtitle: 'Static Site (Private, OAC-only)', accent: '#10B981', tech: ['Origin Access Control', 'Bucket Policy: CloudFront-only', 'Versioned', 'Block Public Access: All'] , desc: 'Holds the static HTML/CSS/image files. No public access whatsoever — the bucket policy grants s3:GetObject only to this specific CloudFront distribution, enforced by an Origin Access Control condition on the distribution\'s ARN.', connections: ['CloudFront', 'GitHub Actions (sync)'] },
+            apigw: { label: 'API Gateway', subtitle: 'HTTP API', accent: '#E7157B', tech: ['HTTP API (v2)', 'ANY /{proxy+}', 'Lambda Proxy Integration'], desc: 'Fronts the Lambda function so CloudFront has a stable origin to call. Used instead of a Lambda Function URL after every unauthenticated Function URL invocation path was rejected at the platform layer on this account — confirmed with a disposable test function, not an Organizations SCP.', connections: ['CloudFront', 'Lambda'] },
+            lambda: { label: 'Lambda', subtitle: 'stats-api (Node.js 22, arm64)', accent: '#ED7100', tech: ['Node.js 22.x', 'arm64', '128 MB', 'No VPC'], desc: 'Single handler for GET /api/stats — reads 3 SSM parameters and calls the public GitHub API, no persistent state. No VPC config, so it gets AWS API and internet access by default with no NAT Gateway anywhere. Execution role is scoped to exactly those 3 parameter ARNs plus CloudWatch Logs.', connections: ['API Gateway', 'CloudWatch Logs'] },
+            cw: { label: 'CloudWatch Logs', subtitle: 'Lambda Execution Logs', accent: '#3B82F6', tech: ['Log Group', '30-Day Retention'], desc: 'Captures stdout/stderr and structured invocation reports from the Lambda function — the only observability surface left once the EC2 CloudWatch Agent was retired along with the rest of the old stack.', connections: ['Lambda'] }
         };
         const EDGES = [
             { from: 'user', to: 'r53', labelId: 'label-user-r53', lineId: 'edge-user-r53' },
-            { from: 'r53', to: 'igw', labelId: 'label-r53-igw', lineId: 'edge-r53-igw' },
-            { from: 'igw', to: 'alb', labelId: 'label-igw-alb', lineId: 'edge-igw-alb' },
-            { from: 'alb', to: 'ec2a', labelId: 'label-alb-ec2a', lineId: 'edge-alb-ec2a' },
-            { from: 'alb', to: 'ec2b', labelId: 'label-alb-ec2b', lineId: 'edge-alb-ec2b' },
-            { from: 'asg', to: 'ec2a', labelId: 'label-asg-ec2a', lineId: 'edge-asg-ec2a' },
-            { from: 'asg', to: 'ec2b', labelId: 'label-asg-ec2b', lineId: 'edge-asg-ec2b' },
-            { from: 'ec2a', to: 'cw', labelId: 'label-ec2a-cw', lineId: 'edge-ec2a-cw' },
-            { from: 'gh', to: 'asg', labelId: 'label-gh-asg', lineId: 'edge-gh-asg' },
-            { from: 'acm', to: 'alb', labelId: 'label-acm-alb', lineId: 'edge-acm-alb' },
-            { from: 's3', to: 'asg', labelId: 'label-s3-asg', lineId: 'edge-s3-asg' }
+            { from: 'r53', to: 'cf', labelId: 'label-r53-cf', lineId: 'edge-r53-cf' },
+            { from: 'acm', to: 'cf', labelId: 'label-acm-cf', lineId: 'edge-acm-cf' },
+            { from: 'cf', to: 'cff', labelId: 'label-cf-cff', lineId: 'edge-cf-cff' },
+            { from: 'gh', to: 's3', labelId: 'label-gh-s3', lineId: 'edge-gh-s3' },
+            { from: 'cf', to: 's3', labelId: 'label-cf-s3', lineId: 'edge-cf-s3' },
+            { from: 'cf', to: 'apigw', labelId: 'label-cf-apigw', lineId: 'edge-cf-apigw' },
+            { from: 'apigw', to: 'lambda', labelId: 'label-apigw-lambda', lineId: 'edge-apigw-lambda' },
+            { from: 'lambda', to: 'cw', labelId: 'label-lambda-cw', lineId: 'edge-lambda-cw' },
+            { from: 'gh', to: 'lambda', labelId: 'label-gh-lambda', lineId: 'edge-gh-lambda' }
         ];
         const SIM_STEPS = [
             { id: 'user', text: 'User sends HTTPS request to shayleeczech.com' },
-            { id: 'r53', text: 'Route 53 resolves domain → ALB IP address' },
-            { id: 'igw', text: 'Request enters VPC through Internet Gateway' },
-            { id: 'alb', text: 'ALB terminates SSL, checks health, routes to target' },
-            { id: 'ec2a', text: 'Nginx serves pages, proxies /api/stats to Node.js' },
-            { id: 'cw', text: 'CloudWatch receives access logs and metrics' }
+            { id: 'r53', text: 'Route 53 resolves domain → CloudFront' },
+            { id: 'cf', text: 'CloudFront terminates TLS, matches the request to a cache behavior' },
+            { id: 'cff', text: 'CloudFront Function rewrites the clean URL to its .html file at the edge' },
+            { id: 's3', text: 'S3 (private, OAC-only) returns the page — cached at the edge for next time' }
         ];
 
         let selectedId = null;
