@@ -26,8 +26,6 @@ async function getSecurityScore() {
 const GITHUB_REPO_OWNER = 'shayczech';
 const REPOSITORIES = [
     'web-server',
-    'k8s-ci-cd-demo',
-    'terraform-aws-secure-vpc',
 ];
 
 function githubFetchHeaders() {
