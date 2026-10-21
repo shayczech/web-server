@@ -21,7 +21,7 @@ terraform {
     aws = {
       source = "hashicorp/aws"
       # >= 5.80 for aws_iam_role_policy_attachments_exclusive / _policies_exclusive.
-      version = ">= 5.80, < 6.0"
+      version = ">= 5.80, < 6.70"
     }
   }
 }
