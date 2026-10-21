@@ -2,22 +2,16 @@
 # SNS alert topics. CloudWatch alarms and EventBridge rules can only publish to
 # a topic in their own region, so there's one per region. Each email
 # subscription must be confirmed from the inbox once after the first apply.
+#
+# The topic policy only needs to admit the two publishing services; in-account
+# principals get access through their own IAM policies. (SNS also rejects
+# "sns:*" in topic policies.)
 # ------------------------------------------------------------------------------
 
 data "aws_iam_policy_document" "alerts_topic" {
   for_each = {
     primary   = "arn:aws:sns:${var.aws_region}:${local.account_id}:${var.server_name}-alerts"
     us_east_1 = "arn:aws:sns:us-east-1:${local.account_id}:${var.server_name}-alerts"
-  }
-
-  statement {
-    sid       = "OwnerFullAccess"
-    actions   = ["sns:*"]
-    resources = [each.value]
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${local.account_id}:root"]
-    }
   }
 
   statement {
