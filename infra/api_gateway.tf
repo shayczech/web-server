@@ -21,10 +21,18 @@ resource "aws_apigatewayv2_route" "stats_api" {
   target    = "integrations/${aws_apigatewayv2_integration.stats_api.id}"
 }
 
+# Throttling caps how hard a flood can hit the Lambda (and, through it, the
+# GitHub API rate limit). Real traffic is a handful of requests per page view,
+# and CloudFront caches /api/* for 60s on top of this.
 resource "aws_apigatewayv2_stage" "default" {
   api_id      = aws_apigatewayv2_api.stats_api.id
   name        = "$default"
   auto_deploy = true
+
+  default_route_settings {
+    throttling_burst_limit = 20
+    throttling_rate_limit  = 10
+  }
 }
 
 resource "aws_lambda_permission" "allow_api_gateway" {

@@ -1,0 +1,60 @@
+# Dependency scan for the Lambda (site/api). Runs on PRs, weekly (so a newly
+# disclosed vuln in an unchanged dependency still fails a run — GitHub emails
+# on scheduled-run failures), and as the gate in front of deploy.yml.
+#
+# Deliberately has no AWS access: npm packages and the Snyk CLI execute here,
+# so this job never gets an OIDC token.
+name: Dependency scan (Snyk)
+
+on:
+  workflow_call:
+    outputs:
+      security-score:
+        description: "0-100 score computed from Snyk findings"
+        value: ${{ jobs.snyk.outputs.security-score }}
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/api/**'
+  schedule:
+    - cron: "0 14 * * 1" # Mondays at 14:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  snyk:
+    runs-on: ubuntu-latest
+    outputs:
+      security-score: ${{ steps.scan.outputs.score }}
+    env:
+      SNYK_VERSION: 1.1307.4
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        working-directory: site/api
+        run: npm ci --ignore-scripts
+
+      - name: Snyk scan and compute security score
+        id: scan
+        working-directory: site/api
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          set +e
+          npx --yes "snyk@${SNYK_VERSION}" test --json-file-output=snyk.json >/dev/null 2>&1
+          set -e
+          SCORE=$(node compute-snyk-score.js snyk.json)
+          echo "Security score from Snyk: ${SCORE}"
+          echo "score=${SCORE}" >> "$GITHUB_OUTPUT"
+          rm -f snyk.json
+          npx --yes "snyk@${SNYK_VERSION}" test --severity-threshold=high

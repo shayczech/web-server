@@ -18,8 +18,13 @@ resource "random_password" "origin_secret" {
   special = false
 }
 
+# The boundary policy is owned by infra/security-baseline/ (applied locally,
+# not by CI). The deploy role may only create/modify this role with the
+# boundary attached, so rewriting lambda_ssm_read below can't grant the
+# function more than the boundary allows.
 resource "aws_iam_role" "lambda_exec" {
-  name = "${var.server_name}-lambda-stats-api-role"
+  name                 = "${var.server_name}-lambda-stats-api-role"
+  permissions_boundary = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/${var.server_name}-lambda-boundary"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -72,6 +77,10 @@ resource "aws_lambda_function" "stats_api" {
   memory_size      = 128
   filename         = "${path.module}/lambda/stats-api.zip"
   source_code_hash = filebase64sha256("${path.module}/lambda/stats-api.zip")
+
+  # Hard ceiling on concurrent executions — bounds cost and GitHub API usage
+  # under a flood. Throttles surface as an alarm (security-baseline/monitoring.tf).
+  reserved_concurrent_executions = 5
 
   environment {
     variables = {

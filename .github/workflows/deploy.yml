@@ -6,69 +6,60 @@ on:
       - main
     paths:
       - 'infra/**'
+      - '!infra/security-baseline/**'
       - 'site/api/**'
       - '.github/workflows/deploy.yml'
+      - '.github/workflows/snyk.yml'
   workflow_dispatch: # Allows manual triggering (full pipeline)
 
-# --- PERMISSIONS YOU ADDED FOR OIDC ---
 permissions:
-  id-token: write  # Allows the job to request an OIDC token
-  contents: read   # Allows the job to checkout the code
+  contents: read
 
 jobs:
+  # Gate: no AWS credentials in the job that runs npm/Snyk code.
+  scan:
+    uses: ./.github/workflows/snyk.yml
+    secrets: inherit
+
   deploy:
+    needs: scan
     runs-on: ubuntu-latest
+    # OIDC token only in this job, which runs no third-party package code
+    # (npm ci --ignore-scripts just unpacks the Lambda's dependencies).
+    permissions:
+      id-token: write
+      contents: read
     env:
       AWS_REGION: us-east-2
-      SECURITY_SCORE: 98
+      SECURITY_SCORE: ${{ needs.scan.outputs.security-score }}
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v5
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: '20'
-
-      - name: Install Node.js Dependencies (for Snyk Scan)
-        run: npm install
-        working-directory: site/api/
-
-      - name: Snyk scan and compute security score
-        working-directory: site/api
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        run: |
-          npm install
-          set +e
-          npx snyk@latest test --json-file-output=snyk.json >/dev/null 2>&1
-          SNYK_EXIT=$?
-          set -e
-          SCORE=$(node compute-snyk-score.js snyk.json)
-          echo "Security score from Snyk: ${SCORE}"
-          echo "SECURITY_SCORE=${SCORE}" >> "$GITHUB_ENV"
-          rm -f snyk.json
-          npx snyk@latest test --severity-threshold=high
+          node-version: '22'
 
       - name: Install Lambda dependencies and build deployment zip
         working-directory: site/api
         run: |
-          npm ci --omit=dev
+          npm ci --omit=dev --ignore-scripts
           mkdir -p ../../infra/lambda
           zip -r ../../infra/lambda/stats-api.zip index.js node_modules package.json -x "*.md" >/dev/null
           rm -rf node_modules
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
-          role-to-assume: arn:aws:iam::643913568924:role/GitHub-Actions-Deploy-Role # Your OIDC Role
+          role-to-assume: arn:aws:iam::643913568924:role/GitHub-Actions-Deploy-Role
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: GitHubActionsSession
 
       # --- PHASE 1: Terraform (IaC) ---
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v4
+        uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
 
       - name: Terraform Init
         id: init
