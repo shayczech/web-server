@@ -3,6 +3,9 @@
 Backend and providers in `terraform.tf`. Flat layout, no modules: S3 + CloudFront
 + Lambda + API Gateway (no VPC, no EC2 — see "History" below).
 
+Two roots: this one (the app) is applied by CI; `security-baseline/` is applied
+locally and owns everything CI must not be able to change.
+
 ## Layout
 
 | File / module        | Purpose |
@@ -17,7 +20,8 @@ Backend and providers in `terraform.tf`. Flat layout, no modules: S3 + CloudFron
 | `route53.tf`          | Hosted zone lookup, apex/www ALIAS records → CloudFront |
 | `variables.tf`        | Root variables (`aws_region`, `server_name`, `domain_name`) |
 | `output.tf`           | Root outputs (CloudFront, S3 bucket, Lambda function name) |
-| `policies/`           | IAM policy JSON attached to the GitHub Actions OIDC deploy role |
+| `policies/`           | `github-deploy-role.json`: the GitHub Actions OIDC deploy role's only policy (attached by `security-baseline/`) |
+| `security-baseline/`  | Separate root, applied locally with admin creds — CloudTrail, GuardDuty, alarms, budget, IAM guardrails. See its README. |
 
 ## Site content
 

@@ -18,7 +18,36 @@ resource "aws_cloudfront_function" "viewer_request" {
   code    = file("${path.module}/cf-functions/viewer-request.js")
 }
 
+# Security headers for every response. No Content-Security-Policy: every page
+# uses inline <script> blocks and the Tailwind Play CDN (which injects inline
+# styles at runtime), so a CSP would need 'unsafe-inline' for both and buy
+# little. HSTS omits `preload` — that's hard to undo once submitted.
+resource "aws_cloudfront_response_headers_policy" "security" {
+  name = "${var.server_name}-security-headers"
+
+  security_headers_config {
+    strict_transport_security {
+      access_control_max_age_sec = 31536000
+      include_subdomains         = true
+      override                   = true
+    }
+    content_type_options {
+      override = true
+    }
+    frame_options {
+      frame_option = "DENY"
+      override     = true
+    }
+    referrer_policy {
+      referrer_policy = "strict-origin-when-cross-origin"
+      override        = true
+    }
+  }
+}
+
 # Replicates nginx's `add_header X-Robots-Tag "noindex, nofollow"` scoped to /p/*.
+# A cache behavior takes one response headers policy, so this repeats the
+# security headers above.
 resource "aws_cloudfront_response_headers_policy" "noindex" {
   name = "${var.server_name}-noindex-p"
 
@@ -29,14 +58,51 @@ resource "aws_cloudfront_response_headers_policy" "noindex" {
       override = true
     }
   }
+
+  security_headers_config {
+    strict_transport_security {
+      access_control_max_age_sec = 31536000
+      include_subdomains         = true
+      override                   = true
+    }
+    content_type_options {
+      override = true
+    }
+    frame_options {
+      frame_option = "DENY"
+      override     = true
+    }
+    referrer_policy {
+      referrer_policy = "strict-origin-when-cross-origin"
+      override        = true
+    }
+  }
+}
+
+# /api/stats fans out to ~5 GitHub API calls per invocation, so cache it at the
+# edge for 60s. min_ttl must be > 0: the Lambda sends `Cache-Control: no-store`
+# (aimed at browsers), which CloudFront would otherwise honor and never cache.
+resource "aws_cloudfront_cache_policy" "api" {
+  name        = "${var.server_name}-api-60s"
+  min_ttl     = 60
+  default_ttl = 60
+  max_ttl     = 60
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "none"
+    }
+    headers_config {
+      header_behavior = "none"
+    }
+    query_strings_config {
+      query_string_behavior = "none"
+    }
+  }
 }
 
 data "aws_cloudfront_cache_policy" "caching_optimized" {
   name = "Managed-CachingOptimized"
-}
-
-data "aws_cloudfront_cache_policy" "caching_disabled" {
-  name = "Managed-CachingDisabled"
 }
 
 data "aws_cloudfront_origin_request_policy" "all_viewer_except_host" {
@@ -79,6 +145,7 @@ resource "aws_cloudfront_distribution" "site" {
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
     cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.security.id
 
     function_association {
       event_type   = "viewer-request"
@@ -107,8 +174,9 @@ resource "aws_cloudfront_distribution" "site" {
     viewer_protocol_policy    = "redirect-to-https"
     allowed_methods           = ["GET", "HEAD", "OPTIONS"]
     cached_methods            = ["GET", "HEAD"]
-    cache_policy_id           = data.aws_cloudfront_cache_policy.caching_disabled.id
+    cache_policy_id           = aws_cloudfront_cache_policy.api.id
     origin_request_policy_id  = data.aws_cloudfront_origin_request_policy.all_viewer_except_host.id
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.security.id
     # No function_association here — the clean-URL/.html rewrite doesn't apply to API paths.
   }
 

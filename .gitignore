@@ -18,4 +18,4 @@ infra/lambda/*.zip
 pycache/
 *.pyc
 .env
-.DS_Store
+.DS_Store*.tfvars
