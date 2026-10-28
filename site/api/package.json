@@ -4,7 +4,7 @@
   "description": "Lambda function for portfolio dynamic stats",
   "main": "index.js",
   "dependencies": {
-    "@aws-sdk/client-ssm": "^3.0.0"
+    "@aws-sdk/client-ssm": "^3.1156.0"
   },
   "overrides": {
     "tar": ">=7.5.7"
