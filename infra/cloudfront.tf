@@ -80,13 +80,15 @@ resource "aws_cloudfront_response_headers_policy" "noindex" {
 }
 
 # /api/stats fans out to ~5 GitHub API calls per invocation, so cache it at the
-# edge for 60s. min_ttl must be > 0: the Lambda sends `Cache-Control: no-store`
-# (aimed at browsers), which CloudFront would otherwise honor and never cache.
+# edge for 5 minutes (the "60s" in the name is from the original TTL; renaming
+# would replace a policy the distribution is using). min_ttl must be > 0: the
+# Lambda sends `Cache-Control: no-store` (aimed at browsers), which CloudFront
+# would otherwise honor and never cache.
 resource "aws_cloudfront_cache_policy" "api" {
   name        = "${var.server_name}-api-60s"
-  min_ttl     = 60
-  default_ttl = 60
-  max_ttl     = 60
+  min_ttl     = 300
+  default_ttl = 300
+  max_ttl     = 300
 
   parameters_in_cache_key_and_forwarded_to_origin {
     cookies_config {

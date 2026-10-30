@@ -5,6 +5,12 @@ const GITHUB_TOKEN_PARAM = '/web-server/github-token';
 const SECURITY_SCORE_PARAM = '/web-server/security-score';
 const GITHUB_FETCH_TIMEOUT_MS = 3000;
 const FALLBACK_SECURITY_SCORE = 98;
+// CloudFront caches /api/stats per edge location, so a bot flood spread across
+// several POPs still fans out to this function all at once. Serving repeat calls
+// from a warm container's memory keeps those at a few ms instead of ~3s of GitHub
+// API calls, which is what was exhausting reserved concurrency.
+const RESULT_CACHE_TTL_MS = 5 * 60 * 1000;
+let cachedResult = null; // { at, body } — successful responses only
 
 const ssmClient = new SSMClient({ region: process.env.AWS_REGION || 'us-east-2' });
 
@@ -198,6 +204,10 @@ exports.handler = async (event) => {
         return response(403, { error: 'Forbidden' });
     }
 
+    if (cachedResult && Date.now() - cachedResult.at < RESULT_CACHE_TTL_MS) {
+        return response(200, cachedResult.body);
+    }
+
     await loadGitHubTokenFromSSM();
 
     try {
@@ -211,14 +221,16 @@ exports.handler = async (event) => {
         ]);
 
         const fileCountFallback = (terraformModules || 0) + (ansiblePlaybooks || 0);
-        return response(200, {
+        const body = {
             terraformModules: terraformModules || 0,
             ansiblePlaybooks: ansiblePlaybooks || 0,
             iacResources: iacFromSSM != null ? iacFromSSM : fileCountFallback,
             ciCdRuns: ciCdRuns ?? 0,
             securityScore,
             githubCommits: totalCommits || 0,
-        });
+        };
+        cachedResult = { at: Date.now(), body };
+        return response(200, body);
     } catch (err) {
         console.error('Unexpected stats error:', err && err.message ? err.message : err);
         const securityScore = await getSecurityScore();

@@ -66,11 +66,13 @@ locals {
       threshold   = 0
       description = "Stats API Lambda crashed or timed out."
     }
+    # Brief throttling during a bot burst is the concurrency cap doing its job;
+    # only alert when it's sustained.
     throttles = {
       metric      = "Throttles"
-      period      = 300
-      threshold   = 0
-      description = "Stats API Lambda hit its reserved concurrency (5) or API Gateway throttling — likely a flood."
+      period      = 3600
+      threshold   = 25
+      description = "Stats API Lambda throttled more than 25 times in an hour (reserved concurrency 5) — sustained flood."
     }
     invocation_spike = {
       metric      = "Invocations"
