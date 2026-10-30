@@ -15,6 +15,12 @@ on:
 permissions:
   contents: read
 
+# Queue deploys instead of running them side by side: two merges in quick
+# succession otherwise race for the Terraform state lock and the second fails.
+concurrency:
+  group: terraform-apply
+  cancel-in-progress: false
+
 jobs:
   # Gate: no AWS credentials in the job that runs npm/Snyk code.
   scan:
