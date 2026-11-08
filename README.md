@@ -41,7 +41,7 @@ Deploys queue instead of running side by side, so back-to-back merges don't race
 
 * **No long-lived AWS credentials.** GitHub Actions assumes a deploy role through OIDC.
 * **Scan job has no cloud access.** `snyk.yml` runs npm and the Snyk CLI without an OIDC token. Only the deploy job gets one, and it runs no third-party package code (`npm ci --ignore-scripts`).
-* **CI can't widen its own permissions.** The deploy role has a single least-privilege policy (`infra/policies/github-deploy-role.json`). That policy, the Lambda permissions boundary, and all monitoring live in `security-baseline/`, which has its own Terraform state that the deploy role cannot read or write.
+* **CI can't widen its own permissions.** The deploy role has a single least-privilege policy (`infra/policies/github-deploy-role.json`). That policy, the Lambda permissions boundary, and this site's alarms live in `security-baseline/`, which has its own Terraform state that the deploy role cannot read or write.
 * **Detection and alerting:** site-down and error-rate alarms live here. The account-wide controls (multi-region CloudTrail, GuardDuty, IAM Access Analyzer, root sign-in alert, the monthly cost budget and the SNS alert topics) live in a separate private account-baseline repo, because the AWS account now hosts more than one project. Every alert emails through those shared SNS topics.
 * **Supply chain:** third-party actions are pinned to commit SHAs, and Dependabot proposes updates weekly.
 * **State:** remote Terraform state in an encrypted S3 bucket with S3 lockfile locking.
