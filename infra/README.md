@@ -12,7 +12,7 @@ locally and owns everything CI must not be able to change.
 |-----------------------|---------|
 | `main.tf`             | Providers (`us-east-2` default, `us_east_1` alias for CloudFront's ACM cert), `data.aws_caller_identity.current` |
 | `s3.tf`               | Private S3 bucket for the static site (OAC-only access, no public bucket policy) |
-| `cloudfront.tf`       | Distribution, S3 Origin Access Control, CloudFront Function (clean URLs + legacy redirect), response headers policy |
+| `cloudfront.tf`       | Distribution, S3 Origin Access Control, CloudFront Function (clean URLs + recipes redirect to danielsonhub.com), response headers policy |
 | `cf-functions/`       | CloudFront Function source (`viewer-request.js`) |
 | `acm_cloudfront.tf`   | ACM cert for CloudFront (must be us-east-1), DNS validation |
 | `lambda.tf`           | Lambda function for `/api/stats`, exec role scoped to 3 SSM `GetParameter` ARNs only |
@@ -26,7 +26,11 @@ locally and owns everything CI must not be able to change.
 ## Site content
 
 The static site (`site/`) is synced directly to the S3 bucket (`aws s3 sync`) by
-`.github/workflows/deploy-content.yml`. CloudFront serves it at `/` and `/p/recipes`.
+`.github/workflows/deploy-content.yml`. CloudFront serves it at `/`. The recipes
+page moved to danielsonhub.com in November 2026; `cf-functions/viewer-request.js`
+301s `/p/recipes`, `/p/recipes.html`, `/p/recipes/*`, `/p/recipes.json`,
+`/p/photos/*` and the older `/p/kitchen` bookmark to the matching
+`https://danielsonhub.com/recipes` path, keeping the query string.
 The dynamic stats endpoint (`site/api/`) is a Lambda function deployed by
 `.github/workflows/deploy.yml`.
 
