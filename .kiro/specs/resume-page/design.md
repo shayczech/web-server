@@ -36,7 +36,8 @@ credentials[ { label } ]
 ## Filter behavior
 
 - Single-select. Choosing a chip hides cards whose `skills[]` lacks that id. Choosing it again, or Clear, restores everything.
-- Matching skill labels inside visible cards get the `keyword` highlight class.
+- Each card shows its stack as tags. The tag for the active skill is highlighted (`is-match`). Highlighting tags instead of words inside the bullet text keeps the match exact, since the text doesn't always use the skill's label.
+- A section (current role, earlier roles, consulting, featured) hides when none of its cards match.
 - Hidden cards use the `hidden` attribute, so they leave the accessibility tree.
 - Each chip is a `<button aria-pressed>`. The status line is `aria-live="polite"`.
 
@@ -55,10 +56,13 @@ It is native, keyboard accessible, and works with JavaScript disabled. Filtering
 - The current page filters cards through `data-tags`, so the pattern is already in the codebase.
 - Source content is the November 2026 resume PDF.
 
+- Filter behavior, section hiding, status text and focus return after Clear, checked in headless Chrome (see `tasks.md`).
+- Layout at 1280 px and at 375 px (rendered in a 375 px iframe, because headless Chrome on macOS won't size a window below about 500 px).
+
 ## Not yet verified
 
-- Layout and chip wrapping at 375 px.
-- Keyboard and screen-reader behavior of the chips and cards.
+- Screen-reader behavior of the chips and cards. Markup uses native buttons, `aria-pressed`, `aria-live` and `<details>`, but no screen reader was run.
+- Color contrast was not measured. The palette is the one the other pages already use.
 - Rendering without JavaScript. Content is JavaScript-rendered, so it is not visible without JS. Search crawlers that run JavaScript will see it, and others will not. LinkedIn is the primary channel, so v1 accepts this. A `<noscript>` line points to LinkedIn.
 - Whether the card wording reads well. Problem, built and result text is derived from the resume bullets and needs your review.
 

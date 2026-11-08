@@ -54,6 +54,6 @@ Deploys queue instead of running side by side, so back-to-back merges don't race
 
 ## Author
 
-**Shaylee Czech** — Senior Infrastructure / Platform Engineer | CISSP  
+**Shaylee Czech** — Security Automation & DevSecOps Engineer | CISSP  
 Building automated, secure, observable cloud infrastructure. Drawn to mission-driven work (quantum, space, AI/ML, clean energy, healthcare).  
 [LinkedIn](https://www.linkedin.com/in/shayleeczech) | [GitHub](https://github.com/shayczech)

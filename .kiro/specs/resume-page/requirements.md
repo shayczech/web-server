@@ -15,7 +15,10 @@ Replace the long stacked resume page with one where the work is the spine and th
 | 2026-11-08 | Content lives in one data block that the page renders, so a resume update is one edit. | Shaylee |
 | 2026-11-08 | Leave phone, email and CISSP ID number off the public page. LinkedIn is the only contact path. | Shaylee |
 | 2026-11-08 | Leave the API gateway auditor material in the current role off the public page. | Shaylee |
-| 2026-11-08 | Update the `web` README Author line to the new title. Proposed default, not yet explicitly confirmed. | Proposed |
+| 2026-11-08 | Update the `web` README Author line to the new title. | Shaylee (default accepted) |
+| 2026-11-08 | Omit the gap and finding details from the two other current-role bullets (the attack-surface bullet and the merge-request validation findings bullet). | Shaylee (default accepted) |
+| 2026-11-08 | Remove the old Professional Skills and Toolkit sections. | Shaylee (default accepted) |
+| 2026-11-08 | Remove the footer email link from all four pages. Required by the exclusions below, which cover all of `site/`, and by "LinkedIn only". | Shaylee (spec #17) |
 
 ## Requirements
 
@@ -40,12 +43,9 @@ This repo is public, so the exclusion terms are deliberately not written here. T
 - Personal contact details: phone number, email address, certification ID number.
 - Employer-sensitive material: the API gateway auditor bullet in the current role, with its findings and the vendor name. The merge-request validation project is described only as "API gateway".
 
-## Open items (need Shaylee)
+## Open items
 
-| Item | Recommended default |
-|---|---|
-| Two other bullets in the current role that state security gaps or findings (one in the attack-surface bullet, one in the merge-request validation bullet). | Omit the gap and finding details from the public page. |
-| Existing "Professional Skills" (soft skills) and "Toolkit" icon-grid sections. The new resume has no equivalent. | Remove them. The chips and summary replace them. |
+None. Both earlier open items were resolved on 2026-11-08 (see Decisions).
 
 ## Out of scope
 
