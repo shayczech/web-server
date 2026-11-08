@@ -4,6 +4,6 @@ output "lambda_boundary_arn" {
 }
 
 output "alert_topic_arns" {
-  description = "SNS alert topics (confirm the email subscription for each)."
-  value       = [aws_sns_topic.alerts.arn, aws_sns_topic.alerts_us_east_1.arn]
+  description = "Account-wide SNS alert topics this root's alarms publish to (owned by the aws-account repo)."
+  value       = [data.aws_sns_topic.alerts.arn, data.aws_sns_topic.alerts_us_east_1.arn]
 }

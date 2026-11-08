@@ -21,7 +21,7 @@ locally and owns everything CI must not be able to change.
 | `variables.tf`        | Root variables (`aws_region`, `server_name`, `domain_name`) |
 | `output.tf`           | Root outputs (CloudFront, S3 bucket, Lambda function name) |
 | `policies/`           | `github-deploy-role.json`: the GitHub Actions OIDC deploy role's only policy (attached by `security-baseline/`) |
-| `security-baseline/`  | Separate root, applied locally with admin creds — CloudTrail, GuardDuty, alarms, budget, IAM guardrails. See its README. |
+| `security-baseline/`  | Separate root, applied locally with admin creds — IAM guardrails and the site's alarms. Account-wide controls (CloudTrail, GuardDuty, budget, alert topics) live in the private `aws-account` repo. See its README. |
 
 ## Site content
 

@@ -1,13 +1,17 @@
 # ------------------------------------------------------------------------------
-# Security baseline: account-level detection, alerting, and the IAM guardrails
-# the CI pipeline runs inside. Applied locally with admin credentials — never by
-# CI — and kept in its own state key, which the deploy role can't read or write.
-# A compromised pipeline therefore can't switch off its own monitoring or widen
-# its own permissions.
+# Security baseline for this site: the IAM guardrails the CI pipeline runs
+# inside, and the site's availability alarms. Applied locally with admin
+# credentials — never by CI — and kept in its own state key, which the deploy
+# role can't read or write. A compromised pipeline therefore can't switch off
+# its own monitoring or widen its own permissions.
+#
+# Account-wide resources (CloudTrail, GuardDuty, Access Analyzer, alert topics,
+# budget) live in the aws-account repo. See moved-to-aws-account.tf.
 # ------------------------------------------------------------------------------
 
 terraform {
-  required_version = ">= 1.0"
+  # removed blocks need >= 1.7.
+  required_version = ">= 1.7"
 
   backend "s3" {
     bucket       = "shaylee-portfolio-tf-state-2025"
