@@ -22,7 +22,7 @@ Visitor → Route 53 → CloudFront ─┬─ (static pages) ─→ private S3 b
 |---|---|
 | `site/` | Static pages (`index`, `resume`, `architecture`, `grc`), recipes under `site/p/`, and the Lambda source under `site/api/` |
 | `infra/` | Terraform for the app, applied by CI. See [`infra/README.md`](infra/README.md) |
-| `infra/security-baseline/` | Separate Terraform root applied locally with admin credentials: CloudTrail, GuardDuty, IAM Access Analyzer, alarms, budget, and the deploy role's permissions. See [its README](infra/security-baseline/README.md) |
+| `infra/security-baseline/` | Separate Terraform root applied locally with admin credentials: the deploy role's permissions, the Lambda permissions boundary, and the site's alarms. See [its README](infra/security-baseline/README.md) |
 | `.github/workflows/` | `deploy.yml`, `deploy-content.yml`, `snyk.yml`, `codeql.yml` |
 | `.github/dependabot.yml` | Weekly grouped updates for npm, GitHub Actions, and Terraform |
 
@@ -42,14 +42,14 @@ Deploys queue instead of running side by side, so back-to-back merges don't race
 * **No long-lived AWS credentials.** GitHub Actions assumes a deploy role through OIDC.
 * **Scan job has no cloud access.** `snyk.yml` runs npm and the Snyk CLI without an OIDC token. Only the deploy job gets one, and it runs no third-party package code (`npm ci --ignore-scripts`).
 * **CI can't widen its own permissions.** The deploy role has a single least-privilege policy (`infra/policies/github-deploy-role.json`). That policy, the Lambda permissions boundary, and all monitoring live in `security-baseline/`, which has its own Terraform state that the deploy role cannot read or write.
-* **Detection and alerting:** multi-region CloudTrail, GuardDuty, IAM Access Analyzer, root sign-in alert, site-down and error-rate alarms, and a monthly cost budget, all emailing through SNS.
+* **Detection and alerting:** site-down and error-rate alarms live here. The account-wide controls (multi-region CloudTrail, GuardDuty, IAM Access Analyzer, root sign-in alert, the monthly cost budget and the SNS alert topics) live in a separate private account-baseline repo, because the AWS account now hosts more than one project. Every alert emails through those shared SNS topics.
 * **Supply chain:** third-party actions are pinned to commit SHAs, and Dependabot proposes updates weekly.
 * **State:** remote Terraform state in an encrypted S3 bucket with S3 lockfile locking.
 
 ## Running it
 
 * **Deploy:** merge to `main`. The workflow that matches the changed paths runs. Either can also be started from the Actions tab.
-* **Security baseline:** apply it locally, once, in the order described in [its README](infra/security-baseline/README.md). CI never applies it.
+* **Security baseline:** apply it locally as described in [its README](infra/security-baseline/README.md). CI never applies it.
 * **Pause deploys:** disable `deploy.yml` and `deploy-content.yml` in the repository's Actions tab.
 
 ## Author

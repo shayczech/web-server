@@ -20,17 +20,6 @@ variable "domain_name" {
   default     = "shayleeczech.com"
 }
 
-variable "alert_email" {
-  description = "Where alarms, GuardDuty/Access Analyzer findings, root sign-ins, and budget alerts go."
-  type        = string
-}
-
-variable "monthly_budget_usd" {
-  description = "Monthly cost budget. Alerts at 40% actual, 100% actual, and 100% forecasted."
-  type        = number
-  default     = 25
-}
-
 variable "deploy_role_name" {
   description = "GitHub Actions OIDC deploy role (created outside Terraform)."
   type        = string

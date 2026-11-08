@@ -30,8 +30,8 @@ resource "aws_cloudwatch_metric_alarm" "site_down" {
   comparison_operator = "LessThanThreshold"
   threshold           = 1
   treat_missing_data  = "breaching"
-  alarm_actions       = [aws_sns_topic.alerts_us_east_1.arn]
-  ok_actions          = [aws_sns_topic.alerts_us_east_1.arn]
+  alarm_actions       = [data.aws_sns_topic.alerts_us_east_1.arn]
+  ok_actions          = [data.aws_sns_topic.alerts_us_east_1.arn]
 }
 
 # --- Is CloudFront serving errors? Low traffic makes single errors swing the
@@ -52,8 +52,8 @@ resource "aws_cloudwatch_metric_alarm" "cloudfront_5xx" {
   comparison_operator = "GreaterThanThreshold"
   threshold           = 10
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [aws_sns_topic.alerts_us_east_1.arn]
-  ok_actions          = [aws_sns_topic.alerts_us_east_1.arn]
+  alarm_actions       = [data.aws_sns_topic.alerts_us_east_1.arn]
+  ok_actions          = [data.aws_sns_topic.alerts_us_east_1.arn]
 }
 
 # --- Stats API Lambda. The handler catches its own errors and returns 200, so
@@ -97,6 +97,6 @@ resource "aws_cloudwatch_metric_alarm" "lambda" {
   comparison_operator = "GreaterThanThreshold"
   threshold           = each.value.threshold
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [aws_sns_topic.alerts.arn]
-  ok_actions          = [aws_sns_topic.alerts.arn]
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = [data.aws_sns_topic.alerts.arn]
 }
