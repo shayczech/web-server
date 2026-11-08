@@ -571,11 +571,6 @@
       "Built a GitHub Actions pipeline where one git push runs Snyk scanning that blocks deployment on high-severity findings, then Terraform apply and Lambda deployment.",
       "Protected the S3 origin with CloudFront Origin Access Control and built a GRC dashboard that maps controls to NIST, CIS, and HIPAA."
     ],
-    "links": [
-      { "label": "Architecture", "href": "/architecture" },
-      { "label": "GRC dashboard", "href": "/grc" },
-      { "label": "Source on GitHub", "href": "https://github.com/shayczech/web-server" }
-    ],
     "skills": ["cloudfront", "s3", "api-gateway", "lambda", "route53", "terraform", "github-actions", "snyk", "event-driven", "nist", "cis", "hipaa"]
   },
   "credentials": [
@@ -610,6 +605,15 @@
 
             renderResume(JSON.parse(document.getElementById('resume-data').textContent));
         });
+
+        // Link targets are constants in code, never read from the resume-data
+        // block. Anything parsed out of the DOM is written with textContent only;
+        // turning DOM text into an href is an XSS sink (CodeQL js/xss-through-dom).
+        const FEATURED_LINKS = [
+            { label: 'Architecture', href: '/architecture', external: false },
+            { label: 'GRC dashboard', href: '/grc', external: false },
+            { label: 'Source on GitHub', href: 'https://github.com/shayczech/web-server', external: true },
+        ];
 
         function el(tag, className, text) {
             const node = document.createElement(tag);
@@ -727,10 +731,10 @@
             const f = data.featured;
             const featured = el('div', 'work-card card-pad');
             const links = el('div', 'card-links mt-4');
-            f.links.forEach(link => {
+            FEATURED_LINKS.forEach(link => {
                 const a = el('a', null, link.label);
                 a.href = link.href;
-                if (link.href.startsWith('http')) {
+                if (link.external) {
                     a.target = '_blank';
                     a.rel = 'noopener';
                 }

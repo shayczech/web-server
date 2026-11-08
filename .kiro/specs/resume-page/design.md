@@ -45,6 +45,12 @@ credentials[ { label } ]
 
 It is native, keyboard accessible, and works with JavaScript disabled. Filtering does not depend on it.
 
+## Security rule for the renderer
+
+The `resume-data` block is DOM text, so it is treated as untrusted. Its values are only ever written with `textContent` or `createTextNode`. They never go into `href`, `src`, `innerHTML`, a selector, or any attribute that a browser interprets. Link targets live in the `FEATURED_LINKS` constant in the script.
+
+The first build broke this rule by setting the featured links' `href` from the data block. CodeQL flagged it on the PR (`js/xss-through-dom`, high), and the fix moved the targets into the constant.
+
 ## Deploy
 
 `deploy-content.yml` syncs `site/` to S3 on merge to `main` and invalidates CloudFront. A pull request deploys nothing. Preview locally before merging.
