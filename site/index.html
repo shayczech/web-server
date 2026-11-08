@@ -528,7 +528,8 @@
             updateStatsUI();
             
             // --- Typed.js Animation ---
-            const typed = new Typed('.typed-headline', {
+            // Constructing the instance starts the animation; nothing reads it afterward.
+            new Typed('.typed-headline', {
                 strings: ['automating', 'deploying', 'architecting'],
                 typeSpeed: 50,
                 backSpeed: 60,
