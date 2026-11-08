@@ -1,50 +1,56 @@
-# Secure DevSecOps Portfolio — HA CI/CD Pipeline
+# Serverless DevSecOps Portfolio: CI/CD, Terraform, and Account Security Baseline
 
-This project demonstrates a secure, highly available web application deployment with a DevSecOps CI/CD pipeline. It highlights Infrastructure-as-Code (IaC), shift-left security, and continuous deployment orchestrated by GitHub Actions.
+The source for [shayleeczech.com](https://shayleeczech.com): a static portfolio site plus one small API, running on a fully serverless AWS stack and deployed by GitHub Actions. Everything is defined as code and the pipeline scans before it deploys.
 
-The architecture is **ALB + Auto Scaling Group across two AZs**: custom VPC, private subnets for EC2, ACM for SSL, and rolling instance refresh for zero-downtime deploys.
+## Architecture
 
-## Project Overview
+```
+Visitor → Route 53 → CloudFront ─┬─ (static pages) ─→ private S3 bucket   [Origin Access Control]
+                (CloudFront       └─ (/api/*)       ─→ API Gateway (HTTP API) → Lambda (Node.js 22, arm64)
+                 Function at edge)
+```
 
-* **Site content:** Static portfolio in **`site/`**, recipes in **`site/p/`**. Nginx on EC2 serves both; the fast-path workflow copies root HTML, **`site/assets/`**, **`site/p/*`**, and **`infra/nginx.conf`** over SSM.
-* **Infrastructure:** AWS custom VPC (public subnets for ALB, private subnets for EC2), Application Load Balancer, Auto Scaling Group (2 AZs), ACM certificate, Route 53 ALIAS records.
-* **State Management:** Remote Terraform state in an encrypted S3 bucket with DynamoDB state locking.
-* **Architecture:**
-  * **ALB** terminates HTTPS (ACM), redirects HTTP→HTTPS, forwards to a target group.
-  * **EC2 instances** (ASG, private subnets) run Docker: Nginx (HTTP only, rate-limited) serves the static site. No public IPs; traffic only from the ALB.
-* **Deployment:** Push to `main` (non-`site/**` paths) or **workflow_dispatch** runs Terraform apply and ASG instance refresh. New instances boot via Launch Template userdata (Docker, CloudWatch Agent, clone repo, Nginx).
-* **Security:** IAM instance profiles (CloudWatch, SSM only); no SSH to instances (SSM Session Manager). Nginx rate limiting (5 req/s, 429). ACM for certificate lifecycle.
-* **Monitoring:** CloudWatch Agent on each instance; Nginx access logs to CloudWatch.
+* **Edge:** CloudFront terminates TLS with an ACM certificate (us-east-1). A CloudFront Function handles clean URLs and one legacy redirect.
+* **Static site:** `site/` is synced to a private S3 bucket. The bucket allows reads only from this CloudFront distribution.
+* **API:** `GET /api/stats` runs in a Lambda behind API Gateway. It reads three SSM parameters and calls the public GitHub API. No VPC, no servers to patch.
+* **Why API Gateway and not a Lambda Function URL:** see [`infra/README.md`](infra/README.md).
+* **Cost:** about $2–5 per month. The previous VPC + ALB + Auto Scaling + EC2 + NAT Gateway version cost about $64 per month and was retired in September 2026.
 
-## Technical Stack
+## Repository layout
 
-| **Area** | **Tools** |
-| :--- | :--- |
-| Infrastructure as Code | Terraform (VPC, ALB, ASG, ACM, Route 53, security groups) |
-| CI/CD | GitHub Actions (Terraform apply, ASG instance refresh) |
-| Cloud Platform | AWS (VPC, ALB, ASG, EC2, ACM, Route 53, IAM, CloudWatch) |
-| Containers | Nginx (static site) |
-| Security | ACM (SSL), Nginx rate limiting, IAM, GitHub OIDC |
+| Path | What it holds |
+|---|---|
+| `site/` | Static pages (`index`, `resume`, `architecture`, `grc`), recipes under `site/p/`, and the Lambda source under `site/api/` |
+| `infra/` | Terraform for the app, applied by CI. See [`infra/README.md`](infra/README.md) |
+| `infra/security-baseline/` | Separate Terraform root applied locally with admin credentials: CloudTrail, GuardDuty, IAM Access Analyzer, alarms, budget, and the deploy role's permissions. See [its README](infra/security-baseline/README.md) |
+| `.github/workflows/` | `deploy.yml`, `deploy-content.yml`, `snyk.yml`, `codeql.yml` |
+| `.github/dependabot.yml` | Weekly grouped updates for npm, GitHub Actions, and Terraform |
 
-## Deployment Workflow
+## Pipeline
 
-### Full pipeline (infra or non-site changes)
+| Workflow | Trigger | What it does |
+|---|---|---|
+| `deploy-content.yml` | Push to `main` touching `site/**` (excluding `site/api/**`), or manual | Syncs `site/` to S3, invalidates CloudFront |
+| `deploy.yml` | Push to `main` touching `infra/**` (excluding `infra/security-baseline/**`) or `site/api/**`, or manual | Runs the Snyk gate, then Terraform apply, builds and deploys the Lambda, publishes the security score and resource count to SSM, invalidates `/api/*` |
+| `snyk.yml` | Pull requests touching `site/api/**`, weekly, and as the gate in `deploy.yml` | Dependency scan of the Lambda; fails on high or critical findings |
+| `codeql.yml` | Push and pull requests to `main`, weekly | CodeQL static analysis for JavaScript |
 
-1. **Push** to `main` (when `site/` is not the only change) or **workflow_dispatch** triggers the full workflow.
-2. **Terraform** init, validate, apply (provisions/updates VPC, ALB, ASG, etc.).
-3. **ASG instance refresh** starts a rolling replacement so new instances boot with the latest userdata and content.
-4. **Live:** Site is served via ALB; instances in private subnets register with the target group and receive traffic.
+Deploys queue instead of running side by side, so back-to-back merges don't race for the Terraform state lock.
 
-### Content-only (fast path)
+## Security design
 
-- **Trigger:** Push to `main` when only files under **`site/**`** change, or run **“Deploy site content only”** manually from the Actions tab.
-- **Behavior:** Skips Terraform apply and ASG refresh. Uses **SSM Send Command** to run on each live instance: `git pull` in `/opt/web-server`, copy portfolio HTML, **`site/assets/`**, **`site/p/*`**, and **`infra/nginx.conf`**, restart Nginx. Typically finishes in under a couple of minutes.
-- **IAM:** The GitHub Actions deploy role needs `ssm:SendCommand` and `ssm:GetCommandInvocation` (added in `infra/policies/terraform-ha-deploy-policy.json`). Run the full pipeline or `terraform apply` once after adding this so the role has the new permissions.
+* **No long-lived AWS credentials.** GitHub Actions assumes a deploy role through OIDC.
+* **Scan job has no cloud access.** `snyk.yml` runs npm and the Snyk CLI without an OIDC token. Only the deploy job gets one, and it runs no third-party package code (`npm ci --ignore-scripts`).
+* **CI can't widen its own permissions.** The deploy role has a single least-privilege policy (`infra/policies/github-deploy-role.json`). That policy, the Lambda permissions boundary, and all monitoring live in `security-baseline/`, which has its own Terraform state that the deploy role cannot read or write.
+* **Detection and alerting:** multi-region CloudTrail, GuardDuty, IAM Access Analyzer, root sign-in alert, site-down and error-rate alarms, and a monthly cost budget, all emailing through SNS.
+* **Supply chain:** third-party actions are pinned to commit SHAs, and Dependabot proposes updates weekly.
+* **State:** remote Terraform state in an encrypted S3 bucket with S3 lockfile locking.
 
-## Future Enhancements
+## Running it
 
-* **Observability:** CloudWatch custom metrics and alarms (e.g., 429 rate, latency).
-* **Scope-down IAM:** Replace broad Terraform-runner permissions with least-privilege policies.
+* **Deploy:** merge to `main`. The workflow that matches the changed paths runs. Either can also be started from the Actions tab.
+* **Security baseline:** apply it locally, once, in the order described in [its README](infra/security-baseline/README.md). CI never applies it.
+* **Pause deploys:** disable `deploy.yml` and `deploy-content.yml` in the repository's Actions tab.
 
 ## Author
 
