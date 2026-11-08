@@ -10,7 +10,7 @@ Visitor → Route 53 → CloudFront ─┬─ (static pages) ─→ private S3 b
                  Function at edge)
 ```
 
-* **Edge:** CloudFront terminates TLS with an ACM certificate (us-east-1). A CloudFront Function handles clean URLs and one legacy redirect.
+* **Edge:** CloudFront terminates TLS with an ACM certificate (us-east-1). A CloudFront Function handles clean URLs and 301s the old recipes URLs (`/p/recipes*`, `/p/photos/*`) to the page's new home at danielsonhub.com/recipes.
 * **Static site:** `site/` is synced to a private S3 bucket. The bucket allows reads only from this CloudFront distribution.
 * **API:** `GET /api/stats` runs in a Lambda behind API Gateway. It reads three SSM parameters and calls the public GitHub API. No VPC, no servers to patch.
 * **Why API Gateway and not a Lambda Function URL:** see [`infra/README.md`](infra/README.md).
@@ -20,7 +20,7 @@ Visitor → Route 53 → CloudFront ─┬─ (static pages) ─→ private S3 b
 
 | Path | What it holds |
 |---|---|
-| `site/` | Static pages (`index`, `resume`, `architecture`, `grc`), recipes under `site/p/`, and the Lambda source under `site/api/` |
+| `site/` | Static pages (`index`, `resume`, `architecture`, `grc`) and the Lambda source under `site/api/` |
 | `infra/` | Terraform for the app, applied by CI. See [`infra/README.md`](infra/README.md) |
 | `infra/security-baseline/` | Separate Terraform root applied locally with admin credentials: the deploy role's permissions, the Lambda permissions boundary, and the site's alarms. See [its README](infra/security-baseline/README.md) |
 | `.github/workflows/` | `deploy.yml`, `deploy-content.yml`, `snyk.yml`, `codeql.yml` |
