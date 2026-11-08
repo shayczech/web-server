@@ -17,7 +17,7 @@ Tick each task with the date and the evidence that proved it. Record no-go resul
 - [x] 11. Exclusion check: grep `site/` and the PR diff for every line in `~/code/temp/resume-exclusions.txt`. 2026-11-08: 0 matches across all of `site/`, after removing the footer email link from all four pages.
 - [x] 12. Update the Author line in the root `README.md` to the new title. 2026-11-08.
 - [x] 12a. Fix CodeQL alert `js/xss-through-dom` (high) on PR #18: featured link `href` was set from the data block. 2026-11-08: targets moved into the `FEATURED_LINKS` constant; every remaining sink in the script reviewed (only constant attributes and `textContent`); rendered DOM shows the three links with the right targets and all 11 entries. Closed when CodeQL reports no open alerts on the PR.
-- [ ] 13. Open the PR. After merge, confirm the content workflow is green and `/resume` renders on the live site.
+- [x] 13. Open the PR. After merge, confirm the content workflow is green and `/resume` renders on the live site. 2026-11-08: PR #18 merged; both CodeQL checks green before merge and no open `js/xss-through-dom` alert on `main`; `deploy-content.yml` run 42498471091 succeeded; live `/resume` returns 200 at 44,099 bytes with the new content and the `FEATURED_LINKS` fix; exclusion list matches 0 lines on the live page; live `/`, `/architecture` and `/grc` return 200 with no `mailto:` link.
 
 ## Tabled
 
