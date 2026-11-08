@@ -1,6 +1,6 @@
 # Resume page redesign: requirements
 
-**Status:** Draft, ready for review. Not started.
+**Status:** Shipped 2026-11-08 (PR #18).
 **Page:** `site/resume.html`, served at `/resume`.
 
 ## Goal
